@@ -1,17 +1,15 @@
-#include <ncurses.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+
+#include <ncurses.h>
+
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
-#include <stdlib.h>
-#include <time.h>
-    
-typedef struct{
-  char* data;
-  int w;
-  int h;
-} Map;
+
+#include "map.h"
 
 void draw_border(int x, int y, int w, int h);
 void draw_layout();
@@ -24,34 +22,34 @@ int main(int argc, char** argv){
   int error;
   lua_State *L = lua_open();   /* opens Lua */
   luaL_openlibs(L);
-    
-/*   while (fgets(buff, sizeof(buff), stdin) != NULL) { */
-/*     error = luaL_loadbuffer(L, buff, strlen(buff), "line") || */
-/*       lua_pcall(L, 0, 0, 0); */
-/*     if (error) { */
-/*       fprintf(stderr, "%s", lua_tostring(L, -1)); */
-/*       lua_pop(L, 1);  /\* pop error message from the stack *\/ */
-/*     } */
-/*   } */
+  luaopen_map(L);
+
+  char* code = "require('cave')";
+  error = luaL_loadbuffer(L, code, strlen(code), "line") || lua_pcall(L, 0, 0, 0);
+
+  if(error){
+    printf("%s", lua_tostring(L,-1));
+    lua_pop(L, 1);
+  }
     
   lua_close(L);
 
-  initscr();
+/*   initscr(); */
 
-  Map* map = malloc(sizeof(Map));
-  map->data = malloc(128*128);
-  map->w = map->h = 128;
+/*   Map* map = malloc(sizeof(Map)); */
+/*   map->data = malloc(128*128); */
+/*   map->w = map->h = 128; */
 
-  fill_map(map);
-  draw_map(map->data, 128, 0, 0, 0, 0, COLS, LINES);
+/*   fill_map(map); */
+/*   draw_map(map->data, 128, 0, 0, 0, 0, COLS, LINES); */
 
-/*   draw_border(0,0,5,6); */
-/*   draw_layout(); */
+/* /\*   draw_border(0,0,5,6); *\/ */
+/* /\*   draw_layout(); *\/ */
 
-  getch();
-  endwin();
-  free(map->data);
-  free(map);
+/*   getch(); */
+/*   endwin(); */
+/*   free(map->data); */
+/*   free(map); */
   return 0;
 }
 
