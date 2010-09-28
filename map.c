@@ -7,6 +7,7 @@ int map_adjacent(lua_State *L);
 int adjacent(Map* map, int x, int y, char c);
 int map_inbounds(lua_State* L);
 int inbounds(Map* map, int x, int y);
+int map_gc(lua_State* L);
 
 static const struct luaL_reg maplib [] = {
   {"new", newmap},
@@ -17,6 +18,7 @@ static const struct luaL_reg map_metatable [] = {
       {"size", map_size},
       {"adjacent", map_adjacent},
       {"inbounds", map_inbounds},
+      {"__gc", map_gc},
       {NULL, NULL}
 };
 
@@ -33,6 +35,12 @@ int luaopen_map(lua_State *L){
 
   luaL_openlib(L, "Map", maplib, 0);
   return 1;
+}
+
+int map_gc(lua_State* L){
+  Map* map = checkmap(L);
+  free(map->data);
+  return 0;
 }
 
 int map_inbounds(lua_State* L){
