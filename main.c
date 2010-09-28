@@ -90,26 +90,6 @@ void fill_map(Map* map){
   }
 }
 
-int adjacent(Map* map, int x, int y, char c){
-  int total = 0;
-
-  if(x > 0 && map->data[(x-1) + y * map->w] == c){total++;}
-  if(y > 0 && map->data[x + (y-1) * map->w] == c){total++;}
-  if(x < map->w-1 && map->data[(x+1) + y * map->w] == c){total++;}
-  if(y < map->h-1 && map->data[x + (y+1) * map->w] == c){total++;}
-
-  if(x > 0 && y > 0
-     && map->data[(x-1) + (y-1) * map->w] == c){total++;}
-  if(x > 0 && y < map->h-1
-     && map->data[(x-1) + (y+1) * map->w] == c){total++;}
-  if(x < map->w-1 && y > 0
-     && map->data[(x+1) + (y-1) * map->w] == c){total++;}
-  if(x < map->w-1 && y < map->h-1
-     && map->data[(x+1) + (y+1) * map->w] == c){total++;}
-
-  return total;
-}
-
 void draw_layout(){
   int n;
   for(n = 0; n < COLS; n++){
