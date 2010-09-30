@@ -19,3 +19,6 @@ m2 = Map.new(3,3)
 for x, y, c in m2:each() do
    print(x,y,c)
 end
+
+m:set(0,0,"+")
+print(m:get(0,0))

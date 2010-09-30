@@ -11,6 +11,8 @@ int map_gc(lua_State* L);
 int map_each(lua_State* L);
 int map_each_helper(lua_State* L);
 int map_each_range_helper(lua_State* L);
+int map_get(lua_State* L);
+int map_set(lua_State* L);
 
 static const struct luaL_reg maplib [] = {
   {"new", newmap},
@@ -22,6 +24,8 @@ static const struct luaL_reg map_metatable [] = {
       {"adjacent", map_adjacent},
       {"inbounds", map_inbounds},
       {"each", map_each},
+      {"get", map_get},
+      {"set", map_set},
       {"__gc", map_gc},
       {NULL, NULL}
 };
@@ -38,6 +42,37 @@ int luaopen_map(lua_State *L){
   luaL_openlib(L, NULL, map_metatable, 0);
 
   luaL_openlib(L, "Map", maplib, 0);
+  return 1;
+}
+
+int map_get(lua_State* L){
+  Map* map = checkmap(L);
+  int x = luaL_checkinteger(L, 2);
+  int y = luaL_checkinteger(L, 3);
+
+  if(inbounds(map, x, y)){
+    lua_pushlstring(L, map->data + x + y*map->w, 1);
+  } else {
+    lua_pushnil(L);
+  }
+
+  return 1;
+}
+
+int map_set(lua_State* L){
+  Map* map = checkmap(L);
+  int x = luaL_checkinteger(L, 2);
+  int y = luaL_checkinteger(L, 3);
+  const char* v = luaL_checkstring(L, 4);
+
+  if(inbounds(map, x, y)){
+    int n = x + y * map->w;
+    map->data[n] = *v;
+    lua_pushlstring(L, map->data + n, 1);
+  } else {
+    lua_pushnil(L);
+  }
+
   return 1;
 }
 
