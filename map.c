@@ -80,10 +80,12 @@ int map_each_range_helper(lua_State* L){
     lua_pushnumber(L, x + range_x);
     lua_pushnumber(L, y + range_y);
 
+    lua_pushlstring(L, map->data + (x+range_x) + (y+range_y)*(map->w), 1);
+
     lua_pushnumber(L, ++n);
     lua_replace(L, lua_upvalueindex(5));
 
-    return 2;
+    return 3;
   }
 }
 
@@ -97,11 +99,12 @@ int map_each_helper(lua_State* L){
   } else {
     lua_pushnumber(L, n % map->w);
     lua_pushnumber(L, n / map->w);
+    lua_pushlstring(L, map->data + n, 1);
 
     lua_pushnumber(L, ++n);
     lua_replace(L, lua_upvalueindex(1));
 
-    return 2;
+    return 3;
   }
 }
 
