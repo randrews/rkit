@@ -8,6 +8,8 @@ int adjacent(Map* map, int x, int y, char c);
 int map_inbounds(lua_State* L);
 int inbounds(Map* map, int x, int y);
 int map_gc(lua_State* L);
+int map_each(lua_State* L);
+int map_each_helper(lua_State* L);
 
 static const struct luaL_reg maplib [] = {
   {"new", newmap},
@@ -18,6 +20,7 @@ static const struct luaL_reg map_metatable [] = {
       {"size", map_size},
       {"adjacent", map_adjacent},
       {"inbounds", map_inbounds},
+      {"each", map_each},
       {"__gc", map_gc},
       {NULL, NULL}
 };
@@ -35,6 +38,32 @@ int luaopen_map(lua_State *L){
 
   luaL_openlib(L, "Map", maplib, 0);
   return 1;
+}
+
+int map_each(lua_State* L){
+  Map* map = checkmap(L);
+  lua_pushnumber(L, 0);
+  lua_pushcclosure(L, &map_each_helper, 1);
+  lua_pushvalue(L, 1);
+  return 2;
+}
+
+int map_each_helper(lua_State* L){
+  Map* map = checkmap(L);
+  int n = lua_tonumber(L, lua_upvalueindex(1));
+
+  if(n >= map->w * map->h){
+    lua_pushnil(L);
+    return 1;
+  } else {
+    lua_pushnumber(L, n % map->w);
+    lua_pushnumber(L, n / map->w);
+
+    lua_pushnumber(L, ++n);
+    lua_replace(L, lua_upvalueindex(1));
+
+    return 2;
+  }
 }
 
 int map_gc(lua_State* L){
