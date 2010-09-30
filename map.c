@@ -10,6 +10,7 @@ int inbounds(Map* map, int x, int y);
 int map_gc(lua_State* L);
 int map_each(lua_State* L);
 int map_each_helper(lua_State* L);
+int map_each_range_helper(lua_State* L);
 
 static const struct luaL_reg maplib [] = {
   {"new", newmap},
@@ -42,10 +43,48 @@ int luaopen_map(lua_State *L){
 
 int map_each(lua_State* L){
   Map* map = checkmap(L);
-  lua_pushnumber(L, 0);
-  lua_pushcclosure(L, &map_each_helper, 1);
+  if(lua_gettop(L) >= 5) {
+    /* range iteration */
+    int x = luaL_checkinteger(L, 2);
+    int y = luaL_checkinteger(L, 3);
+    int w = luaL_checkinteger(L, 4);
+    int h = luaL_checkinteger(L, 5);
+
+    lua_pushnumber(L, 0);
+    lua_pushcclosure(L, &map_each_range_helper, 5);
+  } else {
+    /* simple iteration */
+    lua_pushnumber(L, 0);
+    lua_pushcclosure(L, &map_each_helper, 1);
+  }
+
   lua_pushvalue(L, 1);
   return 2;
+}
+
+int map_each_range_helper(lua_State* L){
+  Map* map = checkmap(L);
+  int x = lua_tonumber(L, lua_upvalueindex(1));
+  int y = lua_tonumber(L, lua_upvalueindex(2));
+  int w = lua_tonumber(L, lua_upvalueindex(3));
+  int h = lua_tonumber(L, lua_upvalueindex(4));
+  int n = lua_tonumber(L, lua_upvalueindex(5));
+
+  if(n >= w*h){
+    lua_pushnil(L);
+    return 1;
+  } else {
+    int range_x = n % w;
+    int range_y = n / w;
+
+    lua_pushnumber(L, x + range_x);
+    lua_pushnumber(L, y + range_y);
+
+    lua_pushnumber(L, ++n);
+    lua_replace(L, lua_upvalueindex(5));
+
+    return 2;
+  }
 }
 
 int map_each_helper(lua_State* L){
