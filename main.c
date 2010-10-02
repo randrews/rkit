@@ -11,9 +11,12 @@
 
 #include "map.h"
 
+const int dest_x = 0;
+const int dest_y = 0;
+
 void draw_border(int x, int y, int w, int h);
 void draw_layout();
-void draw_map(char* map, int src_w, int src_x, int src_y, int dest_x, int dest_y, int w, int h);
+void draw_map(Map* map, int src_x, int src_y, int w, int h);
 void fill_map(Map* map);
 int adjacent(Map* map, int x, int y, char c);
 
@@ -23,43 +26,37 @@ int main(int argc, char** argv){
   lua_State *L = lua_open();   /* opens Lua */
   luaL_openlibs(L);
   luaopen_map(L);
+  set_draw(&draw_map);
+  set_getkey(&getch);
+
+  initscr();
 
   char* code = "require('cave')";
   error = luaL_loadbuffer(L, code, strlen(code), "line") || lua_pcall(L, 0, 0, 0);
 
   if(error){
-    printf("%s", lua_tostring(L,-1));
+    mvaddstr(LINES-2, 0, lua_tostring(L,-1));
     lua_pop(L, 1);
+    getch();
   }
-    
+
+  endwin();
   lua_close(L);
 
-/*   initscr(); */
-
-/*   Map* map = malloc(sizeof(Map)); */
-/*   map->data = malloc(128*128); */
-/*   map->w = map->h = 128; */
-
-/*   fill_map(map); */
-/*   draw_map(map->data, 128, 0, 0, 0, 0, COLS, LINES); */
-
-/* /\*   draw_border(0,0,5,6); *\/ */
-/* /\*   draw_layout(); *\/ */
-
-/*   getch(); */
-/*   endwin(); */
-/*   free(map->data); */
-/*   free(map); */
   return 0;
 }
 
-void draw_map(char* map, int src_w, int src_x, int src_y, int dest_x, int dest_y, int w, int h){
+void draw_map(Map* map, int src_x, int src_y, int w, int h){
+  if(!w){w = COLS;}
+  if(!h){h = LINES;}
+
   int x, y;
+  int src_w = map->w;
 
   for(y=0; y < h; y++){
     for(x=0; x < w; x++){
-      char c = map[((y+src_y)*src_w) + (x+src_x)%src_w];
-      mvaddch(y+dest_y, x+dest_x, c);
+      char c = map->data[((y+src_y)*src_w) + (x+src_x)%src_w];
+      mvaddch(y, x, c);
     }
   }
 }

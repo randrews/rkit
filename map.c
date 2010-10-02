@@ -13,6 +13,11 @@ int map_each_helper(lua_State* L);
 int map_each_range_helper(lua_State* L);
 int map_get(lua_State* L);
 int map_set(lua_State* L);
+int map_draw(lua_State* L);
+int map_getkey(lua_State* L);
+
+void (*DRAW)(Map*,int,int,int,int) = NULL;
+int (*GETKEY)() = NULL;
 
 static const struct luaL_reg maplib [] = {
   {"new", newmap},
@@ -26,11 +31,15 @@ static const struct luaL_reg map_metatable [] = {
       {"each", map_each},
       {"get", map_get},
       {"set", map_set},
+      {"draw", map_draw},
       {"__gc", map_gc},
       {NULL, NULL}
 };
 
 int luaopen_map(lua_State *L){
+  lua_pushcfunction(L, &map_getkey);
+  lua_setglobal(L, "getkey");
+
   luaL_newmetatable(L, "Cave.Map");
 
   /* Set the MT's __index to the MT, so default values for Map come from there */
@@ -43,6 +52,41 @@ int luaopen_map(lua_State *L){
 
   luaL_openlib(L, "Map", maplib, 0);
   return 1;
+}
+
+void set_draw(void (*draw)(Map*,int,int,int,int)){
+  DRAW = draw;
+}
+
+void set_getkey(int (*getkey)()){
+  GETKEY = getkey;
+}
+
+int map_getkey(lua_State* L){
+  if(GETKEY){(*GETKEY)();}
+  return 0;
+}
+
+int map_draw(lua_State* L){
+  Map* map = checkmap(L);
+
+  int x,y,w,h;
+
+  if(lua_gettop(L) >= 5){
+    x = luaL_checkinteger(L, 2);
+    y = luaL_checkinteger(L, 3);
+    w = luaL_checkinteger(L, 4);
+    h = luaL_checkinteger(L, 5);
+  } else {
+    x = y = 0;
+    w = h = 0;
+  }
+
+  if(DRAW){
+    (*DRAW)(map, x, y, w, h);
+  }
+
+  return 0;
 }
 
 int map_get(lua_State* L){
