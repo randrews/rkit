@@ -51,8 +51,23 @@ int main(int argc, char** argv){
 END_OF_MAIN()
 
 void draw_map(Map* map, int src_x, int src_y, int w, int h){
-  BITMAP* letter = create_sub_bitmap(font_bmp, 16, 16, 16, 16);
-  draw_sprite(screen, letter, 80, 50);
-  draw_character_ex(screen, letter, 50, 50, makecol(255, 0, 0), makecol(0, 0, 255));
-  destroy_bitmap(letter);
+  BITMAP* letter;
+  int x,y;
+
+  if(!w){w = 800 / 16;}
+  if(!h){h = 600 / 16;}
+
+  for(y = 0; y < h; y++){
+    for(x = 0; x < w; x++){
+      int chr = map->data[(x + src_x) +
+			  (y + src_y) * map->w];
+      letter = create_sub_bitmap(font_bmp, chr%16*16, chr/16*16, 16, 16);
+
+      draw_character_ex(screen, letter,
+			x*16, y*16,
+			makecol(0, 255, 0),
+			makecol(0, 0, 0));
+      destroy_bitmap(letter);
+    }
+  }
 }
