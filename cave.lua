@@ -49,6 +49,19 @@ function generate_map()
       m2, m = m, m2
    end
 
+   -- Mark everything surrounded by + with #
+   for x,y,c in m:each() do
+      if c=="+" and m:adjacent(x,y,"+")==8 then m2:set(x,y,"#")
+      else m2:set(x, y, m:get(x,y)) end
+   end
+
+   -- Mark everything surrounded by # with club
+   for x,y,c in m2:each() do
+      if c=="#" and m2:adjacent(x,y,"#")==8 then
+	 m:set(x,y,string.char(5))
+      end
+   end
+
    return m
 end
 

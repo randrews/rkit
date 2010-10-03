@@ -82,9 +82,18 @@ Glyph glyph_for(char c){
     break;
 
   case '+':
+    g.fg = makecol(0,192,0);
+    g.bg = makecol(0,128,64);
+    break;
+
+  case 5:
     g.fg = makecol(0,255,0);
     g.bg = makecol(0,128,64);
     break;
+
+  default:
+    g.fg = makecol(192, 192, 192);
+    g.bg = makecol(0, 0, 0);
   }
 
   return g;
