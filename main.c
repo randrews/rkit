@@ -14,9 +14,16 @@
 const int dest_x = 0;
 const int dest_y = 0;
 
-BITMAP *font_bmp;
+typedef struct{
+  BITMAP *letter;
+  int fg, bg;
+} Glyph;
 
 void draw_map(Map* map, int src_x, int src_y, int w, int h);
+void make_glyph_bmps(BITMAP *font_bmp, BITMAP **glyphs, int w, int h);
+Glyph glyph_for(char c);
+
+BITMAP **glyph_bmps;
 
 int main(int argc, char** argv){
   char buff[256];
@@ -31,7 +38,9 @@ int main(int argc, char** argv){
   install_keyboard();
   set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0);  
 
-  font_bmp = load_bitmap("Tahin-font.tga", NULL);
+  BITMAP *font_bmp = load_bitmap("Tahin-font.tga", NULL);
+  glyph_bmps = malloc(256 * sizeof(BITMAP*));
+  make_glyph_bmps(font_bmp, glyph_bmps, 16, 16);
 
   char* code = "require('cave')";
   error = luaL_loadbuffer(L, code, strlen(code), "line") || lua_pcall(L, 0, 0, 0);
@@ -41,8 +50,11 @@ int main(int argc, char** argv){
     lua_pop(L, 1);
   }
 
-  readkey();
   lua_close(L);
+
+  int n;
+  for(n=0; n < 256; n++){ destroy_bitmap(glyph_bmps[n]); }
+  free(glyph_bmps);
 
   if(font_bmp){destroy_bitmap(font_bmp);}
 
@@ -50,8 +62,35 @@ int main(int argc, char** argv){
 }
 END_OF_MAIN()
 
+void make_glyph_bmps(BITMAP *font_bmp, BITMAP **glyphs, int w, int h){
+  int n;
+
+  for(n=0; n < 256; n++){
+    glyphs[n] = create_sub_bitmap(font_bmp, n%16*w, n/16*h, w, h);
+  }
+}
+
+Glyph glyph_for(char c){
+  Glyph g;
+
+  g.letter = glyph_bmps[c];
+
+  switch(c){
+  case '.':
+    g.fg = makecol(0,128,0);
+    g.bg = makecol(0,0,0);
+    break;
+
+  case '+':
+    g.fg = makecol(0,255,0);
+    g.bg = makecol(0,128,64);
+    break;
+  }
+
+  return g;
+}
+
 void draw_map(Map* map, int src_x, int src_y, int w, int h){
-  BITMAP* letter;
   int x,y;
 
   if(!w){w = 800 / 16;}
@@ -59,15 +98,15 @@ void draw_map(Map* map, int src_x, int src_y, int w, int h){
 
   for(y = 0; y < h; y++){
     for(x = 0; x < w; x++){
-      int chr = map->data[(x + src_x) +
-			  (y + src_y) * map->w];
-      letter = create_sub_bitmap(font_bmp, chr%16*16, chr/16*16, 16, 16);
+      char chr = map->data[(x + src_x) +
+			   (y + src_y) * map->w];
 
-      draw_character_ex(screen, letter,
+      Glyph glyph = glyph_for(chr);
+
+      draw_character_ex(screen, glyph.letter,
 			x*16, y*16,
-			makecol(0, 255, 0),
-			makecol(0, 0, 0));
-      destroy_bitmap(letter);
+			glyph.fg,
+			glyph.bg);
     }
   }
 }
