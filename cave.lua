@@ -1,28 +1,3 @@
--- m = Map.new(10,20)
-
--- print(m:size())
--- print(m:adjacent(0,0,"."))
-
--- print(m:inbounds(0,0))
--- print(m:inbounds(-3,0))
--- print(m:inbounds(0,11))
--- print(m:inbounds(0,21))
-
--- for x, y, c in m:each(0,0,4,2) do
---    print(x,y,c)
--- end
-
--- print("----------")
-
--- m2 = Map.new(3,3)
-
--- for x, y, c in m2:each() do
---    print(x,y,c)
--- end
-
--- m:set(0,0,"+")
--- print(m:get(0,0))
-
 mt = getmetatable(Map.new(1,1))
 
 mt.valid_function = function(map, spec)
@@ -87,22 +62,26 @@ SPREAD, DEATH, ITER, PROB = 3, 4, 4, 3
 
 math.randomseed( os.time() )
 
-function generate_map()
-   local m = Map.new(128,128)
-   local m2 = Map.new(128,128)
+function generate_forests(m)
+   local m2 = Map.new(m:size())
 
-   for x, y in m:each() do
-      if math.random(PROB)==1 then m:set(x,y,"+") end
+   for x, y, c in m:each() do
+      m2:set(x, y, c) -- Replace me with a clone function
+      if c ~= "-" and math.random(PROB)==1 then
+	 m:set(x,y,"+")
+      end
    end
 
    for k=1,ITER do
       for x, y, c in m:each() do
-	 if c=="+" and m:adjacent(x,y,"+") < DEATH then
-	    m2:set(x,y,".")
-	 elseif c == "." and m:adjacent(x,y,"+") > SPREAD then
-	    m2:set(x,y,"+")	 
-	 else
-	    m2:set(x,y,c)
+	 if c ~= "-" then
+	    if c=="+" and m:adjacent(x,y,"+") < DEATH then
+	       m2:set(x,y,".")
+	    elseif c == "." and m:adjacent(x,y,"+") > SPREAD then
+	       m2:set(x,y,"+")	 
+	    else
+	       m2:set(x,y,c)
+	    end
 	 end
       end
 
@@ -121,27 +100,39 @@ function generate_map()
 	 m:set(x,y,string.char(5))
       end
    end
+end
 
---    for x,y in m:randomwalk(10, 10, ".") do      
---       m:set(x,y,"#")
---    end
+function generate_river(map, start_x, start_y)
+   local w, h = map:size()
 
-   local c = 100
+   local c = (w+h)*4
    local proximity = function(x,y)
+			local dx = start_x - x
+			local dy = start_y - y
+
+			local dist = math.sqrt(dx*dx + dy*dy)
+
 			return c >= 0 and
-			   m:adjacent(x,y,"#")<3 and
-			   m:adjacent(x,y,"+")==0
+			   (dist < 5 or map:adjacent(x, y, "-") < 3)
 		     end
 
-   for x,y in m:randomwalk(10, 10, proximity, false) do
-      m:set(x,y,"#")
+   for x,y in map:randomwalk(start_x, start_y, proximity) do
+      map:set(x,y,"-")
       c = c - 1
    end
-
-   return m
+   
 end
 
 for k=1,4 do
-   generate_map():draw()
+   m = Map.new(256, 256)
+   for n=1,8 do
+      local w, h = m:size()
+      generate_river(m, math.random(w/2), math.random(h/2))
+      generate_river(m, math.random(w/2) + w/2, math.random(h/2))
+      generate_river(m, math.random(w/2) + w/2, math.random(h/2) + h/2)
+      generate_river(m, math.random(w/2), math.random(h/2) + h/2)
+   end
+   generate_forests(m)
+   m:draw()
    getkey()
 end
