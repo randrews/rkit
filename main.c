@@ -20,8 +20,10 @@ typedef struct{
 } Glyph;
 
 void draw_map(Map* map, int src_x, int src_y, int w, int h);
+void draw_mini_map(Map* map, int src_x, int src_y, int w, int h);
 void make_glyph_bmps(BITMAP *font_bmp, BITMAP **glyphs, int w, int h);
 Glyph glyph_for(char c);
+int color_for(char c);
 
 BITMAP **glyph_bmps;
 
@@ -31,7 +33,7 @@ int main(int argc, char** argv){
   lua_State *L = lua_open();   /* opens Lua */
   luaL_openlibs(L);
   luaopen_map(L);
-  set_draw(&draw_map);
+  set_draw(&draw_mini_map);
   set_getkey(&readkey);
 
   allegro_init();
@@ -99,6 +101,22 @@ Glyph glyph_for(char c){
   return g;
 }
 
+
+int color_for(char c){
+  switch(c){
+  case '.':
+    return makecol(0,128,0);
+  case '+':
+    return makecol(0,192,0);
+  case '-':
+    return makecol(0,0,192);
+  case 5:
+    return makecol(0,255,0);
+  default:
+    return makecol(192, 192, 192);
+  }
+}
+
 void draw_map(Map* map, int src_x, int src_y, int w, int h){
   int x,y;
 
@@ -116,6 +134,27 @@ void draw_map(Map* map, int src_x, int src_y, int w, int h){
 			x*16, y*16,
 			glyph.fg,
 			glyph.bg);
+    }
+  }
+}
+
+void draw_mini_map(Map* map, int src_x, int src_y, int w, int h){
+  int x,y;
+
+  if(!w){w = map->w;}
+  if(!h){h = map->h;}
+
+  for(y = 0; y < h; y++){
+    for(x = 0; x < w; x++){
+      char chr = map->data[(x + src_x) +
+			   (y + src_y) * map->w];
+
+      int color = color_for(chr);
+
+      rect(screen,
+	   x*2, y*2,
+	   x*2+1, y*2+1,
+	   color);
     }
   }
 }
