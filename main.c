@@ -108,7 +108,7 @@ int color_for(char c){
   case '+':
     return makecol(0,192,0);
   case '#':
-    return makecol(192,192,192);
+    return makecol(128,128,128);
   case '-':
     return makecol(0,0,192);
   case 5:

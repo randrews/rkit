@@ -151,6 +151,13 @@ function generate_river(map, start_x, start_y, prob)
 end
 
 function smooth_terrain(map)
+   for x, y, c in map:each() do
+      if (c == "-" or c == "#") and math.random(3) == 1 then
+	 if map:adjacent(x, y, ".") > 0 then map:set(x, y, ".")
+	 elseif map:adjacent(x, y, "-") > 0 then map:set(x, y, "-") end
+      end
+   end
+
    for n=1, 4 do
       for x, y, c in map:each() do
 	 if map:adjacent(x, y, ".") > 4 then
@@ -171,7 +178,7 @@ function fractal_terrain(map)
 
    for y=0, 4 do
       for x=0, 4 do
-	 local c = ("---....#"):random()
+	 local c = ("---...##"):random()
 	 map:set(x*w/4-1, y*h/4-1, c)
 	 map:set(x*w/4, y*h/4-1, c)
 	 map:set(x*w/4-1, y*h/4, c)
@@ -232,7 +239,7 @@ for k=1,4 do
    m = smooth_terrain(m)
 
    local w, h = m:size()
-   for n=1,20 do
+   for n=1,(w/8) do
       local x, y
 
       repeat
