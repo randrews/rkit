@@ -152,10 +152,11 @@ void draw_mini_map(Map* map, int src_x, int src_y, int w, int h){
 
       int color = color_for(chr);
 
-      rect(screen,
-	   x*2, y*2,
-	   x*2+1, y*2+1,
-	   color);
+      /* rect(screen, */
+      /* 	   x*2, y*2, */
+      /* 	   x*2+1, y*2+1, */
+      /* 	   color); */
+      putpixel(screen, x, y, color);
     }
   }
 }

@@ -175,14 +175,15 @@ end
 
 function fractal_terrain(map)
    local w, h = map:size()
+   local r = w/64
 
-   for y=0, 4 do
-      for x=0, 4 do
+   for y=0, r do
+      for x=0, r do
 	 local c = ("---...##"):random()
-	 map:set(x*w/4-1, y*h/4-1, c)
-	 map:set(x*w/4, y*h/4-1, c)
-	 map:set(x*w/4-1, y*h/4, c)
-	 map:set(x*w/4, y*h/4, c)
+	 map:set(x*w/r-1, y*h/r-1, c)
+	 map:set(x*w/r, y*h/r-1, c)
+	 map:set(x*w/r-1, y*h/r, c)
+	 map:set(x*w/r, y*h/r, c)
       end
    end
 
@@ -226,15 +227,15 @@ function fractal_terrain(map)
 	     iter(x, y+h/2, w/2, h/2)
 	  end
 
-   for y=0, 3 do
-      for x=0, 3 do
-	 iter(x*w/4, y*h/4, w/4, h/4)
+   for y=0, (r-1) do
+      for x=0, (r-1) do
+	 iter(x*w/r, y*h/r, w/r, h/r)
       end
    end
 end
 
 for k=1,4 do
-   m = Map.new(256, 256)
+   m = Map.new(512, 512)
    fractal_terrain(m)
    m = smooth_terrain(m)
 
