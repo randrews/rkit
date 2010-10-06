@@ -101,13 +101,14 @@ Glyph glyph_for(char c){
   return g;
 }
 
-
 int color_for(char c){
   switch(c){
   case '.':
     return makecol(0,128,0);
   case '+':
     return makecol(0,192,0);
+  case '#':
+    return makecol(192,192,192);
   case '-':
     return makecol(0,0,192);
   case 5:

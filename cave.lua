@@ -94,6 +94,13 @@ mt.randomwalk =
 	     end      
    end
 
+string.random = function(str)
+		   local n = math.random(#str)
+		   return str:sub(n, n)
+		end
+
+--------------------------------------------------
+
 SPREAD, DEATH, ITER, PROB = 3, 4, 4, 3
 
 math.randomseed( os.time() )
@@ -103,66 +110,138 @@ function generate_forests(m)
 
    for x, y, c in m:each() do
       m2:set(x, y, c) -- Replace me with a clone function
-      if c ~= "-" and math.random(PROB)==1 then
+      if c == "." and math.random(PROB)==1 then
 	 m:set(x,y,"+")
       end
    end
 
    for k=1,ITER do
       for x, y, c in m:each() do
-	 if c ~= "-" then
-	    if c=="+" and m:adjacent(x,y,"+") < DEATH then
-	       m2:set(x,y,".")
-	    elseif c == "." and m:adjacent(x,y,"+") > SPREAD then
-	       m2:set(x,y,"+")	 
-	    else
-	       m2:set(x,y,c)
-	    end
+	 if c=="+" and m:adjacent(x,y,"+") < DEATH then
+	    m2:set(x,y,".")
+	 elseif c == "." and m:adjacent(x,y,"+") > SPREAD then
+	    m2:set(x,y,"+")	 
+	 else
+	    m2:set(x,y,c)
 	 end
       end
 
       m2, m = m, m2
    end
-
-   -- Mark everything surrounded by + with #
-   for x,y,c in m:each() do
-      if c=="+" and m:adjacent(x,y,"+")==8 then m2:set(x,y,"#")
-      else m2:set(x, y, m:get(x,y)) end
-   end
-
-   -- Mark everything surrounded by # with club
-   for x,y,c in m2:each() do
-      if c=="#" and m2:adjacent(x,y,"#")==8 then
-	 m:set(x,y,string.char(5))
-      end
-   end
 end
 
 function generate_river(map, start_x, start_y, prob)
    local w, h = map:size()
-   local max = start_x
 
    local proximity = function(x,y)
-			return (map:get(x, y) ~= "-" and
-			     map:adjacent(x, y, "-") < 3 and
-			     x >= max)
+			return (map:get(x, y) ~= "~" and
+			     map:get(x, y) ~= "#" and
+			  map:adjacent(x, y, "~") < 3)
 		     end
 
    for x,y in map:randomwalk(start_x, start_y, proximity, prob) do
-      if x > max then max = x end
-      map:set(x,y,"-")
+      if map:get(x,y) == "-" then break end
+      map:set(x,y,"~")
       if map:edge(x, y) then break end
-   end   
+   end
+
+   for x, y, c in map:each() do
+      if c == "~" then map:set(x, y, "-") end
+   end
+end
+
+function smooth_terrain(map)
+   for n=1, 4 do
+      for x, y, c in map:each() do
+	 if map:adjacent(x, y, ".") > 4 then
+	    map:set(x, y, ".")
+	 elseif map:adjacent(x, y, "-") > 4 then
+	    map:set(x, y, "-")
+	 else
+	    map:set(x, y, c)
+	 end
+      end
+   end
+
+   return map
+end
+
+function fractal_terrain(map)
+   local w, h = map:size()
+
+   for y=0, 4 do
+      for x=0, 4 do
+	 local c = ("---....#"):random()
+	 map:set(x*w/4-1, y*h/4-1, c)
+	 map:set(x*w/4, y*h/4-1, c)
+	 map:set(x*w/4-1, y*h/4, c)
+	 map:set(x*w/4, y*h/4, c)
+      end
+   end
+
+   local iter
+   iter = function(x, y, w, h)
+	     if w == 2 then return end
+	     local c = "."
+
+	     -- north
+	     c = (map:get(x,y) .. map:get(x+w-1, y)):random()
+	     map:set(x+w/2-1, y, c)
+	     map:set(x+w/2, y, c)
+
+	     -- south
+	     c = (map:get(x,y+h-1) .. map:get(x+w-1, y+h-1)):random()
+	     map:set(x+w/2-1, y+h-1, c)
+	     map:set(x+w/2, y+h-1, c)
+
+	     -- west
+	     c = (map:get(x,y) .. map:get(x, y+h-1)):random()
+	     map:set(x, y+h/2-1, c)
+	     map:set(x, y+h/2, c)
+
+	     -- east
+	     c = (map:get(x+w-1,y) .. map:get(x+w-1, y+h-1)):random()
+	     map:set(x+w-1, y+h/2-1, c)
+	     map:set(x+w-1, y+h/2, c)
+
+	     -- center
+	     c = (map:get(x,y) .. map:get(x+w-1, y+h-1))
+	     c = (c .. map:get(x, y+h-1) .. map:get(x+w-1, y)):random()
+	     map:set(x+w/2-1, y+h/2-1, c)
+	     map:set(x+w/2, y+h/2, c)
+
+	     map:set(x+w/2-1, y+h/2, c)
+	     map:set(x+w/2, y+h/2-1, c)
+
+	     iter(x, y, w/2, h/2)
+	     iter(x+w/2, y, w/2, h/2)
+	     iter(x+w/2, y+h/2, w/2, h/2)
+	     iter(x, y+h/2, w/2, h/2)
+	  end
+
+   for y=0, 3 do
+      for x=0, 3 do
+	 iter(x*w/4, y*h/4, w/4, h/4)
+      end
+   end
 end
 
 for k=1,4 do
    m = Map.new(256, 256)
-   for n=1,8 do
-      local w, h = m:size()
-      generate_river(m, 0, math.random(h/2)+h/4, "nees")
-      generate_river(m, 0, math.random(h/4), "ness")
-      generate_river(m, 0, math.random(h/4)+3*h/4, "nnes")
+   fractal_terrain(m)
+   m = smooth_terrain(m)
+
+   local w, h = m:size()
+   for n=1,20 do
+      local x, y
+
+      repeat
+	 x, y = math.random(w), math.random(h)
+      until m:get(x, y) == "." 
+
+      generate_river(m, x, y, "news")
    end
+
    generate_forests(m)
    m:draw()
    getkey()
