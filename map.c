@@ -15,9 +15,11 @@ int map_get(lua_State* L);
 int map_set(lua_State* L);
 int map_draw(lua_State* L);
 int map_getkey(lua_State* L);
+int map_draw_status(lua_State* L);
 
 void (*DRAW)(Map*,int,int,int,int) = NULL;
 int (*GETKEY)() = NULL;
+void (*DRAW_STATUS)(char*,int,int,int) = NULL;
 
 static const struct luaL_reg maplib [] = {
   {"new", newmap},
@@ -39,6 +41,9 @@ static const struct luaL_reg map_metatable [] = {
 int luaopen_map(lua_State *L){
   lua_pushcfunction(L, &map_getkey);
   lua_setglobal(L, "getkey");
+
+  lua_pushcfunction(L, &map_draw_status);
+  lua_setglobal(L, "draw_status");
 
   luaL_newmetatable(L, "Cave.Map");
 
@@ -62,8 +67,28 @@ void set_getkey(int (*getkey)()){
   GETKEY = getkey;
 }
 
+void set_draw_status(void (*draw_status)(char*,int,int,int)){
+  DRAW_STATUS = draw_status;
+}
+
 int map_getkey(lua_State* L){
   if(GETKEY){(*GETKEY)();}
+  return 0;
+}
+
+int map_draw_status(lua_State* L){
+  char *str = luaL_checkstring(L, 1);
+
+  int r=255, g=255, b=255;
+
+  if(lua_gettop(L) >= 4){
+    r = luaL_checkinteger(L, 2);
+    g = luaL_checkinteger(L, 3);
+    b = luaL_checkinteger(L, 4);
+  }
+
+  if(DRAW_STATUS){ (*DRAW_STATUS)(str, r, g, b); }
+
   return 0;
 }
 

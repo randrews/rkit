@@ -17,5 +17,6 @@ typedef struct{
 int luaopen_map(lua_State *L);
 void set_draw(void (*draw)(Map*,int,int,int,int));
 void set_getkey(int (*getkey)());
+void set_draw_status(void (*draw_status)(char*,int,int,int));
 
 #endif
