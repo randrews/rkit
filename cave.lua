@@ -108,6 +108,7 @@ math.randomseed( os.time() )
 function generate_forests(m)
    local m2 = Map.new(m:size())
 
+   status("Seeding forests")
    for x, y, c in m:each() do
       m2:set(x, y, c) -- Replace me with a clone function
       if c == "." and math.random(PROB)==1 then
@@ -116,6 +117,7 @@ function generate_forests(m)
    end
 
    for k=1,ITER do
+      status("Simulating forest growth")
       for x, y, c in m:each() do
 	 if c=="+" and m:adjacent(x,y,"+") < DEATH then
 	    m2:set(x,y,".")
@@ -131,6 +133,7 @@ function generate_forests(m)
 end
 
 function generate_river(map, start_x, start_y, prob)
+   status("Generating rivers")
    local w, h = map:size()
 
    local proximity = function(x,y)
@@ -151,6 +154,7 @@ function generate_river(map, start_x, start_y, prob)
 end
 
 function smooth_terrain(map)
+   status("Adding noise to fractal")
    for x, y, c in map:each() do
       if (c == "-" or c == "#") and math.random(3) == 1 then
 	 if map:adjacent(x, y, ".") > 0 then map:set(x, y, ".")
@@ -159,6 +163,7 @@ function smooth_terrain(map)
    end
 
    for n=1, 4 do
+      status("Smoothing terrain features")
       for x, y, c in map:each() do
 	 if map:adjacent(x, y, ".") > 4 then
 	    map:set(x, y, ".")
@@ -174,6 +179,7 @@ function smooth_terrain(map)
 end
 
 function fractal_terrain(map)
+   status("Drawing fractal terrain")
    local w, h = map:size()
    local r = w/64
 
@@ -234,13 +240,21 @@ function fractal_terrain(map)
    end
 end
 
+function status(str)
+   draw_status(str .. " (step " .. step_num .. " of " .. ")")
+   step_num = step_num + 1
+end
+
 for k=1,4 do
+   step_num = 1
    m = Map.new(512, 512)
    fractal_terrain(m)
    m = smooth_terrain(m)
 
    local w, h = m:size()
-   for n=1,(w/8) do
+   local rivers = (w/64) ^ 2
+
+   for n=1,rivers do
       local x, y
 
       repeat
@@ -252,5 +266,7 @@ for k=1,4 do
 
    generate_forests(m)
    m:draw()
+
+   -- draw_status("Finished map " .. k, 255, 64, 64)
    getkey()
 end
