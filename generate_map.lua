@@ -18,7 +18,7 @@ function generate_forests(m)
 	 if c=="+" and m:adjacent(x,y,"+") < DEATH then
 	    m2:set(x,y,".")
 	 elseif c == "." and m:adjacent(x,y,"+") > SPREAD then
-	    m2:set(x,y,"+")	 
+	    m2:set(x,y,"+")
 	 else
 	    m2:set(x,y,c)
 	 end
@@ -170,6 +170,47 @@ function place_towns(map)
    end
 end
 
+function place_roads(map)
+   local town_x, town_y
+
+   local neighbor_fn = map:neighbors()
+
+   local neighbors = function(current)
+			local ret = {}
+			local cells = neighbor_fn(unpack(current))
+
+			for i, cell in pairs(cells) do
+			   local c = map:get(unpack(cell))
+			   if c == "." or c == "^" or c == ":" then ret[cell] = 1 end
+			end
+
+			return ret
+		     end
+
+   local goal = function(cell)
+		   local x, y = unpack(cell)
+		   local c = map:get(x,y)
+		   return (x ~= town_x or y ~= town_y) and (c == "^" or c == ":")
+		end
+
+   for start_x, start_y, c in map:each() do
+      if c == "^" then
+	 status("Navigating roads")
+	 town_x, town_y = start_x, start_y
+
+	 local path = search(neighbors, {start_x, start_y}, goal)
+
+	 if path then
+	    for k, cell in pairs(path) do
+	       local x, y = unpack(cell)
+	       if map:get(x, y) ~= "^" then map:set(x, y, ":") end
+	    end
+	    m:draw()
+	 end
+      end
+   end
+end
+
 function generate_map()
    step_num = 1
    m = Map.new(512, 512)
@@ -191,6 +232,8 @@ function generate_map()
 
    generate_forests(m)
    place_towns(m)
+   m:draw()
+   place_roads(m)
 
    return m
 end
