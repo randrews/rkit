@@ -20,7 +20,7 @@ typedef struct{
 } Glyph;
 
 void draw_map(Map* map, int src_x, int src_y, int w, int h);
-void draw_status(char* status, int r, int g, int b);
+void draw_status(const char* status, int r, int g, int b);
 void draw_mini_map(Map* map, int src_x, int src_y, int w, int h);
 void make_glyph_bmps(BITMAP *font_bmp, BITMAP **glyphs, int w, int h);
 Glyph glyph_for(char c);
@@ -40,7 +40,7 @@ int main(int argc, char** argv){
 
   allegro_init();
   install_keyboard();
-  set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0);  
+  set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0);
 
   BITMAP *font_bmp = load_bitmap("Tahin-font.tga", NULL);
   glyph_bmps = malloc(256 * sizeof(BITMAP*));
@@ -124,22 +124,16 @@ int color_for(char c){
   }
 }
 
-void draw_status(char* status, int r, int g, int b){
-  int line_width = 800 / 16;
+void draw_status(const char* status, int r, int g, int b){
+  int line_width = 800 / 8; /* Number of chars that can fit on a line */
   int max = strlen(status);
-  if(max > line_width) { max = line_width; }
-
   int col = makecol(r,g,b);
 
-  int n;
-  for(n = 0; n < line_width; n++){
-    char c = ' ';
-    if(n < max) { c = status[n]; }
+  textout_ex(screen, font, status, 2, 590, col, 0);
 
-    draw_character_ex(screen,
-		      glyph_bmps[c],
-		      n*16, 600 - 16,
-		      col, 0);
+  /* If there's space left, blank it out */
+  if(max < line_width) {
+    rectfill(screen, max*8+2, 590, 800, 600, 0);
   }
 }
 
