@@ -215,7 +215,9 @@ function generate_map()
    step_num = 1
    m = Map.new(512, 512)
    fractal_terrain(m)
+   m:draw()
    m = smooth_terrain(m)
+   m:draw()
 
    local w, h = m:size()
    local rivers = (w/64) ^ 2
@@ -231,6 +233,7 @@ function generate_map()
    end
 
    generate_forests(m)
+   m:draw()
    place_towns(m)
    -- m:draw()
    -- place_roads(m)

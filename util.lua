@@ -100,7 +100,7 @@ string.random = function(str)
 		end
 
 function status(str)
-   draw_status(str .. " (step " .. step_num .. " of 75)")
+   draw_status(str .. " (step " .. step_num .. " of 139)")
    step_num = step_num + 1
 end
 
