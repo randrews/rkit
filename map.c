@@ -19,7 +19,7 @@ int map_draw_status(lua_State* L);
 
 void (*DRAW)(Map*,int,int,int,int) = NULL;
 int (*GETKEY)() = NULL;
-void (*DRAW_STATUS)(char*,int,int,int) = NULL;
+void (*DRAW_STATUS)(const char*,int,int,int) = NULL;
 
 static const struct luaL_reg maplib [] = {
   {"new", newmap},
@@ -67,7 +67,7 @@ void set_getkey(int (*getkey)()){
   GETKEY = getkey;
 }
 
-void set_draw_status(void (*draw_status)(char*,int,int,int)){
+void set_draw_status(void (*draw_status)(const char*,int,int,int)){
   DRAW_STATUS = draw_status;
 }
 
@@ -77,7 +77,7 @@ int map_getkey(lua_State* L){
 }
 
 int map_draw_status(lua_State* L){
-  char *str = luaL_checkstring(L, 1);
+  const char *str = luaL_checkstring(L, 1);
 
   int r=255, g=255, b=255;
 
