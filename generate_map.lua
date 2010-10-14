@@ -232,8 +232,8 @@ function generate_map()
 
    generate_forests(m)
    place_towns(m)
-   m:draw()
-   place_roads(m)
+   -- m:draw()
+   -- place_roads(m)
 
    return m
 end
