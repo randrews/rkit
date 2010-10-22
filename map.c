@@ -72,8 +72,17 @@ void set_draw_status(void (*draw_status)(const char*,int,int,int)){
 }
 
 int map_getkey(lua_State* L){
-  if(GETKEY){(*GETKEY)();}
-  return 0;
+  if(GETKEY){
+	int code = (*GETKEY)();
+	char chr = code & 0xff; /* Low byte is ASCII */
+	int scan = code >> 8; /* High byte is the scancode */
+
+	lua_pushlstring(L, &chr, 1);
+	lua_pushnumber(L, scan);
+	return 2;
+  } else {
+	return 0;
+  }
 }
 
 int map_draw_status(lua_State* L){
