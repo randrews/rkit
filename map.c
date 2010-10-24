@@ -1,4 +1,4 @@
-#include "map.h"
+#include "cave.h"
 
 int newmap(lua_State* L);
 Map* checkmap(lua_State *L);
