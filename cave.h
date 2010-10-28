@@ -34,6 +34,8 @@ Map* pushmap(lua_State *L, int w, int h);
 int luaopen_save(lua_State *L);
 
 /* drawing.c */
+int luaopen_drawing(lua_State *L);
+
 void init_drawing();
 void close_drawing();
 void draw_map(Map* map, int src_x, int src_y, int w, int h);

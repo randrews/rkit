@@ -7,7 +7,8 @@ int main(int argc, char** argv){
   luaL_openlibs(L);
   luaopen_map(L);
   luaopen_save(L);
-  set_draw(&draw_mini_map);
+  luaopen_drawing(L);
+  set_draw(&draw_map);
   set_getkey(&readkey);
   set_draw_status(&draw_status);
 
