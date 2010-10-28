@@ -23,12 +23,19 @@ if not m then
    Savegame.save("test.cave", m)
 end
 
-if m then
-   m:draw()
-   getkey()
-end
+player_x, player_y = start_location(m)
 
--- -- player_x, player_y = start_location(m)
+w = 31
+h = 31
+m:draw(player_x - (w-1)/2,
+	   player_y - (h-1)/2,
+	   w, h)
+
+Drawing.draw_glyph("@",
+			 (w-1)/2,
+			 (h-1)/2)
+
+getkey()
 
 -- k, s = getkey()
 
