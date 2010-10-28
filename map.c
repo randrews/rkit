@@ -1,7 +1,6 @@
 #include "cave.h"
 
 int newmap(lua_State* L);
-Map* checkmap(lua_State *L);
 int map_size(lua_State *L);
 int map_adjacent(lua_State *L);
 int adjacent(Map* map, int x, int y, char c);
@@ -102,7 +101,7 @@ int map_draw_status(lua_State* L){
 }
 
 int map_draw(lua_State* L){
-  Map* map = checkmap(L);
+  Map* map = checkmap(L, 1);
 
   int x,y,w,h;
 
@@ -124,7 +123,7 @@ int map_draw(lua_State* L){
 }
 
 int map_get(lua_State* L){
-  Map* map = checkmap(L);
+  Map* map = checkmap(L, 1);
   int x = luaL_checkinteger(L, 2);
   int y = luaL_checkinteger(L, 3);
 
@@ -138,7 +137,7 @@ int map_get(lua_State* L){
 }
 
 int map_set(lua_State* L){
-  Map* map = checkmap(L);
+  Map* map = checkmap(L, 1);
   int x = luaL_checkinteger(L, 2);
   int y = luaL_checkinteger(L, 3);
   const char* v = luaL_checkstring(L, 4);
@@ -155,7 +154,7 @@ int map_set(lua_State* L){
 }
 
 int map_each(lua_State* L){
-  Map* map = checkmap(L);
+  Map* map = checkmap(L, 1);
   if(lua_gettop(L) >= 5) {
     /* range iteration */
     int x = luaL_checkinteger(L, 2);
@@ -176,7 +175,7 @@ int map_each(lua_State* L){
 }
 
 int map_each_range_helper(lua_State* L){
-  Map* map = checkmap(L);
+  Map* map = checkmap(L, 1);
   int x = lua_tonumber(L, lua_upvalueindex(1));
   int y = lua_tonumber(L, lua_upvalueindex(2));
   int w = lua_tonumber(L, lua_upvalueindex(3));
@@ -203,7 +202,7 @@ int map_each_range_helper(lua_State* L){
 }
 
 int map_each_helper(lua_State* L){
-  Map* map = checkmap(L);
+  Map* map = checkmap(L, 1);
   int n = lua_tonumber(L, lua_upvalueindex(1));
 
   if(n >= map->w * map->h){
@@ -222,13 +221,13 @@ int map_each_helper(lua_State* L){
 }
 
 int map_gc(lua_State* L){
-  Map* map = checkmap(L);
+  Map* map = checkmap(L, 1);
   free(map->data);
   return 0;
 }
 
 int map_inbounds(lua_State* L){
-  Map* map = checkmap(L);
+  Map* map = checkmap(L, 1);
   int x = luaL_checkint(L,2);
   int y = luaL_checkint(L,3);
 
@@ -244,7 +243,7 @@ int inbounds(Map* map, int x, int y){
 
 /* Takes coords and a string, returns the total of the adjacent cells that are any char in that string */
 int map_adjacent(lua_State *L){
-  Map* map = checkmap(L);
+  Map* map = checkmap(L, 1);
   int x = luaL_checkint(L,2);
   int y = luaL_checkint(L,3);
   const char* c = luaL_checkstring(L, 4);
@@ -282,15 +281,15 @@ int adjacent(Map* map, int x, int y, char c){
 
 /* Returns the width and height of a map */
 int map_size(lua_State *L){
-  Map* map = checkmap(L);
+  Map* map = checkmap(L, 1);
   lua_pushnumber(L, map->w);
   lua_pushnumber(L, map->h);
   return 2;
 }
 
-Map* checkmap(lua_State *L){
-  void *map = luaL_checkudata(L, 1, "Cave.Map");
-  luaL_argcheck(L, map != NULL, 1, "Map expected");
+Map* checkmap(lua_State *L, int index){
+  void *map = luaL_checkudata(L, index, "Cave.Map");
+  luaL_argcheck(L, map != NULL, index, "Map expected");
   return (Map*) map;
 }
 
@@ -298,6 +297,12 @@ int newmap(lua_State* L){
   int w = luaL_checkint(L, 1);
   int h = luaL_checkint(L, 2);
 
+  pushmap(L, w, h);
+
+  return 1;
+}
+
+Map* pushmap(lua_State *L, int w, int h){
   Map* map = (Map*) lua_newuserdata(L, sizeof(Map));
 
   map->w = w;
@@ -309,5 +314,5 @@ int newmap(lua_State* L){
   luaL_getmetatable(L, "Cave.Map");
   lua_setmetatable(L, -2);
 
-  return 1;
+  return map;
 }

@@ -6,6 +6,7 @@ int main(int argc, char** argv){
   lua_State *L = lua_open();   /* opens Lua */
   luaL_openlibs(L);
   luaopen_map(L);
+  luaopen_save(L);
   set_draw(&draw_mini_map);
   set_getkey(&readkey);
   set_draw_status(&draw_status);

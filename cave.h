@@ -26,6 +26,10 @@ void set_draw(void (*draw)(Map*,int,int,int,int));
 void set_getkey(int (*getkey)());
 void set_draw_status(void (*draw_status)(const char*,int,int,int));
 
+/* Lua interface stuff shared between libraries */
+Map* checkmap(lua_State *L, int index);
+Map* pushmap(lua_State *L, int w, int h);
+
 /* save.c */
 int luaopen_save(lua_State *L);
 
