@@ -1,5 +1,5 @@
 
-function generate_forests(m)
+function generate_forests(m, status)
    local m2 = Map.new(m:size())
 
    local SPREAD, DEATH, ITER, PROB = 3, 4, 4, 3
@@ -28,7 +28,7 @@ function generate_forests(m)
    end
 end
 
-function generate_river(map, start_x, start_y)
+function generate_river(map, start_x, start_y, status)
    status("Generating rivers")
    local w, h = map:size()
 
@@ -62,7 +62,7 @@ function generate_river(map, start_x, start_y)
    end
 end
 
-function smooth_terrain(map)
+function smooth_terrain(map, status)
    status("Adding noise to fractal")
    for x, y, c in map:each() do
       if (c == "-" or c == "#") and math.random(3) == 1 then
@@ -87,7 +87,7 @@ function smooth_terrain(map)
    return map
 end
 
-function fractal_terrain(map)
+function fractal_terrain(map, status)
    status("Drawing fractal terrain")
    local w, h = map:size()
    local r = w/64
@@ -149,7 +149,7 @@ function fractal_terrain(map)
    end
 end
 
-function place_towns(map)
+function place_towns(map, status)
    local w, h = map:size()
    local x, y
 
@@ -170,7 +170,7 @@ function place_towns(map)
    end
 end
 
-function place_roads(map)
+function place_roads(map, status)
    local town_x, town_y
 
    local neighbor_fn = map:neighbors()
@@ -211,11 +211,18 @@ function place_roads(map)
    end
 end
 
-function generate_map()
+-- status_fn is a function that's called to report on the progress of making the
+-- map, since it can take a little while
+function generate_map(status_fn)
+   -- If null is passed in, pass our guys a function that just ignores the string
+   if not status_fn then
+	  status_fn = function(str) end
+   end
+
    step_num = 1
    m = Map.new(512, 512)
-   fractal_terrain(m)
-   m = smooth_terrain(m)
+   fractal_terrain(m, status_fn)
+   m = smooth_terrain(m, status_fn)
 
    local w, h = m:size()
    local rivers = (w/64) ^ 2
@@ -227,11 +234,11 @@ function generate_map()
 		 x, y = math.random(w)-1, math.random(h)-1
       until m:get(x, y) == "." and not m:edge(x, y)
 
-      generate_river(m, x, y)
+      generate_river(m, x, y, status_fn)
    end
 
-   generate_forests(m)
-   place_towns(m)
+   generate_forests(m, status_fn)
+   place_towns(m, status_fn)
 
    return m
 end
