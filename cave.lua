@@ -16,13 +16,23 @@ function start_location(map)
    return x, y
 end
 
--- m = generate_map()
+m = Savegame.load("test.cave")
 
--- player_x, player_y = start_location(m)
-
-k, s = getkey()
-
-while k ~= "q" do
-   print(k, s)
-   k, s = getkey()
+if not m then
+   m = generate_map()
+   Savegame.save("test.cave", m)
 end
+
+if m then
+   m:draw()
+   getkey()
+end
+
+-- -- player_x, player_y = start_location(m)
+
+-- k, s = getkey()
+
+-- while k ~= "q" do
+--    print(k, s)
+--    k, s = getkey()
+-- end
