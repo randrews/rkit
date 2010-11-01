@@ -18,7 +18,7 @@ int main(int argc, char** argv){
 
   init_drawing();
 
-  char* code = "require('cave')";
+  char* code = "require('lua/cave')";
   error = luaL_loadbuffer(L, code, strlen(code), "line") || lua_pcall(L, 0, 0, 0);
 
   if(error){

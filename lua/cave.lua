@@ -1,6 +1,6 @@
-require("generate_map")
-require("util")
-require("search")
+require("lua/generate_map")
+require("lua/util")
+require("lua/search")
 
 -- Find a good place to start the player off
 function start_location(map)
