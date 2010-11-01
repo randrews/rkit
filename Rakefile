@@ -1,3 +1,10 @@
+require "rake/clean"
+
+CLEAN.include "*~"
+CLEAN.include "*.o"
+CLEAN.include "cave"
+CLEAN.include "test.cave"
+
 ENV["CC"] ||= "gcc"
 LIBS = "-llua -lncurses"
 SOURCES = Dir["*.c"]
