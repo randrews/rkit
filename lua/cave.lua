@@ -35,7 +35,7 @@ Drawing.draw_glyph("@",
 			 (w-1)/2,
 			 (h-1)/2)
 
-getkey()
+-- getkey()
 
 -- k, s = getkey()
 
