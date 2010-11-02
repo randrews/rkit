@@ -37,7 +37,8 @@ int luaopen_save(lua_State *L);
 /* Glyph* pushglyph(lua_State *L, int letter, int fg, int bg); */
 
 /* rkit.c */
-int luaopen_rkit(lua_State *L);
+int open_rkit(lua_State *L);
+void close_rkit();
 
 /* drawing.c */
 int luaopen_drawing(lua_State *L);
