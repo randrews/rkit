@@ -9,6 +9,59 @@ typedef struct {
 int loaded_count = 0;
 Tilesheet *loaded_sheets;
 
+int bitmap_count = 0;
+BITMAP **loaded_bmps;
+
+/*************************************************/
+/*** RKit standard bitmap functions **************/
+/*************************************************/
+
+int load_lua_bitmap(lua_State *L){
+  const char *path = luaL_checkstring(L, 1);
+
+  BITMAP *bmp = load_bitmap(path, NULL);
+  if(!bmp){
+	return luaL_error(L, "Failed to load bitmap %s", path);
+  }
+
+  /* Increase size of loaded_bmps by one */
+  BITMAP **new_loaded_bmps = malloc(sizeof(BITMAP*) * (bitmap_count + 1));
+  memcpy(new_loaded_bmps, loaded_bmps, sizeof(BITMAP*) * bitmap_count);
+  free(loaded_bmps);
+  loaded_bmps = new_loaded_bmps;
+  bitmap_count++;
+  loaded_bmps[bitmap_count - 1] = bmp;
+
+  lua_pushnumber(L, bitmap_count - 1);
+  return 1;
+}
+
+int draw_bitmap(lua_State *L){
+  int numargs = lua_gettop(L);
+
+  int bmp_index = luaL_checkinteger(L, 1);
+  int x = luaL_checkinteger(L, 2);
+  int y = luaL_checkinteger(L, 3);
+
+  int sx=0, sy=0;
+  if(numargs >= 4){ sx = luaL_checkinteger(L, 4); }
+  if(numargs >= 5){ sy = luaL_checkinteger(L, 5); }
+
+  if(bmp_index >= bitmap_count){
+	return luaL_error(L, "Invalid bitmap token %d", bmp_index);
+  }
+
+  BITMAP *bmp = loaded_bmps[bmp_index];
+
+  int w=bmp->w, h=bmp->h;
+  if(numargs >= 6){ w = luaL_checkinteger(L, 6); }
+  if(numargs >= 7){ h = luaL_checkinteger(L, 7); }
+
+  blit(bmp, screen, sx, sy, x, y, w, h);
+
+  return 0;
+}
+
 /*************************************************/
 /*** RKit tilesheet functions ********************/
 /*************************************************/
@@ -24,8 +77,11 @@ int draw_glyph(lua_State *L){
   if(lua_gettop(L) >= 5){ fg = luaL_checkinteger(L, 5); }
   if(lua_gettop(L) >= 6){ bg = luaL_checkinteger(L, 6); }
 
-  int tile_index;
+  if(ts_index >= loaded_count){
+	return luaL_error(L, "Invalid tilesheet token %d", ts_index);
+  }
 
+  int tile_index;
   if(lua_type(L, 2) == LUA_TSTRING){
     const char *c = luaL_checkstring(L, 2);
 	tile_index = (int)(*c);
@@ -103,6 +159,8 @@ int make_color(lua_State *L){
 /*************************************************/
 
 static const struct luaL_reg rkit_lib[] = {
+  {"load_bitmap", load_lua_bitmap},
+  {"draw_bitmap", draw_bitmap},
   {"load_tilesheet", load_tilesheet},
   {"color", make_color},
   {"draw_glyph", draw_glyph},
@@ -143,4 +201,12 @@ void close_rkit(){
   /* Free the (now emptied) list of sheets */
   free(loaded_sheets);
   loaded_count = 0;
+
+  /* Delete the list of loaded bitmaps */
+  for(n=0; n < bitmap_count; n++){
+	destroy_bitmap(loaded_bmps[n]);
+  }
+
+  /* ...And free it */
+  free(loaded_bmps);
 }
