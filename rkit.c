@@ -51,18 +51,15 @@ int load_tilesheet(lua_State *L){
 	height = luaL_checkinteger(L, 3);
   }
 
-  /* Increase size of loaded_sheets by one */
-  Tilesheet *new_loaded_sheets = malloc(sizeof(Tilesheet) * (loaded_count + 1));
-  memcpy(new_loaded_sheets, loaded_sheets, sizeof(Tilesheet) * loaded_count);
-  free(loaded_sheets);
-  loaded_sheets = new_loaded_sheets;
-  loaded_count++;
-
   /* Create and populate the new sheet */
   Tilesheet ts;
   ts.bmp = load_bitmap(path, NULL);
   ts.width = width;
   ts.height = height;
+
+  if(!ts.bmp){
+	return luaL_error(L, "Failed to load bitmap %s", path);
+  }
 
   int tiles_per_row = ts.bmp->w / width;
   int tiles_per_column = ts.bmp->h / height;
@@ -76,6 +73,13 @@ int load_tilesheet(lua_State *L){
 										n / tiles_per_row * height,
 										width, height);
   }
+
+  /* Increase size of loaded_sheets by one */
+  Tilesheet *new_loaded_sheets = malloc(sizeof(Tilesheet) * (loaded_count + 1));
+  memcpy(new_loaded_sheets, loaded_sheets, sizeof(Tilesheet) * loaded_count);
+  free(loaded_sheets);
+  loaded_sheets = new_loaded_sheets;
+  loaded_count++;
 
   /* Copy the new tilesheet into loaded_sheets */
   memcpy(loaded_sheets + loaded_count - 1, &ts, sizeof(Tilesheet));
