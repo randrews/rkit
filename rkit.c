@@ -162,29 +162,32 @@ int open_rkit(lua_State *L){
 /*** Closing the RKit functions ******************/
 /*************************************************/
 
+void free_tilesheet(Tilesheet *ts){
+	/* Find out how many tile bmps we have to kill */
+	int tiles_per_row = ts->bmp->w / ts->width;
+	int tiles_per_column = ts->bmp->h / ts->height;
+	int tile_count = tiles_per_row * tiles_per_column;
+
+	/* Destroy all tile bmps */
+	int i;
+	for(i = 0; i < tile_count; i++){
+		destroy_bitmap(ts->tile_bmps[i]);
+	}
+
+	/* Free the (now empty) list of tile bmps, and the main bmp */
+	free(ts->tile_bmps);
+	destroy_bitmap(ts->bmp);
+}
+
 void close_rkit(){
 	/* Loop over all loaded sheets */
 	Tilesheet **sheets = (Tilesheet**) alist_free(&loaded_sheets);
 
-	int n;
+	int n = 0;
 	while(sheets[n]){
-		Tilesheet *ts = sheets[n];
-
-		/* Find out how many tile bmps we have to kill */
-		int tiles_per_row = ts->bmp->w / ts->width;
-		int tiles_per_column = ts->bmp->h / ts->height;
-		int tile_count = tiles_per_row * tiles_per_column;
-
-		/* Destroy all tile bmps */
-		int i;
-		for(i = 0; i < tile_count; i++){
-			destroy_bitmap(ts->tile_bmps[i]);
-		}
-
-		/* Free the (now empty) list of tile bmps, and the main bmp */
-		free(ts->tile_bmps);
-		destroy_bitmap(ts->bmp);
-		free(ts);
+		free_tilesheet(sheets[n]);
+		free(sheets[n]);
+		n++;
 	}
 
 	/* Free the (now emptied) list of sheets */
