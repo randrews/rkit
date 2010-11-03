@@ -1,4 +1,4 @@
-#include "cave.h"
+#include "rkit.h"
 
 typedef struct {
 	BITMAP *bmp;

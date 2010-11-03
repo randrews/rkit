@@ -15,11 +15,6 @@ typedef struct{
 	int h;
 } Map;
 
-typedef struct{
-  BITMAP *letter;
-  int fg, bg;
-} Glyph;
-
 typedef struct Node{
 	char *key;
 	struct Node *next;
@@ -51,26 +46,6 @@ void set_draw_status(void (*draw_status)(const char*,int,int,int));
 Map* checkmap(lua_State *L, int index);
 Map* pushmap(lua_State *L, int w, int h);
 
-/* save.c */
-int luaopen_save(lua_State *L);
-
-/* /\* glyph.c *\/ */
-/* int luaopen_glyph(lua_State *L); */
-/* Glyph* checkglyph(lua_State *L, int index); */
-/* Glyph* pushglyph(lua_State *L, int letter, int fg, int bg); */
-
 /* rkit.c */
 int open_rkit(lua_State *L);
 void close_rkit();
-
-/* drawing.c */
-int luaopen_drawing(lua_State *L);
-
-void init_drawing();
-void close_drawing();
-void draw_map(Map* map, int src_x, int src_y, int w, int h);
-void draw_status(const char* status, int r, int g, int b);
-void draw_mini_map(Map* map, int src_x, int src_y, int w, int h);
-void make_glyph_bmps(BITMAP *font_bmp, BITMAP **glyphs, int w, int h);
-Glyph glyph_for(char c);
-int color_for(char c);

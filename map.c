@@ -1,4 +1,4 @@
-#include "cave.h"
+#include "rkit.h"
 
 int newmap(lua_State* L);
 int map_size(lua_State *L);

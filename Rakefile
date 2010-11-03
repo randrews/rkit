@@ -2,11 +2,10 @@ require "rake/clean"
 
 CLEAN.include "*~"
 CLEAN.include "*.o"
-CLEAN.include "cave"
-CLEAN.include "test.cave"
+CLEAN.include "rkit"
 
 ENV["CC"] ||= "gcc"
-LIBS = "-llua -lncurses"
+LIBS = "-llua"
 SOURCES = Dir["*.c"]
 OBJECTS = SOURCES.map{|s| s.ext(".o")}
 FLAGS = "-g -arch i386"
@@ -17,7 +16,7 @@ ALLEGRO_LIBS = `allegro-config --libs`
 ALLEGRO_FLAGS = `allegro-config --cflags`
 
 task :default => OBJECTS do
-    sh "#{ENV['CC']} #{FLAGS} -o cave #{OBJECTS.join(' ')} #{LIBS} #{ALLEGRO_LIBS}"
+    sh "#{ENV['CC']} #{FLAGS} -o rkit #{OBJECTS.join(' ')} #{LIBS} #{ALLEGRO_LIBS}"
 end
 
 rule ".o" => ".c" do |t|

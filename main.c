@@ -1,4 +1,4 @@
-#include "cave.h"
+#include "rkit.h"
 
 int main(int argc, char** argv){
 	char buff[256];
@@ -6,18 +6,11 @@ int main(int argc, char** argv){
 
 	luaL_openlibs(L);
 	luaopen_map(L);
-	/*   luaopen_save(L); */
 	open_rkit(L);
-
-	/*   set_draw(&draw_map); */
-	/*   set_getkey(&readkey); */
-	/*   set_draw_status(&draw_status); */
 
 	allegro_init();
 	install_keyboard();
 	set_gfx_mode(GFX_AUTODETECT_WINDOWED, 1024, 768, 0, 0);
-
-	init_drawing();
 
 	char* code = "require('lua/rkit')";
 	char* line = malloc(500);
