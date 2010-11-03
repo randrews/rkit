@@ -10,15 +10,38 @@
 #include <allegro.h>
 
 typedef struct{
-  char* data;
-  int w;
-  int h;
+	char* data;
+	int w;
+	int h;
 } Map;
 
 typedef struct{
   BITMAP *letter;
   int fg, bg;
 } Glyph;
+
+typedef struct Node{
+	char *key;
+	struct Node *next;
+	void *value;
+} Node;
+
+typedef struct{
+	Node *head, *last;
+} AList;
+
+/* alist.c */
+
+/* Frees all the keys, and returns a new array of the values.
+   Does NOT free the AList itself, or any of the values. */
+void** alist_free();
+
+/* Sets the value associated with a given key, and returns
+   the old value associated with that key, or null. */
+void* alist_put(AList *alist, const char *key, void *value);
+
+void* alist_get(AList *alist, const char *key);
+int alist_length(AList *alist);
 
 /* map.c */
 int luaopen_map(lua_State *L);
