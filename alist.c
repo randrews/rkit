@@ -42,7 +42,7 @@ void* alist_put(AList *alist, const char *key, void *value){
 		old_node->value = value;
 		return old_value;
 	} else {
-		char *key_copy = strcpy(malloc(strlen(key))+1, key);
+		char *key_copy = strcpy(malloc(strlen(key)+1), key);
 		Node *new_node = malloc(sizeof(Node));
 		new_node->value = value;
 		new_node->key = key_copy;

@@ -9,7 +9,7 @@ ENV["CC"] ||= "gcc"
 LIBS = "-llua -lncurses"
 SOURCES = Dir["*.c"]
 OBJECTS = SOURCES.map{|s| s.ext(".o")}
-FLAGS = "-arch i386"
+FLAGS = "-g -arch i386"
 
 OBJECTS.map{|o| task o => o.ext(".c")}
 

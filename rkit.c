@@ -199,8 +199,8 @@ void close_rkit(){
 	/* Delete the list of loaded bitmaps */
 	BITMAP **bmps = (BITMAP**) alist_free(&loaded_bmps);
 
-	/* n = 0; */
-	/* while(bmps[n]){ destroy_bitmap(bmps[n++]); } */
+	n = 0;
+	while(bmps[n]){ destroy_bitmap(bmps[n++]); }
 
-	/* free(bmps); */
+	free(bmps);
 }
