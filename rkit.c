@@ -6,9 +6,7 @@ typedef struct {
 	BITMAP **tile_bmps;
 } Tilesheet;
 
-int loaded_count = 0;
-Tilesheet *loaded_sheets;
-
+AList loaded_sheets;
 AList loaded_bmps;
 
 /*************************************************/
@@ -64,15 +62,16 @@ int draw_glyph(lua_State *L){
 	int fg = makecol(128,128,128);
 	int bg = -1;
 
-	int ts_index = luaL_checkinteger(L, 1);
+	const char *ts_name = luaL_checkstring(L, 1);
 	/* Skipping 2 ... */
 	int x = luaL_checkinteger(L, 3);
 	int y = luaL_checkinteger(L, 4);
 	if(lua_gettop(L) >= 5){ fg = luaL_checkinteger(L, 5); }
 	if(lua_gettop(L) >= 6){ bg = luaL_checkinteger(L, 6); }
 
-	if(ts_index >= loaded_count){
-		return luaL_error(L, "Invalid tilesheet token %d", ts_index);
+	Tilesheet* ts = (Tilesheet*) alist_get(&loaded_sheets, ts_name);
+	if(!ts){
+		return luaL_error(L, "Invalid tilesheet name %d", ts_name);
 	}
 
 	int tile_index;
@@ -83,7 +82,7 @@ int draw_glyph(lua_State *L){
 		tile_index = luaL_checkinteger(L, 2);
 	}
 
-	BITMAP *letter = loaded_sheets[ts_index].tile_bmps[tile_index];
+	BITMAP *letter = ts->tile_bmps[tile_index];
 
 	draw_character_ex(screen, letter,
 					  x, y,
@@ -102,40 +101,33 @@ int load_tilesheet(lua_State *L){
 	}
 
 	/* Create and populate the new sheet */
-	Tilesheet ts;
-	ts.bmp = load_bitmap(path, NULL);
-	ts.width = width;
-	ts.height = height;
+	Tilesheet *ts = malloc(sizeof(Tilesheet));
+	ts->bmp = load_bitmap(path, NULL);
+	ts->width = width;
+	ts->height = height;
 
-	if(!ts.bmp){
+	if(!ts->bmp){
 		return luaL_error(L, "Failed to load bitmap %s", path);
 	}
 
-	int tiles_per_row = ts.bmp->w / width;
-	int tiles_per_column = ts.bmp->h / height;
+	int tiles_per_row = ts->bmp->w / width;
+	int tiles_per_column = ts->bmp->h / height;
 	int tile_count = tiles_per_row * tiles_per_column;
-	ts.tile_bmps = malloc(tile_count * sizeof(BITMAP*));
+	ts->tile_bmps = malloc(tile_count * sizeof(BITMAP*));
 
 	int n;
 	for(n = 0; n < tile_count; n++){
-		ts.tile_bmps[n] = create_sub_bitmap(ts.bmp,
-											n % tiles_per_row * width,
-											n / tiles_per_row * height,
-											width, height);
+		ts->tile_bmps[n] = create_sub_bitmap(ts->bmp,
+											 n % tiles_per_row * width,
+											 n / tiles_per_row * height,
+											 width, height);
 	}
 
 	/* Increase size of loaded_sheets by one */
-	Tilesheet *new_loaded_sheets = malloc(sizeof(Tilesheet) * (loaded_count + 1));
-	memcpy(new_loaded_sheets, loaded_sheets, sizeof(Tilesheet) * loaded_count);
-	free(loaded_sheets);
-	loaded_sheets = new_loaded_sheets;
-	loaded_count++;
-
-	/* Copy the new tilesheet into loaded_sheets */
-	memcpy(loaded_sheets + loaded_count - 1, &ts, sizeof(Tilesheet));
+	alist_put(&loaded_sheets, path, ts);
 
 	/* Return the index of what we just loaded */
-	lua_pushnumber(L, loaded_count - 1);
+	lua_pushstring(L, path);
 	return 1;
 }
 
@@ -172,29 +164,31 @@ int open_rkit(lua_State *L){
 
 void close_rkit(){
 	/* Loop over all loaded sheets */
+	Tilesheet **sheets = (Tilesheet**) alist_free(&loaded_sheets);
+
 	int n;
-	for(n = 0; n < loaded_count; n++){
-		Tilesheet ts = loaded_sheets[n];
+	while(sheets[n]){
+		Tilesheet *ts = sheets[n];
 
 		/* Find out how many tile bmps we have to kill */
-		int tiles_per_row = ts.bmp->w / ts.width;
-		int tiles_per_column = ts.bmp->h / ts.height;
+		int tiles_per_row = ts->bmp->w / ts->width;
+		int tiles_per_column = ts->bmp->h / ts->height;
 		int tile_count = tiles_per_row * tiles_per_column;
 
 		/* Destroy all tile bmps */
 		int i;
 		for(i = 0; i < tile_count; i++){
-			destroy_bitmap(ts.tile_bmps[i]);
+			destroy_bitmap(ts->tile_bmps[i]);
 		}
 
 		/* Free the (now empty) list of tile bmps, and the main bmp */
-		free(ts.tile_bmps);
-		destroy_bitmap(ts.bmp);
+		free(ts->tile_bmps);
+		destroy_bitmap(ts->bmp);
+		free(ts);
 	}
 
 	/* Free the (now emptied) list of sheets */
-	free(loaded_sheets);
-	loaded_count = 0;
+	free(sheets);
 
 	/* Delete the list of loaded bitmaps */
 	BITMAP **bmps = (BITMAP**) alist_free(&loaded_bmps);
