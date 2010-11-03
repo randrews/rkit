@@ -145,6 +145,13 @@ int make_color(lua_State *L){
 /*** RKit input functions ************************/
 /*************************************************/
 
+/* A little about this:
+   This returns two values. One is the string keycode name
+   that Allegro gives us, which assumes the keyboard is Sholes
+   but provides readable names for the arrow keys, etc. The
+   second is the ASCII character, that takes keyboard layout
+   into account, but doesn't return useful values for non-
+   printable characters. */
 int rkit_readkey(lua_State *L){
 	int code = readkey();
 	char chr = code & 0xff; /* Low byte is ASCII */
