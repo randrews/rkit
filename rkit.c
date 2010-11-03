@@ -140,6 +140,21 @@ int make_color(lua_State *L){
 	return 1;
 }
 
+
+/*************************************************/
+/*** RKit input functions ************************/
+/*************************************************/
+
+int rkit_readkey(lua_State *L){
+	int code = readkey();
+	char chr = code & 0xff; /* Low byte is ASCII */
+	int scan = code >> 8; /* High byte is the scancode */
+	const char *name = scancode_to_name(scan);
+	lua_pushstring(L, name);
+	lua_pushlstring(L, &chr, 1);
+	return 2;
+}
+
 /*************************************************/
 /*** Loading the RKit functions ******************/
 /*************************************************/
@@ -150,6 +165,7 @@ static const struct luaL_reg rkit_lib[] = {
 	{"load_tilesheet", load_tilesheet},
 	{"color", make_color},
 	{"draw_glyph", draw_glyph},
+	{"readkey", rkit_readkey},
 	{NULL, NULL}
 };
 

@@ -38,6 +38,10 @@ void* alist_put(AList *alist, const char *key, void *value);
 void* alist_get(AList *alist, const char *key);
 int alist_length(AList *alist);
 
+/* input.c */
+/* int open_input(lua_State *L); */
+/* void close_input(); */
+
 /* map.c */
 int luaopen_map(lua_State *L);
 void set_draw(void (*draw)(Map*,int,int,int,int));
