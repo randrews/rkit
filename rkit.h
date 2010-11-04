@@ -38,10 +38,6 @@ void* alist_put(AList *alist, const char *key, void *value);
 void* alist_get(AList *alist, const char *key);
 int alist_length(AList *alist);
 
-/* input.c */
-/* int open_input(lua_State *L); */
-/* void close_input(); */
-
 /* map.c */
 int luaopen_map(lua_State *L);
 void set_draw(void (*draw)(Map*,int,int,int,int));
@@ -53,3 +49,4 @@ Map* pushmap(lua_State *L, int w, int h);
 /* rkit.c */
 int open_rkit(lua_State *L);
 void close_rkit();
+void rkit_on_keypress(int scancode); /* We let main.c set this to be the keyboard callback */

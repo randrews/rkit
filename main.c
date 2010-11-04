@@ -9,7 +9,11 @@ int main(int argc, char** argv){
 	open_rkit(L);
 
 	allegro_init();
+
 	install_keyboard();
+	keyboard_lowlevel_callback = rkit_on_keypress;
+	set_keyboard_rate(0, 0);
+
 	set_gfx_mode(GFX_AUTODETECT_WINDOWED, 1024, 768, 0, 0);
 
 	char* code = "require('lua/rkit')";

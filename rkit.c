@@ -145,6 +145,10 @@ int make_color(lua_State *L){
 /*** RKit input functions ************************/
 /*************************************************/
 
+int input_handler_set = 0; /* Nonzero if the last call to set_input_handler didn't pass nil */
+int active_handler; /* Index in the Lua registry for the active kbd handler */
+lua_State *input_target; /* The Lua state we'll send keyboard event notifications to */
+
 /* A little about this:
    This returns two values. One is the string keycode name
    that Allegro gives us, which assumes the keyboard is Sholes
@@ -162,6 +166,31 @@ int rkit_readkey(lua_State *L){
 	return 2;
 }
 
+int set_input_handler(lua_State *L){
+	input_handler_set = !(lua_isnoneornil(L, 1)); /* Check whether we set or cleared the handler */
+
+	/* If this is an invalid handler... */
+	if(input_handler_set && !lua_isfunction(L, 1)){ luaL_typerror(L, 1, "function"); }
+
+	active_handler = luaL_ref(L, LUA_REGISTRYINDEX); /* Shove this in the registry */
+	lua_pushboolean(L, input_handler_set);
+	return 1;
+}
+
+/* Allegro keypress handler */
+void rkit_on_keypress(int scancode){
+	int released = scancode & 0x80; /* zero if the key was pressed, nonzero if released */
+	if(!input_handler_set){ return; } /* Bail if there's no handler */
+	if(released){ scancode -= 0x80; } /* If released, subtract the flag, so we can get the scan name */
+
+	lua_rawgeti(input_target, LUA_REGISTRYINDEX, active_handler); /* Push the active handler */
+	lua_pushstring(input_target, scancode_to_name(scancode)); /* Push the arguments */
+	lua_pushboolean(input_target, !released);
+	lua_call(input_target, 2, 0); /* Call with two args, drop return values */
+}
+END_OF_FUNCTION(rkit_on_keypress)
+LOCK_FUNCTION(rkit_on_keypress)
+
 /*************************************************/
 /*** Loading the RKit functions ******************/
 /*************************************************/
@@ -173,10 +202,12 @@ static const struct luaL_reg rkit_lib[] = {
 	{"color", make_color},
 	{"draw_glyph", draw_glyph},
 	{"readkey", rkit_readkey},
+	{"set_input_handler", set_input_handler},
 	{NULL, NULL}
 };
 
 int open_rkit(lua_State *L){
+	input_target = L;
 	luaL_openlib(L, "RKit", rkit_lib, 0);
 	return 1;
 }

@@ -5,9 +5,19 @@ RKit.draw_bitmap(floor, 0, 0)
 RKit.draw_glyph(ts, "=", 50, 50)
 RKit.draw_glyph(ts, 65, 70, 50, RKit.color(255, 0, 0), RKit.color(100, 0, 0))
 
-key, letter = RKit.readkey()
+-- RKit.readkey()
+--     Blocks until a key is pressed, returns the key name and the ASCII value (if any)
+--     The key name is the same on all keyboards, and works for arrow keys, etc.
+--     The ASCII letter only works for printable chars, and takes keyboard layout (Dvorak)
+--     into account.
 
-while key ~= "ESC" do
-   print("["..key.."]", letter)
-   key, letter = RKit.readkey()
-end
+-- RKit.set_input_handler()
+--     Takes a function that is called whenever a key is pressed or released.
+--     The function takes two args: the first in the key name (like what readkey gives)
+--     The second is true for a key being pressed, false for released.
+
+RKit.set_input_handler(function(key, pressed)
+						  print(key, pressed)
+						  if key == "ESC" then RKit.set_input_handler(nil) end
+					   end)
+
