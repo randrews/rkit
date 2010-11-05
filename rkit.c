@@ -192,6 +192,18 @@ END_OF_FUNCTION(rkit_on_keypress)
 LOCK_FUNCTION(rkit_on_keypress)
 
 /*************************************************/
+/*** RKit timer functions ************************/
+/*************************************************/
+
+int rkit_timer_loop(lua_State *L){
+	while(1){
+		lua_pushvalue(L, 1);
+		lua_call(L, 0, 0);
+		sleep(1);
+	}
+}
+
+/*************************************************/
 /*** Loading the RKit functions ******************/
 /*************************************************/
 
@@ -203,6 +215,7 @@ static const struct luaL_reg rkit_lib[] = {
 	{"draw_glyph", draw_glyph},
 	{"readkey", rkit_readkey},
 	{"set_input_handler", set_input_handler},
+	{"timer_loop", rkit_timer_loop},
 	{NULL, NULL}
 };
 
