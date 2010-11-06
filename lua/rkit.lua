@@ -3,6 +3,7 @@ floor = RKit.load_bitmap("img/floor.tga")
 
 RKit.draw_bitmap(floor, 0, 0)
 RKit.draw_glyph(ts, "=", 50, 50)
+RKit.page_flip()
 RKit.draw_glyph(ts, 65, 70, 50, RKit.color(255, 0, 0), RKit.color(100, 0, 0))
 
 -- RKit.readkey()
@@ -16,10 +17,11 @@ RKit.draw_glyph(ts, 65, 70, 50, RKit.color(255, 0, 0), RKit.color(100, 0, 0))
 --     The function takes two args: the first in the key name (like what readkey gives)
 --     The second is true for a key being pressed, false for released.
 
--- RKit.set_input_handler(function(key, pressed)
--- 						  print(key, pressed)
--- 						  if key == "ESC" then RKit.set_input_handler(nil) end
--- 					   end)
+run = true
 
-RKit.set_input_handler(print)
-RKit.timer_loop(function() print("Hi") end)
+RKit.set_input_handler(function(key, pressed)
+						  print(key, pressed)
+						  if key == "ESC" then run = false end
+					   end)
+
+RKit.timer_loop(500, function() print("Hi") ; return run end)

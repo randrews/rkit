@@ -9,6 +9,9 @@ typedef struct {
 AList loaded_sheets;
 AList loaded_bmps;
 
+int active_page = 0;
+BITMAP* pages[2]; /* Screen bitmaps for double-buffering */
+
 /*************************************************/
 /*** RKit standard bitmap functions **************/
 /*************************************************/
@@ -49,8 +52,14 @@ int draw_bitmap(lua_State *L){
 	if(numargs >= 6){ w = luaL_checkinteger(L, 6); }
 	if(numargs >= 7){ h = luaL_checkinteger(L, 7); }
 
-	blit(bmp, screen, sx, sy, x, y, w, h);
+	blit(bmp, pages[active_page], sx, sy, x, y, w, h);
 
+	return 0;
+}
+
+int flip_page(lua_State *L){
+/* 	blit(pages[active_page], screen, 0, 0, 0, 0, 1024, 768); */
+	active_page = (active_page + 1) % 2;
 	return 0;
 }
 
@@ -84,7 +93,7 @@ int draw_glyph(lua_State *L){
 
 	BITMAP *letter = ts->tile_bmps[tile_index];
 
-	draw_character_ex(screen, letter,
+	draw_character_ex(pages[active_page], letter,
 					  x, y,
 					  fg, bg);
 
@@ -188,18 +197,23 @@ void rkit_on_keypress(int scancode){
 	lua_pushboolean(input_target, !released);
 	lua_call(input_target, 2, 0); /* Call with two args, drop return values */
 }
-END_OF_FUNCTION(rkit_on_keypress)
-LOCK_FUNCTION(rkit_on_keypress)
 
 /*************************************************/
 /*** RKit timer functions ************************/
 /*************************************************/
 
 int rkit_timer_loop(lua_State *L){
+	int delay = luaL_checkinteger(L, 1);
+
 	while(1){
-		lua_pushvalue(L, 1);
-		lua_call(L, 0, 0);
-		sleep(1);
+		lua_pushvalue(L, 2);
+		lua_call(L, 0, 1);
+		if(lua_isboolean(L, -1) &&
+		   !lua_toboolean(L, -1)){
+			break;
+		}
+		lua_pop(L, 1);
+		usleep(1000 * delay);
 	}
 }
 
@@ -210,6 +224,7 @@ int rkit_timer_loop(lua_State *L){
 static const struct luaL_reg rkit_lib[] = {
 	{"load_bitmap", load_lua_bitmap},
 	{"draw_bitmap", draw_bitmap},
+	{"flip_page", flip_page},
 	{"load_tilesheet", load_tilesheet},
 	{"color", make_color},
 	{"draw_glyph", draw_glyph},
@@ -222,6 +237,14 @@ static const struct luaL_reg rkit_lib[] = {
 int open_rkit(lua_State *L){
 	input_target = L;
 	luaL_openlib(L, "RKit", rkit_lib, 0);
+
+	/* Initialize the pages for page flipping */
+/* 	pages[0] = create_bitmap(1024, 768); */
+/* 	pages[1] = create_bitmap(1024, 768); */
+	pages[0] = screen;
+	pages[1] = screen;
+/* 	blit(pages[0], screen, 0, 0, 0, 0, 1024, 768); */
+
 	return 1;
 }
 
