@@ -7,20 +7,42 @@
 #include <lauxlib.h>
 #include <lualib.h>
 
+#ifdef OBJC
+
+#import <AppKit/AppKit.h>
+
+@interface RKitView : NSView {
+    /* Dependency injection. rkit.m (it'll have to be .m) will define
+       a function that draws the screen. We'll store a pointer to it here,
+       and when Cocoa wants to redraw, our drawRect method will call
+       that function. */
+    void (*redraw)(NSView*, NSRect);
+}
+
+-(void) drawRect: (NSRect) rect;
+
+@end
+
+#endif
+
+#ifndef OBJC
+typedef void* RKitView;
+#endif
+
 typedef struct{
-	char* data;
-	int w;
-	int h;
+    char* data;
+    int w;
+    int h;
 } Map;
 
 typedef struct Node{
-	char *key;
-	struct Node *next;
-	void *value;
+    char *key;
+    struct Node *next;
+    void *value;
 } Node;
 
 typedef struct{
-	Node *head, *last;
+    Node *head, *last;
 } AList;
 
 /* alist.c */

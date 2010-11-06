@@ -23,5 +23,5 @@ rule ".o" => ".c" do |t|
 end
 
 rule ".o" => ".m" do |t|
-    sh "#{ENV['CC']} #{FLAGS} -o #{t.name} -c #{t.source}"
+    sh "#{ENV['CC']} #{FLAGS} -o #{t.name} -c #{t.source} -D OBJC"
 end
