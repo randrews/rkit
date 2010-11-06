@@ -2,13 +2,10 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
-#include <pthread.h>
 
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
-
-#include <allegro.h>
 
 typedef struct{
 	char* data;
