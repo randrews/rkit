@@ -7,6 +7,8 @@ typedef struct {
 AList loaded_sheets;
 AList loaded_bmps;
 
+lua_State *event_target; /* The Lua state we'll send event notifications to, redraw and input */
+
 RKitView *rkit_view;
 NSWindow *window;
 
@@ -100,6 +102,10 @@ int load_tilesheet(lua_State *L){
 	return 1;
 }
 
+/*************************************************/
+/*** RKit color functions ************************/
+/*************************************************/
+
 int make_color(lua_State *L){
 	int r = luaL_checkinteger(L, 1);
 	int g = luaL_checkinteger(L, 2);
@@ -115,19 +121,25 @@ NSColor* color_from_int(int color){
 									 alpha: 1.0];
 }
 
-void redraw(NSRect rect){
-	NSColor *c = color_from_int(128 + (128 << 8) + (255 << 16));
+/*************************************************/
+/*** RKit drawing functions **********************/
+/*************************************************/
+
+int clear_screen(lua_State *L){
+	int color = (lua_gettop(L) == 0 ? 
+				 0 :
+				 luaL_checkinteger(L, 1));
+
+	NSColor *c = color_from_int(color);
 	[c setFill];
-	[[NSBezierPath bezierPathWithRect: rect] fill];
+	[[NSBezierPath bezierPathWithRect: NSMakeRect(0, 0, 1024, 768)] fill];
+
+	return 0;
 }
 
 /*************************************************/
 /*** RKit input functions ************************/
 /*************************************************/
-
-int input_handler_set = 0; /* Nonzero if the last call to set_input_handler didn't pass nil */
-int active_handler; /* Index in the Lua registry for the active kbd handler */
-lua_State *input_target; /* The Lua state we'll send keyboard event notifications to */
 
 /* A little about this:
    This returns two values. One is the string keycode name
@@ -140,15 +152,34 @@ int rkit_readkey(lua_State *L){
 	return 0;
 }
 
-int set_input_handler(lua_State *L){
-	input_handler_set = !(lua_isnoneornil(L, 1)); /* Check whether we set or cleared the handler */
+/*************************************************/
+/*** RKit event handler registration *************/
+/*************************************************/
+
+int input_handler_set = 0; /* Nonzero if the last call to set_input_handler didn't pass nil */
+int redraw_handler_set = 0; /* Nonzero if the last call to set_redraw_handler didn't pass nil */
+
+int active_input_handler; /* Index in the Lua registry for the active kbd handler */
+int active_redraw_handler; /* Index in the Lua registry for the active kbd handler */
+
+int set_handler(lua_State *L, int *handler){
+	int handler_set = !(lua_isnoneornil(L, 1)); /* Check whether we set or cleared the handler */
 
 	/* If this is an invalid handler... */
-	if(input_handler_set && !lua_isfunction(L, 1)){ luaL_typerror(L, 1, "function"); }
+	if(handler_set && !lua_isfunction(L, 1)){ luaL_typerror(L, 1, "function"); }
 
-	active_handler = luaL_ref(L, LUA_REGISTRYINDEX); /* Shove this in the registry */
-	lua_pushboolean(L, input_handler_set);
-	return 1;
+	*handler = luaL_ref(L, LUA_REGISTRYINDEX); /* Shove this in the registry */
+	return handler_set;
+}
+
+int set_input_handler(lua_State *L){
+	input_handler_set = set_handler(L, &active_input_handler);
+	return 0;
+}
+
+int set_redraw_handler(lua_State *L){
+	redraw_handler_set = set_handler(L, &active_redraw_handler);
+	return 0;
 }
 
 /*************************************************/
@@ -160,6 +191,18 @@ int rkit_timer_loop(lua_State *L){
 }
 
 /*************************************************/
+/*** RKit redraw hook ****************************/
+/*************************************************/
+
+void redraw(NSRect rect){
+	if(redraw_handler_set){
+		lua_pushinteger(event_target, active_redraw_handler);
+		lua_gettable(event_target, LUA_REGISTRYINDEX);
+		lua_call(event_target, 0, 0);
+	}
+}
+
+/*************************************************/
 /*** Loading the RKit functions ******************/
 /*************************************************/
 
@@ -167,16 +210,18 @@ static const struct luaL_reg rkit_lib[] = {
 	{"load_bitmap", load_lua_bitmap},
 	{"draw_bitmap", draw_bitmap},
 	{"load_tilesheet", load_tilesheet},
+	{"clear_screen", clear_screen},
 	{"color", make_color},
 	{"draw_glyph", draw_glyph},
 	{"readkey", rkit_readkey},
 	{"set_input_handler", set_input_handler},
+	{"set_redraw_handler", set_redraw_handler},
 	{"timer_loop", rkit_timer_loop},
 	{NULL, NULL}
 };
 
 int open_rkit(lua_State *L, RKitView *view, NSWindow *window_p){
-	input_target = L;
+	event_target = L;
 	window = window_p;
 	rkit_view = view;
 	[window retain];
