@@ -7,8 +7,10 @@
 #include <lauxlib.h>
 #include <lualib.h>
 
+/* Declare the interface of the RKitView. C files include this too,
+   so we'll wrap it in an ifdef, and only define that when compiling
+   .m files */
 #ifdef OBJC
-
 #import <AppKit/AppKit.h>
 
 @interface RKitView : NSView {
@@ -16,17 +18,18 @@
        a function that draws the screen. We'll store a pointer to it here,
        and when Cocoa wants to redraw, our drawRect method will call
        that function. */
-    void (*redraw)(NSView*, NSRect);
+    void (*redraw)(NSRect);
 }
 
 -(void) drawRect: (NSRect) rect;
+-(void) setRedraw: (void (*)(NSRect)) redraw_p;
 
 @end
-
-#endif
-
-#ifndef OBJC
-typedef void* RKitView;
+#else
+/* C files may still have to see RKitView in a prototype, so just tell
+   them in's a void* and be done with it. */
+typedef void RKitView;
+typedef void NSWindow;
 #endif
 
 typedef struct{
@@ -66,7 +69,7 @@ void set_draw_status(void (*draw_status)(const char*,int,int,int));
 Map* checkmap(lua_State *L, int index);
 Map* pushmap(lua_State *L, int w, int h);
 
-/* rkit.c */
-int open_rkit(lua_State *L);
+/* rkit.m */
+int open_rkit(lua_State *L, RKitView *view, NSWindow *window);
 void close_rkit();
 void rkit_on_keypress(int scancode); /* We let main.c set this to be the keyboard callback */

@@ -30,18 +30,26 @@ int main(int argc, char** argv){
 	RKitView* rkit_view = [[RKitView alloc] init];
 	[window setContentView: rkit_view];
 
-	[window setTitle: @"RKit"];
-	[window makeKeyAndOrderFront: NSApp];
-	[NSApp run];
-	[pool drain];
-
 	/*************************************************/
 	/*** Lua stuff ***********************************/
 	/*************************************************/
 
 	lua_State *L = lua_open();
+	luaL_openlibs(L);
+	open_rkit(L, rkit_view, window);
+
 	init_lua(L, "require('lua/rkit')");
 	/* lua_console(L); */
+
+
+	/*************************************************/
+	/*** Run the app *********************************/
+	/*************************************************/
+
+	[window setTitle: @"RKit"];
+	[window makeKeyAndOrderFront: NSApp];
+	[NSApp run];
+	[pool drain];
 
 	/*************************************************/
 	/*** Cleanup *************************************/
@@ -56,9 +64,6 @@ int main(int argc, char** argv){
 
 
 int init_lua(lua_State *L, char* code){
-	luaL_openlibs(L);
-	open_rkit(L);
-
 	int lua_error = luaL_loadbuffer(L, code, strlen(code), "line") || lua_pcall(L, 0, 0, 0);
 
 	if(lua_error){ show_lua_error(L); }

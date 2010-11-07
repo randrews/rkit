@@ -7,6 +7,9 @@ typedef struct {
 AList loaded_sheets;
 AList loaded_bmps;
 
+RKitView *rkit_view;
+NSWindow *window;
+
 /*************************************************/
 /*** RKit standard bitmap functions **************/
 /*************************************************/
@@ -101,11 +104,22 @@ int make_color(lua_State *L){
 	int r = luaL_checkinteger(L, 1);
 	int g = luaL_checkinteger(L, 2);
 	int b = luaL_checkinteger(L, 3);
-
-	lua_pushnumber(L, 0);
+	lua_pushnumber(L, r + (g << 8) + (b << 16));
 	return 1;
 }
 
+NSColor* color_from_int(int color){
+	return [NSColor colorWithCalibratedRed: (color & 0xff)/256.0
+									 green: ((color >> 8) & 0xff)/256.0
+									  blue: ((color >> 16) & 0xff)/256.0
+									 alpha: 1.0];
+}
+
+void redraw(NSRect rect){
+	NSColor *c = color_from_int(128 + (128 << 8) + (255 << 16));
+	[c setFill];
+	[[NSBezierPath bezierPathWithRect: rect] fill];
+}
 
 /*************************************************/
 /*** RKit input functions ************************/
@@ -161,8 +175,14 @@ static const struct luaL_reg rkit_lib[] = {
 	{NULL, NULL}
 };
 
-int open_rkit(lua_State *L){
+int open_rkit(lua_State *L, RKitView *view, NSWindow *window_p){
 	input_target = L;
+	window = window_p;
+	rkit_view = view;
+	[window retain];
+	[rkit_view retain];
+	[view setRedraw: redraw];
+
 	luaL_openlib(L, "RKit", rkit_lib, 0);
 	return 1;
 }
@@ -189,4 +209,7 @@ void close_rkit(){
 	free(sheets);
 
 	/* Delete the list of loaded bitmaps */
+
+	[rkit_view release];
+	[window release];
 }
