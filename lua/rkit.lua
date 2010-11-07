@@ -1,3 +1,5 @@
+RKit.set_title("RKit Demo")
+
 ts = RKit.load_tilesheet("img/Tahin-font.png", 16, 16)
 floor = RKit.load_bitmap("img/floor.png")
 

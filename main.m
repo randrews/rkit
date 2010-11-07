@@ -29,6 +29,7 @@ int main(int argc, char** argv){
 
 	RKitView* rkit_view = [[RKitView alloc] init];
 	[window setContentView: rkit_view];
+	[window setTitle: @"RKit"];
 
 	/*************************************************/
 	/*** Lua stuff ***********************************/
@@ -46,7 +47,6 @@ int main(int argc, char** argv){
 	/*** Run the app *********************************/
 	/*************************************************/
 
-	[window setTitle: @"RKit"];
 	[window makeKeyAndOrderFront: NSApp];
 	[NSApp run];
 	[pool drain];

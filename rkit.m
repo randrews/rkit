@@ -203,6 +203,12 @@ int clear_screen(lua_State *L){
 	return 0;
 }
 
+int set_title(lua_State *L){
+	const char *title = luaL_checkstring(L, 1);
+	[window setTitle: [NSString stringWithUTF8String: title]];
+	return 0;
+}
+
 /*************************************************/
 /*** RKit input functions ************************/
 /*************************************************/
@@ -277,6 +283,7 @@ static const struct luaL_reg rkit_lib[] = {
 	{"draw_bitmap", draw_bitmap},
 	{"load_tilesheet", load_tilesheet},
 	{"clear_screen", clear_screen},
+	{"set_title", set_title},
 	{"color", make_color},
 	{"draw_glyph", draw_glyph},
 	{"readkey", rkit_readkey},
