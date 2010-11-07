@@ -1,7 +1,16 @@
 #include "rkit.h"
 
+NSColor* color_from_int(int color);
+
 typedef struct {
 	int width, height;
+	NSImage *bmp;
+
+	/* We have to make a separate NSImage and draw a rect there,
+	   so we can composite it to the screen. So we store it and its rect,
+	   so we can avoid making one every draw_glyph. */
+	NSImage *bg_image;
+	NSRect bg_rect;
 } Tilesheet;
 
 AList loaded_sheets;
@@ -66,7 +75,7 @@ int draw_bitmap(lua_State *L){
 /*************************************************/
 
 int draw_glyph(lua_State *L){
-	int fg = 0; /* Default: gray */
+	int fg = 255 + (255 << 8) + (255 << 16); /* Default: white */
 	int bg = -1;
 
 	const char *ts_name = luaL_checkstring(L, 1);
@@ -77,8 +86,9 @@ int draw_glyph(lua_State *L){
 	if(lua_gettop(L) >= 6){ bg = luaL_checkinteger(L, 6); }
 
 	Tilesheet* ts = (Tilesheet*) alist_get(&loaded_sheets, ts_name);
-	return luaL_error(L, "Invalid tilesheet name %d", ts_name);
+	if(!ts){ return luaL_error(L, "Invalid tilesheet name %s", ts_name); }
 
+	/* Arg 2 is the tile index, which is non a one-liner to read. */
 	int tile_index;
 	if(lua_type(L, 2) == LUA_TSTRING){
 		const char *c = luaL_checkstring(L, 2);
@@ -87,8 +97,45 @@ int draw_glyph(lua_State *L){
 		tile_index = luaL_checkinteger(L, 2);
 	}
 
-	/* Blit here */
+	/* Figure out the coords we're blitting from on the tilesheet.
+	   These are Lua coordinates (top-left), we convert them below. */
+	int tiles_per_row = [ts->bmp size].width / ts->width;
+	int tile_x = (tile_index % tiles_per_row) * ts->width;
+	int tile_y = (tile_index / tiles_per_row) * ts->height;
 
+	/* Make rects to blit from and to */
+	NSRect src = NSMakeRect(tile_x,
+							[ts->bmp size].height - tile_y - ts->height,
+							ts->width, ts->height);
+
+	NSPoint dest = NSMakePoint(x,
+							   768 - y - ts->height);
+
+	NSRect dest_rect = NSMakeRect(dest.x, dest.y, ts->width, ts->height);
+
+	/* We have a background color, blit that first */
+	if(bg != -1){
+		NSColor *bg_color = color_from_int(bg);
+		[bg_color setFill];
+		[[NSBezierPath bezierPathWithRect: dest_rect] fill];
+	}
+
+	/* Double-blit the foreground char */
+	NSColor *fg_color = color_from_int(fg);
+	[ts->bg_image lockFocus];
+	[fg_color setFill];
+	[[NSBezierPath bezierPathWithRect: ts->bg_rect] fill];
+	[ts->bg_image unlockFocus];
+
+	[ts->bmp drawAtPoint: dest
+				fromRect: src
+			   operation: NSCompositeDestinationOut
+				fraction: 1.0];
+
+	[ts->bg_image drawAtPoint: dest
+					 fromRect: ts->bg_rect
+					operation: NSCompositeDestinationAtop
+					 fraction: 1.0];
 	return 0;
 }
 
@@ -106,16 +153,15 @@ int load_tilesheet(lua_State *L){
 	ts->width = width;
 	ts->height = height;
 
-	return luaL_error(L, "Failed to load bitmap %s", path);
+	NSString *ns_path = [NSString stringWithUTF8String: path];
+	ts->bmp = [[NSImage alloc] initWithContentsOfFile: ns_path];
 
-/* 	int tiles_per_row = ts->bmp->w / width; */
-/* 	int tiles_per_column = ts->bmp->h / height; */
-/* 	int tile_count = tiles_per_row * tiles_per_column; */
-/* 	ts->tile_bmps = malloc(tile_count * sizeof(BITMAP*)); */
+	ts->bg_rect = NSMakeRect(0, 0, ts->width, ts->height);
+	ts->bg_image = [[NSImage alloc] initWithSize: ts->bg_rect.size];
+
+	if(!ts->bmp){ return luaL_error(L, "Failed to load bitmap %s", path); }
 
 	alist_put(&loaded_sheets, path, ts);
-
-	/* Return the index of what we just loaded */
 	lua_pushstring(L, path);
 	return 1;
 }
@@ -254,16 +300,14 @@ int open_rkit(lua_State *L, RKitView *view, NSWindow *window_p){
 /*** Closing the RKit functions ******************/
 /*************************************************/
 
-void free_tilesheet(Tilesheet *ts){
-}
-
 void close_rkit(){
 	/* Loop over all loaded sheets */
 	Tilesheet **sheets = (Tilesheet**) alist_free(&loaded_sheets);
 
 	int n = 0;
 	while(sheets[n]){
-		free_tilesheet(sheets[n]);
+		[sheets[n]->bg_image release];
+		[sheets[n]->bmp release];
 		free(sheets[n]);
 		n++;
 	}

@@ -1,9 +1,7 @@
--- ts = RKit.load_tilesheet("img/Tahin-font.tga", 16, 16)
+ts = RKit.load_tilesheet("img/Tahin-font.png", 16, 16)
 floor = RKit.load_bitmap("img/floor.png")
 
 -- RKit.draw_bitmap(floor, 0, 0)
--- RKit.draw_glyph(ts, "=", 50, 50)
--- RKit.draw_glyph(ts, 65, 70, 50, RKit.color(255, 0, 0), RKit.color(100, 0, 0))
 
 -- RKit.readkey()
 --     Blocks until a key is pressed, returns the key name and the ASCII value (if any)
@@ -23,8 +21,11 @@ floor = RKit.load_bitmap("img/floor.png")
 
 RKit.set_redraw_handler(function(rect)
 						   RKit.clear_screen(RKit.color(128,128,0))
-						   -- RKit.draw_bitmap(floor, 30, 618, 0, 668, 100, 100)
+
 						   RKit.draw_bitmap(floor, 30, 50, 0, 0, 100, 100)
+
+						   RKit.draw_glyph(ts, "=", 50, 50)
+						   RKit.draw_glyph(ts, 65, 70, 50, RKit.color(255, 0, 0), RKit.color(100, 0, 0))
 						end)
 
 RKit.set_input_handler(print)
