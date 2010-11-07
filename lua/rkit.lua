@@ -23,6 +23,8 @@ floor = RKit.load_bitmap("img/floor.png")
 
 RKit.set_redraw_handler(function(rect)
 						   RKit.clear_screen(RKit.color(128,128,0))
+						   -- RKit.draw_bitmap(floor, 30, 618, 0, 668, 100, 100)
+						   RKit.draw_bitmap(floor, 30, 50, 0, 0, 100, 100)
 						end)
 
 RKit.set_input_handler(print)

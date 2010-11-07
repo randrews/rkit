@@ -39,13 +39,24 @@ int draw_bitmap(lua_State *L){
 	if(numargs >= 4){ sx = luaL_checkinteger(L, 4); }
 	if(numargs >= 5){ sy = luaL_checkinteger(L, 5); }
 
-	return luaL_error(L, "Invalid bitmap name %s", bmp_name);
+	NSImage* bmp = (NSImage*) alist_get(&loaded_bmps, bmp_name);
+	if(!bmp){ return luaL_error(L, "Invalid bitmap name %s", bmp_name); }
 
-	int w = 0, h = 0;
+	int w = [bmp size].width, h = [bmp size].height;
 	if(numargs >= 6){ w = luaL_checkinteger(L, 6); }
 	if(numargs >= 7){ h = luaL_checkinteger(L, 7); }
 
-	/* Blit here */
+	/* There are some tricky things here.
+	   We are taking from Lua a src top-left point and a dest top-left point,
+	   measured from the top left of the window, but Cocoa expects a src and
+	   dest bottom-left point, measured from the bottom left. So, we subtract
+	   the y value from the height of the whole region, to convert the origin
+	   of the coord system, then we subtract the height of the rect we have
+	   from that, to compensate for which corner it expects. */
+	[bmp drawAtPoint: NSMakePoint(x, 768 - y - h)
+			fromRect: NSMakeRect(sx, [bmp size].height - sy - h, w, h)
+		   operation: NSCompositeCopy
+			fraction: 1.0];
 
 	return 0;
 }
