@@ -1,5 +1,5 @@
 -- ts = RKit.load_tilesheet("img/Tahin-font.tga", 16, 16)
--- floor = RKit.load_bitmap("img/floor.tga")
+floor = RKit.load_bitmap("img/floor.png")
 
 -- RKit.draw_bitmap(floor, 0, 0)
 -- RKit.draw_glyph(ts, "=", 50, 50)

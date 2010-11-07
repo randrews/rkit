@@ -18,7 +18,14 @@ NSWindow *window;
 
 int load_lua_bitmap(lua_State *L){
 	const char *path = luaL_checkstring(L, 1);
-	return luaL_error(L, "Failed to load bitmap %s", path);
+	NSString *ns_path = [NSString stringWithUTF8String: path];
+	NSImage *bmp = [[NSImage alloc] initWithContentsOfFile: ns_path];
+
+	if(!bmp){ return luaL_error(L, "Failed to load bitmap %s", path); }
+
+	alist_put(&loaded_bmps, path, bmp);
+	lua_pushstring(L, path);
+	return 1;
 }
 
 int draw_bitmap(lua_State *L){
@@ -254,6 +261,10 @@ void close_rkit(){
 	free(sheets);
 
 	/* Delete the list of loaded bitmaps */
+	NSImage **bmps = (NSImage**) alist_free(&loaded_bmps);
+	n = 0;
+	while(bmps[n]){ [bmps[n++] release]; }
+	free(bmps);
 
 	[rkit_view release];
 	[window release];
