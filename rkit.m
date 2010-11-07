@@ -62,7 +62,8 @@ int draw_bitmap(lua_State *L){
 	   the y value from the height of the whole region, to convert the origin
 	   of the coord system, then we subtract the height of the rect we have
 	   from that, to compensate for which corner it expects. */
-	[bmp drawAtPoint: NSMakePoint(x, 768 - y - h)
+	int screen_h = [rkit_view bounds].size.height;
+	[bmp drawAtPoint: NSMakePoint(x, screen_h - y - h)
 			fromRect: NSMakeRect(sx, [bmp size].height - sy - h, w, h)
 		   operation: NSCompositeCopy
 			fraction: 1.0];
@@ -108,8 +109,9 @@ int draw_glyph(lua_State *L){
 							[ts->bmp size].height - tile_y - ts->height,
 							ts->width, ts->height);
 
+	int screen_h = [rkit_view bounds].size.height;
 	NSPoint dest = NSMakePoint(x,
-							   768 - y - ts->height);
+							   screen_h - y - ts->height);
 
 	NSRect dest_rect = NSMakeRect(dest.x, dest.y, ts->width, ts->height);
 
@@ -190,13 +192,13 @@ NSColor* color_from_int(int color){
 /*************************************************/
 
 int clear_screen(lua_State *L){
-	int color = (lua_gettop(L) == 0 ? 
+	int color = (lua_gettop(L) == 0 ?
 				 0 :
 				 luaL_checkinteger(L, 1));
 
 	NSColor *c = color_from_int(color);
 	[c setFill];
-	[[NSBezierPath bezierPathWithRect: NSMakeRect(0, 0, 1024, 768)] fill];
+	[[NSBezierPath bezierPathWithRect: [rkit_view bounds]] fill];
 
 	return 0;
 }
