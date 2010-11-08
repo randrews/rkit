@@ -19,7 +19,7 @@
        and when Cocoa wants to redraw, our drawRect method will call
        that function. */
     void (*redraw)(NSRect);
-    void (*keydown)();
+    void (*keydown)(const char*,int);
 }
 
 -(void) drawRect: (NSRect) rect;
@@ -27,7 +27,7 @@
 
 -(BOOL) acceptsFirstResponder;
 -(void) keyDown: (NSEvent*) event;
--(void) setKeydown: (void (*)()) keydown_p;
+-(void) setKeydown: (void (*)(const char*,int)) keydown_p;
 
 @end
 #else

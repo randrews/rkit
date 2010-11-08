@@ -21,10 +21,13 @@
 -(BOOL) acceptsFirstResponder { return YES; }
 
 -(void) keyDown: (NSEvent*) event {
-	NSLog(@"Fnar: %@", event);
+	if(keydown){
+		keydown([[event characters] UTF8String],
+				[event keyCode]);
+	}
 }
 
--(void) setKeydown: (void (*)()) keydown_p {
+-(void) setKeydown: (void (*)(const char*,int)) keydown_p {
 	keydown = keydown_p;
 }
 

@@ -5,12 +5,6 @@ floor = RKit.load_bitmap("img/floor.png")
 
 -- RKit.draw_bitmap(floor, 0, 0)
 
--- RKit.readkey()
---     Blocks until a key is pressed, returns the key name and the ASCII value (if any)
---     The key name is the same on all keyboards, and works for arrow keys, etc.
---     The ASCII letter only works for printable chars, and takes keyboard layout (Dvorak)
---     into account.
-
 -- RKit.set_input_handler()
 --     Takes a function that is called whenever a key is pressed or released.
 --     The function takes two args: the first in the key name (like what readkey gives)

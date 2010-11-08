@@ -210,21 +210,6 @@ int set_title(lua_State *L){
 }
 
 /*************************************************/
-/*** RKit input functions ************************/
-/*************************************************/
-
-/* A little about this:
-   This returns two values. One is the string keycode name
-   that Allegro gives us, which assumes the keyboard is Sholes
-   but provides readable names for the arrow keys, etc. The
-   second is the ASCII character, that takes keyboard layout
-   into account, but doesn't return useful values for non-
-   printable characters. */
-int rkit_readkey(lua_State *L){
-	return 0;
-}
-
-/*************************************************/
 /*** RKit event handler registration *************/
 /*************************************************/
 
@@ -275,6 +260,20 @@ void redraw(NSRect rect){
 }
 
 /*************************************************/
+/*** RKit input functions ************************/
+/*************************************************/
+
+void key_down(const char *letter, int key_code){
+	if(input_handler_set){
+		lua_pushinteger(event_target, active_input_handler);
+		lua_gettable(event_target, LUA_REGISTRYINDEX);
+		lua_pushstring(event_target, letter);
+		lua_pushinteger(event_target, key_code);
+		lua_call(event_target, 2, 0);
+	}
+}
+
+/*************************************************/
 /*** Loading the RKit functions ******************/
 /*************************************************/
 
@@ -286,7 +285,6 @@ static const struct luaL_reg rkit_lib[] = {
 	{"set_title", set_title},
 	{"color", make_color},
 	{"draw_glyph", draw_glyph},
-	{"readkey", rkit_readkey},
 	{"set_input_handler", set_input_handler},
 	{"set_redraw_handler", set_redraw_handler},
 	{"timer_loop", rkit_timer_loop},
@@ -300,6 +298,7 @@ int open_rkit(lua_State *L, RKitView *view, NSWindow *window_p){
 	[window retain];
 	[rkit_view retain];
 	[view setRedraw: redraw];
+	[view setKeydown: key_down];
 
 	luaL_openlib(L, "RKit", rkit_lib, 0);
 	return 1;
