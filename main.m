@@ -29,6 +29,7 @@ int main(int argc, char** argv){
 
 	RKitView* rkit_view = [[RKitView alloc] init];
 	[window setContentView: rkit_view];
+	[window makeFirstResponder: rkit_view];
 	[window setTitle: @"RKit"];
 
 	/*************************************************/
