@@ -19,15 +19,20 @@
        and when Cocoa wants to redraw, our drawRect method will call
        that function. */
     void (*redraw)(NSRect);
+    void (*keydown)();
 }
 
 -(void) drawRect: (NSRect) rect;
 -(void) setRedraw: (void (*)(NSRect)) redraw_p;
 
+-(BOOL) acceptsFirstResponder;
+-(void) keyDown: (NSEvent*) event;
+-(void) setKeydown: (void (*)()) keydown_p;
+
 @end
 #else
 /* C files may still have to see RKitView in a prototype, so just tell
-   them in's a void* and be done with it. */
+   them it's a void* and be done with it. */
 typedef void RKitView;
 typedef void NSWindow;
 #endif
