@@ -20,6 +20,7 @@
        that function. */
     void (*redraw)(NSRect);
     void (*keydown)(const char*,int);
+    void (*timer_hook)(int);
 }
 
 -(void) drawRect: (NSRect) rect;
@@ -29,6 +30,8 @@
 -(void) keyDown: (NSEvent*) event;
 -(void) setKeydown: (void (*)(const char*,int)) keydown_p;
 
+-(void) callTimer: (NSTimer*) timer_fn_index;
+-(void) setTimerHook: (void (*)(int)) timer_hook_p;
 @end
 #else
 /* C files may still have to see RKitView in a prototype, so just tell
@@ -77,4 +80,3 @@ Map* pushmap(lua_State *L, int w, int h);
 /* rkit.m */
 int open_rkit(lua_State *L, RKitView *view, NSWindow *window);
 void close_rkit();
-void rkit_on_keypress(int scancode); /* We let main.c set this to be the keyboard callback */

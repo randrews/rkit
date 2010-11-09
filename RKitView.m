@@ -31,4 +31,17 @@
 	keydown = keydown_p;
 }
 
+/*************************************************/
+/*** Timer stuff *********************************/
+/*************************************************/
+
+-(void) callTimer: (NSTimer*) timer {
+	int *timer_num = (int*)[[timer userInfo] bytes];
+	if(timer_hook){ timer_hook(*timer_num); }
+}
+
+-(void) setTimerHook: (void (*)(int)) timer_hook_p {
+	timer_hook = timer_hook_p;
+}
+
 @end
