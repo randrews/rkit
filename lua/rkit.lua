@@ -29,6 +29,9 @@ RKit.set_input_handler(print)
 RKit.set_redraw_handler(function()
 						   RKit.draw_bitmap(floor, 0, 0)
 
+						   draw_grid(src_grid, 100, 160)
+						   draw_grid(dest_grid, 420, 160)
+
 						   -- RKit.draw_glyph(ts, "=", 50, 50)
 						   -- RKit.draw_glyph(ts, 65, 70, 50, RKit.color(255, 0, 0), RKit.color(100, 0, 0))
 						end)
@@ -46,3 +49,27 @@ RKit.redraw()
 --     (or just whenever you're ready for them to stop).
 
 RKit.create_timer(function() print("Hi") end, 2.0)
+
+math.randomseed(os.time())
+
+src_grid = {}
+dest_grid = {}
+
+for n=1, 36 do
+   src_grid[n] = math.random(3)
+   dest_grid[n] = math.random(3)
+end
+
+function draw_grid(grid, left, top)
+   for n, v in ipairs(grid) do
+	  local x = (n - 1) % 6 * 20 + left
+	  local y = math.floor((n - 1) / 6) * 20 + top
+
+	  local cell = "."
+	  if v == 1 then cell = 176
+	  elseif v == 2 then cell = 177
+	  elseif v == 3 then cell = 219 end
+
+	  RKit.draw_glyph(ts, cell, x, y, 0)
+   end
+end
