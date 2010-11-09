@@ -243,8 +243,42 @@ int set_redraw_handler(lua_State *L){
 /*** RKit timer functions ************************/
 /*************************************************/
 
-int rkit_timer_loop(lua_State *L){
+int create_timer(lua_State *L){
+	if(!lua_isfunction(L, 1)){ luaL_typerror(L, 1, "function"); }
+	double delay = (double)(luaL_checknumber(L, 2));
+
+	lua_pushvalue(L, 1);
+	int timer_fn_index = luaL_ref(L, LUA_REGISTRYINDEX);
+
+	NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval: delay
+													  target: rkit_view
+													selector: @selector(callTimer:)
+													userInfo: [NSData dataWithBytes: &timer_fn_index
+																			 length: sizeof(int)]
+													 repeats: YES];
+	[timer retain];
+
+	lua_pushlightuserdata(L, timer);
+	return 1;
+}
+
+int stop_timer(lua_State *L){
+	if(!lua_islightuserdata(L, 1)){ luaL_typerror(L, 1, "timer"); }
+
+	NSTimer *timer = (NSTimer*) lua_touserdata(L, 1);
+	int timer_idx = *((int*)[[timer userInfo] bytes]);
+
+	[timer invalidate];
+	[timer release];
+	luaL_unref(L, LUA_REGISTRYINDEX, timer_idx);
+
 	return 0;
+}
+
+void rkit_timer_hook(int timer_fn){
+	lua_pushinteger(event_target, timer_fn);
+	lua_gettable(event_target, LUA_REGISTRYINDEX);
+	lua_call(event_target, 0, 0);
 }
 
 /*************************************************/
@@ -287,7 +321,8 @@ static const struct luaL_reg rkit_lib[] = {
 	{"draw_glyph", draw_glyph},
 	{"set_input_handler", set_input_handler},
 	{"set_redraw_handler", set_redraw_handler},
-	{"timer_loop", rkit_timer_loop},
+	{"create_timer", create_timer},
+	{"stop_timer", stop_timer},
 	{NULL, NULL}
 };
 
@@ -299,6 +334,7 @@ int open_rkit(lua_State *L, RKitView *view, NSWindow *window_p){
 	[rkit_view retain];
 	[view setRedraw: redraw];
 	[view setKeydown: key_down];
+	[view setTimerHook: rkit_timer_hook];
 
 	luaL_openlib(L, "RKit", rkit_lib, 0);
 	return 1;

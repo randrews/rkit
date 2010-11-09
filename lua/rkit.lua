@@ -25,4 +25,16 @@ RKit.set_redraw_handler(function(rect)
 						end)
 
 RKit.set_input_handler(print)
-RKit.timer_loop(function() print("Hi") end)
+
+tim = nil
+count = 0
+tim = RKit.create_timer(function()
+						   count = count + 1
+
+						   if count > 5 then
+							  RKit.stop_timer(tim)
+						   else
+							  print("Hi", count)
+						   end
+						end,
+						0.1)
