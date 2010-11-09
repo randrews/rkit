@@ -27,8 +27,6 @@ RKit.set_input_handler(print)
 --     draw_glyph draws a tile on the window from a loaded tilesheet
 
 RKit.set_redraw_handler(function()
-						   -- RKit.clear_screen(RKit.color(128,128,0))
-
 						   RKit.draw_bitmap(floor, 0, 0)
 
 						   -- RKit.draw_glyph(ts, "=", 50, 50)
@@ -47,4 +45,4 @@ RKit.redraw()
 --     RKit.stop_timep(timer) on all timers to stop them before the end of the program
 --     (or just whenever you're ready for them to stop).
 
-RKit.create_timer(function() print("Hi", count) end, 2.0)
+RKit.create_timer(function() print("Hi") end, 2.0)

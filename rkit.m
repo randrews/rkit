@@ -33,23 +33,21 @@ int load_lua_bitmap(lua_State *L){
 	if(!bmp){ return luaL_error(L, "Failed to load bitmap %s", path); }
 
 	alist_put(&loaded_bmps, path, bmp);
-	lua_pushstring(L, path);
+	lua_pushlightuserdata(L, bmp);
 	return 1;
 }
 
 int draw_bitmap(lua_State *L){
 	int numargs = lua_gettop(L);
 
-	const char *bmp_name = luaL_checkstring(L, 1);
+	if(!lua_islightuserdata(L, 1)){ luaL_typerror(L, 1, "bitmap"); }
+	NSImage *bmp = lua_touserdata(L, 1);
 	int x = luaL_checkinteger(L, 2);
 	int y = luaL_checkinteger(L, 3);
 
 	int sx=0, sy=0;
 	if(numargs >= 4){ sx = luaL_checkinteger(L, 4); }
 	if(numargs >= 5){ sy = luaL_checkinteger(L, 5); }
-
-	NSImage* bmp = (NSImage*) alist_get(&loaded_bmps, bmp_name);
-	if(!bmp){ return luaL_error(L, "Invalid bitmap name %s", bmp_name); }
 
 	int w = [bmp size].width, h = [bmp size].height;
 	if(numargs >= 6){ w = luaL_checkinteger(L, 6); }
@@ -79,15 +77,13 @@ int draw_glyph(lua_State *L){
 	int fg = 255 + (255 << 8) + (255 << 16); /* Default: white */
 	int bg = -1;
 
-	const char *ts_name = luaL_checkstring(L, 1);
+	if(!lua_islightuserdata(L, 1)){ luaL_typerror(L, 1, "tilesheet"); }
+	Tilesheet *ts = lua_touserdata(L, 1);
 	/* Skipping 2 ... */
 	int x = luaL_checkinteger(L, 3);
 	int y = luaL_checkinteger(L, 4);
 	if(lua_gettop(L) >= 5){ fg = luaL_checkinteger(L, 5); }
 	if(lua_gettop(L) >= 6){ bg = luaL_checkinteger(L, 6); }
-
-	Tilesheet* ts = (Tilesheet*) alist_get(&loaded_sheets, ts_name);
-	if(!ts){ return luaL_error(L, "Invalid tilesheet name %s", ts_name); }
 
 	/* Arg 2 is the tile index, which is non a one-liner to read. */
 	int tile_index;
@@ -164,7 +160,7 @@ int load_tilesheet(lua_State *L){
 	if(!ts->bmp){ return luaL_error(L, "Failed to load bitmap %s", path); }
 
 	alist_put(&loaded_sheets, path, ts);
-	lua_pushstring(L, path);
+	lua_pushlightuserdata(L, ts);
 	return 1;
 }
 
