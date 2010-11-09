@@ -292,6 +292,11 @@ void redraw(NSRect rect){
 	}
 }
 
+int trigger_redraw(lua_State *L){
+	[rkit_view setNeedsDisplay: YES];
+	return 0;
+}
+
 /*************************************************/
 /*** RKit input functions ************************/
 /*************************************************/
@@ -352,6 +357,7 @@ static const struct luaL_reg rkit_lib[] = {
 	{"draw_glyph", draw_glyph},
 	{"set_input_handler", set_input_handler},
 	{"set_redraw_handler", set_redraw_handler},
+	{"redraw", trigger_redraw},
 	{"create_timer", create_timer},
 	{"stop_timer", stop_timer},
 	{"resizable", set_resizable},
