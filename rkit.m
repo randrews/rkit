@@ -253,8 +253,7 @@ int create_timer(lua_State *L){
 	NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval: delay
 													  target: rkit_view
 													selector: @selector(callTimer:)
-													userInfo: [NSData dataWithBytes: &timer_fn_index
-																			 length: sizeof(int)]
+													userInfo: [NSNumber numberWithInt: timer_fn_index]
 													 repeats: YES];
 	[timer retain];
 
@@ -266,7 +265,7 @@ int stop_timer(lua_State *L){
 	if(!lua_islightuserdata(L, 1)){ luaL_typerror(L, 1, "timer"); }
 
 	NSTimer *timer = (NSTimer*) lua_touserdata(L, 1);
-	int timer_idx = *((int*)[[timer userInfo] bytes]);
+	int timer_idx = [[timer userInfo] intValue];
 
 	[timer invalidate];
 	[timer release];

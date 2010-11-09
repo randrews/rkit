@@ -36,8 +36,8 @@
 /*************************************************/
 
 -(void) callTimer: (NSTimer*) timer {
-	int *timer_num = (int*)[[timer userInfo] bytes];
-	if(timer_hook){ timer_hook(*timer_num); }
+	int timer_num = [[timer userInfo] intValue];
+	if(timer_hook){ timer_hook(timer_num); }
 }
 
 -(void) setTimerHook: (void (*)(int)) timer_hook_p {
