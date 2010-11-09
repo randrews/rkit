@@ -38,3 +38,6 @@ tim = RKit.create_timer(function()
 						   end
 						end,
 						0.1)
+
+RKit.resizable(false)
+RKit.resize(640, 480, 200, 200)

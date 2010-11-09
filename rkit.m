@@ -308,6 +308,38 @@ void key_down(const char *letter, int key_code){
 }
 
 /*************************************************/
+/*** RKit window management functions ************/
+/*************************************************/
+
+int set_resizable(lua_State *L){
+	int resizable = lua_toboolean(L, 1);
+	[window setStyleMask: (NSTitledWindowMask |
+						   NSClosableWindowMask |
+						   (resizable ? NSResizableWindowMask : 0) |
+						   NSMiniaturizableWindowMask)];
+	return 0;
+}
+
+int resize_window(lua_State *L){
+	NSRect frame = [window frame];
+
+	int x = frame.origin.x, y = frame.origin.y;
+
+	int w = luaL_checkinteger(L, 1);
+	int h = luaL_checkinteger(L, 2);
+
+	if(lua_gettop(L) >= 4){
+		x = luaL_checkinteger(L, 3);
+		y = luaL_checkinteger(L, 4);
+	}
+
+	[window setFrame: NSMakeRect(x, y, w, h)
+			 display: YES];
+
+	return 0;
+}
+
+/*************************************************/
 /*** Loading the RKit functions ******************/
 /*************************************************/
 
@@ -323,6 +355,8 @@ static const struct luaL_reg rkit_lib[] = {
 	{"set_redraw_handler", set_redraw_handler},
 	{"create_timer", create_timer},
 	{"stop_timer", stop_timer},
+	{"resizable", set_resizable},
+	{"resize", resize_window},
 	{NULL, NULL}
 };
 
