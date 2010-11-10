@@ -41,6 +41,8 @@ RKit.set_redraw_handler(function()
 
 RKit.redraw()
 
+mob = RKit.create_mob()
+
 -- RKit.create_timer()
 --     Takes a function and a (float) number of seconds. Calls the function after
 --     that long of a delay, repeatedly.

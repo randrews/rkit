@@ -11,7 +11,7 @@ LIBS = "-llua"
 SOURCES = Dir["*.c"] + Dir["*.m"]
 OBJECTS = SOURCES.map{|s| s.ext(".o")}
 FLAGS = "-g -arch i386"
-FRAMEWORKS = %w{Foundation AppKit}
+FRAMEWORKS = %w{Foundation AppKit QuartzCore}
 
 OBJECTS.map{|o| file o => (File.exists?(o.ext(".c")) ? o.ext(".c") : o.ext(".m"))}
 OBJECTS.map{|o| file o => (Dir["*.h"])}

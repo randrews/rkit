@@ -6,8 +6,11 @@
 /*** Drawing stuff *******************************/
 /*************************************************/
 
+// -(void) drawLayer: (CALayer*) layer inContext: (CGContextRef) ctx {
+// }
+
 - (void) drawRect: (NSRect) rect {
-  if(redraw){ redraw(rect); }
+	if(redraw){ redraw([self frame]); }
 }
 
 -(void) setRedraw: (void (*)(NSRect)) redraw_p {
@@ -42,6 +45,19 @@
 
 -(void) setTimerHook: (void (*)(int)) timer_hook_p {
 	timer_hook = timer_hook_p;
+}
+
+@end
+
+/*************************************************/
+/*** Layer stuff *********************************/
+/*************************************************/
+
+@implementation MobDelegate
+
+-(void) drawLayer: (CALayer*) layer inContext: (CGContextRef) ctx {
+	NSLog(@"layer: %@", layer);
+	NSLog(@"ctx: %@", ctx);
 }
 
 @end

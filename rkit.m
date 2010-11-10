@@ -19,6 +19,7 @@ AList loaded_bmps;
 lua_State *event_target; /* The Lua state we'll send event notifications to, redraw and input */
 
 RKitView *rkit_view;
+MobDelegate *mob_delegate;
 NSWindow *window;
 
 /*************************************************/
@@ -340,6 +341,27 @@ int resize_window(lua_State *L){
 }
 
 /*************************************************/
+/*** RKit mob functions **************************/
+/*************************************************/
+
+int create_mob(lua_State *L){
+	CALayer *mob_layer = [CALayer layer];
+
+	mob_layer.position=CGPointMake(50.0f,50.0f);
+	mob_layer.bounds=CGRectMake(0.0f,0.0f,100.0f,100.0f);
+
+	[mob_layer setDelegate: mob_delegate];
+	[mob_layer setBackgroundColor: CGColorCreateGenericRGB(0.2, 0.4, 1, 1)];
+
+	[[rkit_view layer] addSublayer: mob_layer];
+
+	[mob_layer setNeedsDisplay];
+
+	lua_pushlightuserdata(L, mob_layer);
+	return 1;
+}
+
+/*************************************************/
 /*** Loading the RKit functions ******************/
 /*************************************************/
 
@@ -358,6 +380,7 @@ static const struct luaL_reg rkit_lib[] = {
 	{"stop_timer", stop_timer},
 	{"resizable", set_resizable},
 	{"resize", resize_window},
+	{"create_mob", create_mob},
 	{NULL, NULL}
 };
 
@@ -370,6 +393,7 @@ int open_rkit(lua_State *L, RKitView *view, NSWindow *window_p){
 	[view setRedraw: redraw];
 	[view setKeydown: key_down];
 	[view setTimerHook: rkit_timer_hook];
+	mob_delegate = [[MobDelegate alloc] init];
 
 	luaL_openlib(L, "RKit", rkit_lib, 0);
 	return 1;
@@ -402,4 +426,5 @@ void close_rkit(){
 
 	[rkit_view release];
 	[window release];
+	[mob_delegate release];
 }

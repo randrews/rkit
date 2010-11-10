@@ -28,6 +28,7 @@ int main(int argc, char** argv){
 						   defer: NO];
 
 	RKitView* rkit_view = [[RKitView alloc] init];
+	[rkit_view setWantsLayer: YES];
 	[window setContentView: rkit_view];
 	[window makeFirstResponder: rkit_view];
 	[window setTitle: @"RKit"];
