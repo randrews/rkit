@@ -39,8 +39,8 @@
    try to call it, so make a new class. But, we can shove the Lua fn
    indices into the individual layers (so cool) so we only need one of
    these, and no members. */
-@interface MobDelegate : NSObject
--(void) drawLayer: (CALayer*) layer inContext: (CGContextRef) ctx;
+@interface MobView : NSView
+-(void) drawRect: (NSRect) rect;
 @end
 #else
 /* C files may still have to see RKitView in a prototype, so just tell

@@ -53,11 +53,16 @@
 /*** Layer stuff *********************************/
 /*************************************************/
 
-@implementation MobDelegate
+@implementation MobView
 
--(void) drawLayer: (CALayer*) layer inContext: (CGContextRef) ctx {
-	NSLog(@"layer: %@", layer);
-	NSLog(@"ctx: %@", ctx);
+-(void) drawRect: (NSRect) rect {
+	NSColor *col = [NSColor colorWithCalibratedRed: 0.1
+											 green: 0.4
+											  blue: 1.0
+											 alpha: 1.0];
+	[col setFill];
+	[[NSBezierPath bezierPathWithRect: rect] fill];
+	NSLog(@"rect: %d", rect.size.width);
 }
 
 @end
