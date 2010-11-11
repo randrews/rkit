@@ -41,7 +41,16 @@ RKit.set_redraw_handler(function()
 
 RKit.redraw()
 
-mob = RKit.create_mob()
+mob = RKit.create_mob(100, 100, 50, 50,
+					  function()
+						 RKit.rect(0, 0, 50, 50, 0)
+					  end)
+
+mob_x = 100
+RKit.set_input_handler(function(letter, key)
+						  mob_x = mob_x + 50
+						  RKit.move_mob(mob, mob_x, 100)
+					   end)
 
 -- RKit.create_timer()
 --     Takes a function and a (float) number of seconds. Calls the function after
