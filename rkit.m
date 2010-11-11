@@ -205,6 +205,19 @@ int set_title(lua_State *L){
 	return 0;
 }
 
+int draw_rect(lua_State *L){
+	int x = luaL_checkinteger(L, 1);
+	int y = luaL_checkinteger(L, 2);
+	int w = luaL_checkinteger(L, 3);
+	int h = luaL_checkinteger(L, 4);
+	NSColor *c = color_from_int(luaL_checkinteger(L, 5));
+
+	[c setStroke];
+	[[NSBezierPath bezierPathWithRect: NSMakeRect(x, y, w, h)] stroke];
+
+	return 0;
+}
+
 /*************************************************/
 /*** RKit event handler registration *************/
 /*************************************************/
@@ -343,16 +356,45 @@ int resize_window(lua_State *L){
 /*** RKit mob functions **************************/
 /*************************************************/
 
+void mob_redraw_callback(NSRect rect, int lua_function){
+	NSLog(@"Redrawing with %d", lua_function);
+
+	lua_pushinteger(event_target, lua_function);
+	lua_gettable(event_target, LUA_REGISTRYINDEX);
+	lua_call(event_target, 0, 0);
+}
+
 int create_mob(lua_State *L){
+	int x = luaL_checkinteger(L, 1);
+	int y = luaL_checkinteger(L, 2);
+	int w = luaL_checkinteger(L, 3);
+	int h = luaL_checkinteger(L, 4);
+	if(!lua_isfunction(L, 5)){ luaL_typerror(L, 5, "function"); }
+	lua_pushvalue(L, 5);
+	int fn = luaL_ref(L, LUA_REGISTRYINDEX); /* Shove this in the registry */
+
 	MobView *mob = [[MobView alloc] init];
 	[mob setWantsLayer: YES];
-	[mob setFrame: NSMakeRect(50, 50, 100, 100)];
+	[mob setFrame: NSMakeRect(x, [rkit_view frame].size.height - y - h, w, h)];
+	[mob setRedraw: mob_redraw_callback];
+	[mob setLuaFunction: fn];
 	[rkit_view addSubview: mob];
-
-	[[mob animator] setFrame: NSMakeRect(500, 300, 100, 100)];
 
 	lua_pushlightuserdata(L, mob);
 	return 1;
+}
+
+int move_mob(lua_State *L){
+	if(!lua_islightuserdata(L, 1)){ luaL_typerror(L, 1, "mob"); }
+	MobView *mob = (MobView*) lua_touserdata(L, 1);
+	int x = luaL_checkinteger(L, 2);
+	int y = luaL_checkinteger(L, 3);
+
+	int real_y = [rkit_view frame].size.height - y - [mob frame].size.height;
+	[[mob animator] setFrame: NSMakeRect(x,  real_y,
+										 [mob frame].size.width,
+										 [mob frame].size.height)];
+	return 0;
 }
 
 /*************************************************/
@@ -367,6 +409,7 @@ static const struct luaL_reg rkit_lib[] = {
 	{"set_title", set_title},
 	{"color", make_color},
 	{"draw_glyph", draw_glyph},
+	{"rect", draw_rect},
 	{"set_input_handler", set_input_handler},
 	{"set_redraw_handler", set_redraw_handler},
 	{"redraw", trigger_redraw},
@@ -375,6 +418,7 @@ static const struct luaL_reg rkit_lib[] = {
 	{"resizable", set_resizable},
 	{"resize", resize_window},
 	{"create_mob", create_mob},
+	{"move_mob", move_mob},
 	{NULL, NULL}
 };
 
