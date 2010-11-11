@@ -11,6 +11,7 @@
    so we'll wrap it in an ifdef, and only define that when compiling
    .m files */
 #ifdef OBJC
+
 #import <AppKit/AppKit.h>
 #import <QuartzCore/CALayer.h>
 
@@ -39,15 +40,24 @@
    try to call it, so make a new class. But, we can shove the Lua fn
    indices into the individual layers (so cool) so we only need one of
    these, and no members. */
-@interface MobView : NSView
+@interface MobView : NSView {
+    void (*redraw)(NSRect, int);
+    int lua_function;
+}
+
 -(void) drawRect: (NSRect) rect;
+-(void) setRedraw: (void (*)(NSRect, int)) redraw_p;
+-(void) setLuaFunction: (int) lua_function_p;
 @end
+
 #else
+
 /* C files may still have to see RKitView in a prototype, so just tell
    them it's a void* and be done with it. */
 typedef void RKitView;
 typedef void MobDelegate;
 typedef void NSWindow;
+
 #endif
 
 typedef struct{

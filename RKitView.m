@@ -56,13 +56,15 @@
 @implementation MobView
 
 -(void) drawRect: (NSRect) rect {
-	NSColor *col = [NSColor colorWithCalibratedRed: 0.1
-											 green: 0.4
-											  blue: 1.0
-											 alpha: 1.0];
-	[col setFill];
-	[[NSBezierPath bezierPathWithRect: rect] fill];
-	NSLog(@"rect: %d", rect.size.width);
+	if(redraw){ redraw([self frame], lua_function); }
+}
+
+-(void) setRedraw: (void (*)(NSRect, int)) redraw_p {
+	redraw = redraw_p;
+}
+
+-(void) setLuaFunction: (int) lua_function_p {
+	lua_function = lua_function_p;
 }
 
 @end
