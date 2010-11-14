@@ -77,9 +77,9 @@ function draw_grid(grid, left, top)
 	  local y = math.floor((n - 1) / 6) * 20 + top
 
 	  local cell = "."
-	  if v == 1 then cell = 176
-	  elseif v == 2 then cell = 177
-	  elseif v == 3 then cell = 219 end
+	  if v == 1 then cell = 64
+	  elseif v == 2 then cell = 65
+	  elseif v == 3 then cell = 43 end
 
 	  RKit.draw_glyph(ts, cell, x, y, 0)
    end
