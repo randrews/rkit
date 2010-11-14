@@ -32,14 +32,6 @@ int draw_bitmap(lua_State *L){
 	if(numargs >= 6){ w = luaL_checkinteger(L, 6); }
 	if(numargs >= 7){ h = luaL_checkinteger(L, 7); }
 
-	/* There are some tricky things here.
-	   We are taking from Lua a src top-left point and a dest top-left point,
-	   measured from the top left of the window, but Cocoa expects a src and
-	   dest bottom-left point, measured from the bottom left. So, we subtract
-	   the y value from the height of the whole region, to convert the origin
-	   of the coord system, then we subtract the height of the rect we have
-	   from that, to compensate for which corner it expects. */
-	int screen_h = [rkit_view bounds].size.height;
 	[bmp drawAtPoint: NSMakePoint(x, y)
 			fromRect: NSMakeRect(sx, sy, w, h)
 		   operation: NSCompositeCopy
@@ -81,17 +73,13 @@ int draw_glyph(lua_State *L){
 
 	/* Make rects to blit from and to */
 	NSRect src = NSMakeRect(tile_x, tile_y, ts->width, ts->height);
-
-	int screen_h = [rkit_view bounds].size.height;
-	NSPoint dest = NSMakePoint(x,y);
-
-	NSRect dest_rect = NSMakeRect(dest.x, dest.y, ts->width, ts->height);
+	NSRect dest = NSMakeRect(x, y, ts->width, ts->height);
 
 	/* We have a background color, blit that first */
 	if(bg != -1){
 		NSColor *bg_color = color_from_int(bg);
 		[bg_color setFill];
-		[[NSBezierPath bezierPathWithRect: dest_rect] fill];
+		[[NSBezierPath bezierPathWithRect: dest] fill];
 	}
 
 	/* Double-blit the foreground char */
@@ -101,12 +89,12 @@ int draw_glyph(lua_State *L){
 	[[NSBezierPath bezierPathWithRect: ts->bg_rect] fill];
 	[ts->bg_image unlockFocus];
 
-	[ts->bmp drawAtPoint: dest
+	[ts->bmp drawAtPoint: dest.origin
 				fromRect: src
 			   operation: NSCompositeDestinationOut
 				fraction: 1.0];
 
-	[ts->bg_image drawAtPoint: dest
+	[ts->bg_image drawAtPoint: dest.origin
 					 fromRect: ts->bg_rect
 					operation: NSCompositeDestinationAtop
 					 fraction: 1.0];
@@ -141,7 +129,7 @@ int load_tilesheet(lua_State *L){
 }
 
 /*************************************************/
-/*** RKit color functions ************************/
+/*** Color functions *****************************/
 /*************************************************/
 
 int make_color(lua_State *L){
@@ -157,4 +145,71 @@ NSColor* color_from_int(int color){
 									 green: ((color >> 8) & 0xff)/256.0
 									  blue: ((color >> 16) & 0xff)/256.0
 									 alpha: 1.0];
+}
+
+/*************************************************/
+/*** Drawing functions ***************************/
+/*************************************************/
+
+int clear_screen(lua_State *L){
+	int color = (lua_gettop(L) == 0 ?
+				 0 :
+				 luaL_checkinteger(L, 1));
+
+	NSColor *c = color_from_int(color);
+	[c setFill];
+	[[NSBezierPath bezierPathWithRect: [rkit_view bounds]] fill];
+
+	return 0;
+}
+
+int draw_rect(lua_State *L){
+	int x = luaL_checkinteger(L, 1);
+	int y = luaL_checkinteger(L, 2);
+	int w = luaL_checkinteger(L, 3);
+	int h = luaL_checkinteger(L, 4);
+	NSColor *c = color_from_int(luaL_checkinteger(L, 5));
+
+	[c setStroke];
+	[[NSBezierPath bezierPathWithRect: NSMakeRect(x, y, w, h)] stroke];
+
+	return 0;
+}
+
+/*************************************************/
+/*** Window management functions *****************/
+/*************************************************/
+
+int set_title(lua_State *L){
+	const char *title = luaL_checkstring(L, 1);
+	[window setTitle: [NSString stringWithUTF8String: title]];
+	return 0;
+}
+
+int set_resizable(lua_State *L){
+	int resizable = lua_toboolean(L, 1);
+	[window setStyleMask: (NSTitledWindowMask |
+						   NSClosableWindowMask |
+						   (resizable ? NSResizableWindowMask : 0) |
+						   NSMiniaturizableWindowMask)];
+	return 0;
+}
+
+int resize_window(lua_State *L){
+	NSRect frame = [window frame];
+
+	int x = frame.origin.x, y = frame.origin.y;
+
+	int w = luaL_checkinteger(L, 1);
+	int h = luaL_checkinteger(L, 2);
+
+	if(lua_gettop(L) >= 4){
+		x = luaL_checkinteger(L, 3);
+		y = luaL_checkinteger(L, 4);
+	}
+
+	[window setFrame: NSMakeRect(x, y, w, h)
+			 display: YES];
+
+	return 0;
 }

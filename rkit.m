@@ -10,42 +10,7 @@ RKitView *rkit_view;
 NSWindow *window;
 
 /*************************************************/
-/*** RKit drawing functions **********************/
-/*************************************************/
-
-int clear_screen(lua_State *L){
-	int color = (lua_gettop(L) == 0 ?
-				 0 :
-				 luaL_checkinteger(L, 1));
-
-	NSColor *c = color_from_int(color);
-	[c setFill];
-	[[NSBezierPath bezierPathWithRect: [rkit_view bounds]] fill];
-
-	return 0;
-}
-
-int set_title(lua_State *L){
-	const char *title = luaL_checkstring(L, 1);
-	[window setTitle: [NSString stringWithUTF8String: title]];
-	return 0;
-}
-
-int draw_rect(lua_State *L){
-	int x = luaL_checkinteger(L, 1);
-	int y = luaL_checkinteger(L, 2);
-	int w = luaL_checkinteger(L, 3);
-	int h = luaL_checkinteger(L, 4);
-	NSColor *c = color_from_int(luaL_checkinteger(L, 5));
-
-	[c setStroke];
-	[[NSBezierPath bezierPathWithRect: NSMakeRect(x, y, w, h)] stroke];
-
-	return 0;
-}
-
-/*************************************************/
-/*** RKit event handler registration *************/
+/*** Event handler registration ******************/
 /*************************************************/
 
 int input_handler_set = 0; /* Nonzero if the last call to set_input_handler didn't pass nil */
@@ -75,7 +40,7 @@ int set_redraw_handler(lua_State *L){
 }
 
 /*************************************************/
-/*** RKit timer functions ************************/
+/*** Timer functions *****************************/
 /*************************************************/
 
 int create_timer(lua_State *L){
@@ -147,44 +112,10 @@ void key_down(const char *letter, int key_code){
 }
 
 /*************************************************/
-/*** RKit window management functions ************/
-/*************************************************/
-
-int set_resizable(lua_State *L){
-	int resizable = lua_toboolean(L, 1);
-	[window setStyleMask: (NSTitledWindowMask |
-						   NSClosableWindowMask |
-						   (resizable ? NSResizableWindowMask : 0) |
-						   NSMiniaturizableWindowMask)];
-	return 0;
-}
-
-int resize_window(lua_State *L){
-	NSRect frame = [window frame];
-
-	int x = frame.origin.x, y = frame.origin.y;
-
-	int w = luaL_checkinteger(L, 1);
-	int h = luaL_checkinteger(L, 2);
-
-	if(lua_gettop(L) >= 4){
-		x = luaL_checkinteger(L, 3);
-		y = luaL_checkinteger(L, 4);
-	}
-
-	[window setFrame: NSMakeRect(x, y, w, h)
-			 display: YES];
-
-	return 0;
-}
-
-/*************************************************/
 /*** RKit mob functions **************************/
 /*************************************************/
 
 void mob_redraw_callback(NSRect rect, int lua_function){
-	NSLog(@"Redrawing with %d", lua_function);
-
 	lua_pushinteger(event_target, lua_function);
 	lua_gettable(event_target, LUA_REGISTRYINDEX);
 	lua_call(event_target, 0, 0);
