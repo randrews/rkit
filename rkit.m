@@ -132,7 +132,7 @@ int create_mob(lua_State *L){
 
 	MobView *mob = [[MobView alloc] init];
 	[mob setWantsLayer: YES];
-	[mob setFrame: NSMakeRect(x, [rkit_view frame].size.height - y - h, w, h)];
+	[mob setFrame: NSMakeRect(x, y, w, h)];
 	[mob setRedraw: mob_redraw_callback];
 	[mob setLuaFunction: fn];
 	[rkit_view addSubview: mob];
@@ -147,8 +147,7 @@ int move_mob(lua_State *L){
 	int x = luaL_checkinteger(L, 2);
 	int y = luaL_checkinteger(L, 3);
 
-	int real_y = [rkit_view frame].size.height - y - [mob frame].size.height;
-	[[mob animator] setFrame: NSMakeRect(x,  real_y,
+	[[mob animator] setFrame: NSMakeRect(x,  y,
 										 [mob frame].size.width,
 										 [mob frame].size.height)];
 	return 0;
