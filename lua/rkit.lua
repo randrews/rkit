@@ -6,7 +6,7 @@ RKit.set_title("RKit Demo")
 --     Load bitmaps either as a grid of n*n pixel tiles, or
 --     as a simple bitmap.
 
-ts = RKit.load_tilesheet("img/Tahin-font.png", 16, 16)
+ts = RKit.load_tilesheet("img/matricks.png", 32)
 floor = RKit.load_bitmap("img/floor.png")
 
 -- RKit.draw_bitmap(floor, 0, 0, 640, 480)
@@ -29,8 +29,8 @@ RKit.set_input_handler(print)
 RKit.set_redraw_handler(function()
 						   RKit.draw_bitmap(floor, 0, 0)
 
-						   draw_grid(src_grid, 100, 160)
-						   draw_grid(dest_grid, 420, 160)
+						   draw_grid(src_grid, (320 - 32*6) / 2, (480 - 32*6) / 2)
+						   draw_grid(dest_grid, (320 - 32*6) / 2 + 320, (480 - 32*6) / 2)
 
 						   -- RKit.draw_glyph(ts, "=", 50, 50)
 						   -- RKit.draw_glyph(ts, 65, 70, 50, RKit.color(255, 0, 0), RKit.color(100, 0, 0))
@@ -73,13 +73,10 @@ end
 
 function draw_grid(grid, left, top)
    for n, v in ipairs(grid) do
-	  local x = (n - 1) % 6 * 20 + left
-	  local y = math.floor((n - 1) / 6) * 20 + top
+	  local x = (n - 1) % 6 * 32 + left
+	  local y = math.floor((n - 1) / 6) * 32 + top
 
-	  local cell = "."
-	  if v == 1 then cell = 64
-	  elseif v == 2 then cell = 65
-	  elseif v == 3 then cell = 43 end
+	  local cell = v - 1
 
 	  RKit.draw_glyph(ts, cell, x, y, 0)
    end
