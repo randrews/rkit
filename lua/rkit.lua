@@ -2,64 +2,49 @@ RKit.resizable(false)
 RKit.resize(640, 480, 200, 200)
 RKit.set_title("RKit Demo")
 
--- RKit.load_tilesheet and RKit.load_bitmap
---     Load bitmaps either as a grid of n*n pixel tiles, or
---     as a simple bitmap.
-
 ts = RKit.load_tilesheet("img/matricks.png", 32)
 floor = RKit.load_bitmap("img/floor.png")
 
--- RKit.draw_bitmap(floor, 0, 0, 640, 480)
-
--- RKit.set_input_handler()
---     Takes a function that is called whenever a key is pressed or released.
---     The function takes two args: the first is the ASCII value of the key (if any)
---     The second is the key scancode
-
-RKit.set_input_handler(print)
-
--- RKit.set_redraw_handler()
---     Takes a function that gets called every time the window should be redrawn.
---     The funtcion takes no args.
---     It gets a few things in can call though:
---     clear_screen fills the screen with a color (made with RKit.color)
---     draw_bitmap draws a bitmap on the window at given coords
---     draw_glyph draws a tile on the window from a loaded tilesheet
+left = (320 - 32*6) / 2
+bottom = (480 - 32*6) / 2
 
 RKit.set_redraw_handler(function()
 						   RKit.draw_bitmap(floor, 0, 0)
 
-						   draw_grid(src_grid, (320 - 32*6) / 2, (480 - 32*6) / 2)
-						   draw_grid(dest_grid, (320 - 32*6) / 2 + 320, (480 - 32*6) / 2)
-
-						   -- RKit.draw_glyph(ts, "=", 50, 50)
-						   -- RKit.draw_glyph(ts, 65, 70, 50, RKit.color(255, 0, 0), RKit.color(100, 0, 0))
+						   draw_grid(src_grid, left, bottom)
+						   draw_grid(dest_grid, left + 320, bottom)
 						end)
-
--- RKit.redraw()
---     Tells the window to redraw at its earliest convenience.
 
 RKit.redraw()
 
-mob = RKit.create_mob(100, 100, 50, 50,
+cursor = {x = 0, y = 5}
+keys = { up = 126,
+		 down = 125,
+		 left = 123,
+		 right = 124 }
+
+mob = RKit.create_mob(left, bottom + 32*cursor.y, 32, 32,
 					  function()
-						 RKit.rect(0, 0, 50, 50, 0)
+						 col = RKit.color(255, 64, 64)
+						 RKit.rect(0, 0, 32, 32, col)
+						 RKit.rect(1, 1, 31, 31, col)
 					  end)
 
-mob_x = 100
 RKit.set_input_handler(function(letter, key)
-						  mob_x = mob_x + 50
-						  RKit.move_mob(mob, mob_x, 100)
+						  if key == keys.up then cursor.y = cursor.y + 1
+						  elseif key == keys.down then cursor.y = cursor.y - 1
+						  elseif key == keys.left then cursor.x = cursor.x - 1
+						  elseif key == keys.right then cursor.x = cursor.x + 1 end
+
+						  if cursor.x < 0 then cursor.x = 0
+						  elseif cursor.x > 5 then cursor.x = 5 end
+						  if cursor.y < 0 then cursor.y = 0
+						  elseif cursor.y > 5 then cursor.y = 5 end
+
+						  RKit.move_mob(mob,
+										left + 32 * cursor.x,
+										bottom + 32 * cursor.y)
 					   end)
-
--- RKit.create_timer()
---     Takes a function and a (float) number of seconds. Calls the function after
---     that long of a delay, repeatedly.
---     Returns a lightuserdata representing the timer, you should call
---     RKit.stop_timep(timer) on all timers to stop them before the end of the program
---     (or just whenever you're ready for them to stop).
-
-RKit.create_timer(function() print("Hi") end, 2.0)
 
 math.randomseed(os.time())
 
