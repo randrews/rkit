@@ -46,7 +46,7 @@ int draw_bitmap(lua_State *L){
 
 int draw_glyph(lua_State *L){
 	int fg = 255 + (255 << 8) + (255 << 16); /* Default: white */
-	int bg = -1;
+	int bg = -2;
 
 	if(!lua_islightuserdata(L, 1)){ luaL_typerror(L, 1, "tilesheet"); }
 	Tilesheet *ts = lua_touserdata(L, 1);
@@ -56,7 +56,7 @@ int draw_glyph(lua_State *L){
 	if(lua_gettop(L) >= 5){ fg = luaL_checkinteger(L, 5); }
 	if(lua_gettop(L) >= 6){ bg = luaL_checkinteger(L, 6); }
 
-	/* Arg 2 is the tile index, which is non a one-liner to read. */
+	/* Arg 2 is the tile index, which is not a one-liner to read. */
 	int tile_index;
 	if(lua_type(L, 2) == LUA_TSTRING){
 		const char *c = luaL_checkstring(L, 2);
@@ -76,28 +76,47 @@ int draw_glyph(lua_State *L){
 	NSRect dest = NSMakeRect(x, y, ts->width, ts->height);
 
 	/* We have a background color, blit that first */
-	if(bg != -1){
+	if(bg >= 0){
 		NSColor *bg_color = color_from_int(bg);
 		[bg_color setFill];
 		[[NSBezierPath bezierPathWithRect: dest] fill];
 	}
 
-	/* Double-blit the foreground char */
+	/* Triple-blit the foreground char */
 	NSColor *fg_color = color_from_int(fg);
 	[ts->bg_image lockFocus];
 	[fg_color setFill];
 	[[NSBezierPath bezierPathWithRect: ts->bg_rect] fill];
 	[ts->bg_image unlockFocus];
 
-	[ts->bmp drawAtPoint: dest.origin
-				fromRect: src
-			   operation: NSCompositeDestinationOut
-				fraction: 1.0];
+	if(bg == -1){	
+		[ts->bmp drawAtPoint: dest.origin
+		   fromRect: src
+		   operation: NSCompositeClear
+		   fraction: 1.0];
 
-	[ts->bg_image drawAtPoint: dest.origin
-					 fromRect: ts->bg_rect
-					operation: NSCompositeDestinationAtop
-					 fraction: 1.0];
+		[ts->bmp drawAtPoint: dest.origin
+		   fromRect: src
+		   operation: NSCompositeCopy
+		   fraction: 1.0];
+
+		[ts->bg_image drawAtPoint: dest.origin
+		   fromRect: ts->bg_rect
+		   operation: NSCompositeSourceIn
+		   fraction: 1.0];
+
+	} else {
+		[ts->bmp drawAtPoint: dest.origin
+		   fromRect: src
+		   operation: NSCompositeDestinationOut
+		   fraction: 1.0];
+
+		[ts->bg_image drawAtPoint: dest.origin
+		   fromRect: ts->bg_rect
+		   operation: NSCompositeDestinationAtop
+		   fraction: 1.0];
+	}
+
 	return 0;
 }
 

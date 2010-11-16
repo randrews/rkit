@@ -26,8 +26,7 @@ keys = { up = 126,
 mob = RKit.create_mob(left, bottom + 32*cursor.y, 32, 32,
 					  function()
 						 col = RKit.color(255, 64, 64)
-						 RKit.rect(0, 0, 32, 32, col)
-						 RKit.rect(1, 1, 31, 31, col)
+						 RKit.draw_glyph(ts, 3, 0, 0, col, -1)
 					  end)
 
 RKit.set_input_handler(function(letter, key)
