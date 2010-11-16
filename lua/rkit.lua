@@ -1,6 +1,6 @@
 RKit.resizable(false)
 RKit.resize(640, 480, 200, 200)
-RKit.set_title("RKit Demo")
+RKit.set_title("Matricks")
 
 ts = RKit.load_tilesheet("img/matricks.png", 32)
 floor = RKit.load_bitmap("img/floor.png")
@@ -30,6 +30,8 @@ mob = RKit.create_mob(left, bottom + 32*cursor.y, 32, 32,
 					  end)
 
 RKit.set_input_handler(function(letter, key)
+						  local oldcursor = { x = cursor.x, y = cursor.y }
+
 						  if key == keys.up then cursor.y = cursor.y + 1
 						  elseif key == keys.down then cursor.y = cursor.y - 1
 						  elseif key == keys.left then cursor.x = cursor.x - 1
@@ -39,6 +41,9 @@ RKit.set_input_handler(function(letter, key)
 						  elseif cursor.x > 5 then cursor.x = 5 end
 						  if cursor.y < 0 then cursor.y = 0
 						  elseif cursor.y > 5 then cursor.y = 5 end
+
+						  move_cursor(oldcursor, cursor)
+						  RKit.redraw()
 
 						  RKit.move_mob(mob,
 										left + 32 * cursor.x,
@@ -64,4 +69,12 @@ function draw_grid(grid, left, top)
 
 	  RKit.draw_glyph(ts, cell, x, y, 0)
    end
+end
+
+function move_cursor(from, to)
+   if from.x == to.x and from.y == to.y then return end
+   local from_sq = src_grid[from.x + 6*from.y + 1]
+   local to_sq = src_grid[to.x + 6*to.y + 1]
+   if from_sq == to_sq then return end
+   src_grid[to.x + 6*to.y + 1] = (6 - from_sq - to_sq)
 end
