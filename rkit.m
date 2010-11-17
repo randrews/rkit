@@ -153,6 +153,14 @@ int move_mob(lua_State *L){
 	return 0;
 }
 
+int close_mob(lua_State *L){
+	if(!lua_islightuserdata(L, 1)){ luaL_typerror(L, 1, "mob"); }
+	MobView *mob = (MobView*) lua_touserdata(L, 1);
+	[mob removeFromSuperview];
+	[mob release];
+	return 0;
+}
+
 /*************************************************/
 /*** Loading the RKit functions ******************/
 /*************************************************/
@@ -176,6 +184,7 @@ static const struct luaL_reg rkit_lib[] = {
 	{"resize", resize_window},
 	{"create_mob", create_mob},
 	{"move_mob", move_mob},
+	{"close_mob", close_mob},
 	{NULL, NULL}
 };
 
