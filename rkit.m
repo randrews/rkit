@@ -166,6 +166,7 @@ static const struct luaL_reg rkit_lib[] = {
 	{"color", make_color},
 	{"draw_glyph", draw_glyph},
 	{"rect", draw_rect},
+	{"text", draw_text},
 	{"set_input_handler", set_input_handler},
 	{"set_redraw_handler", set_redraw_handler},
 	{"redraw", trigger_redraw},

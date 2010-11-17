@@ -88,5 +88,6 @@ NSColor* color_from_int(int color);
 int clear_screen(lua_State *L);
 int set_title(lua_State *L);
 int draw_rect(lua_State *L);
+int draw_text(lua_State *L);
 int set_resizable(lua_State *L);
 int resize_window(lua_State *L);

@@ -195,6 +195,14 @@ int draw_rect(lua_State *L){
 	return 0;
 }
 
+int draw_text(lua_State *L){
+	NSString *str = [NSString stringWithUTF8String: luaL_checkstring(L, 1)];
+	int x = luaL_checkinteger(L, 2);
+	int y = luaL_checkinteger(L, 3);
+
+	[str drawAtPoint: NSMakePoint(x, y) withAttributes: nil];
+}
+
 /*************************************************/
 /*** Window management functions *****************/
 /*************************************************/
