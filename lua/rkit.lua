@@ -7,12 +7,14 @@ floor = RKit.load_bitmap("img/floor.png")
 
 left = (320 - 32*6) / 2
 bottom = (480 - 32*6) / 2
+moves = 0
 
 RKit.set_redraw_handler(function()
 						   RKit.draw_bitmap(floor, 0, 0)
 
 						   draw_grid(src_grid, left, bottom)
 						   draw_grid(dest_grid, left + 320, bottom)
+						   RKit.text("Moves: " .. moves, 10, 10)
 						end)
 
 RKit.redraw()
@@ -75,6 +77,7 @@ function move_cursor(from, to)
    if from.x == to.x and from.y == to.y then return end
    local from_sq = src_grid[from.x + 6*from.y + 1]
    local to_sq = src_grid[to.x + 6*to.y + 1]
+   moves = moves + 1
    if from_sq == to_sq then return end
    src_grid[to.x + 6*to.y + 1] = (6 - from_sq - to_sq)
 end
