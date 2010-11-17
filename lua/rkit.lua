@@ -4,6 +4,8 @@ RKit.set_title("Matricks")
 
 ts = RKit.load_tilesheet("img/matricks.png", 32)
 floor = RKit.load_bitmap("img/floor.png")
+solved = RKit.load_bitmap("img/solved.png")
+show_solved = false
 
 left = (320 - 32*6) / 2
 bottom = (480 - 32*6) / 2
@@ -15,6 +17,10 @@ RKit.set_redraw_handler(function()
 						   draw_grid(src_grid, left, bottom)
 						   draw_grid(dest_grid, left + 320, bottom)
 						   RKit.text("Moves: " .. moves, 10, 10)
+
+						   if show_solved then
+							  RKit.draw_bitmap(solved, 70, 165)
+						   end
 						end)
 
 RKit.redraw()
@@ -50,6 +56,8 @@ RKit.set_input_handler(function(letter, key)
 						  RKit.move_mob(mob,
 										left + 32 * cursor.x,
 										bottom + 32 * cursor.y)
+
+						  game_over()
 					   end)
 
 math.randomseed(os.time())
@@ -80,4 +88,18 @@ function move_cursor(from, to)
    moves = moves + 1
    if from_sq == to_sq then return end
    src_grid[to.x + 6*to.y + 1] = (6 - from_sq - to_sq)
+end
+
+function game_over()
+   local diff = false
+   for n=1, 36 do
+	  if src_grid[n] ~= dest_grid[n] then diff = true ; break ; end
+   end
+
+   if not diff then
+	  RKit.close_mob(mob)
+	  RKit.set_input_handler(nil)
+	  show_solved = true
+	  RKit.redraw()
+   end
 end
