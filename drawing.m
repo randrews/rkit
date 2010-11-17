@@ -34,7 +34,7 @@ int draw_bitmap(lua_State *L){
 
 	[bmp drawAtPoint: NSMakePoint(x, y)
 			fromRect: NSMakeRect(sx, sy, w, h)
-		   operation: NSCompositeCopy
+		   operation: NSCompositeSourceOver
 			fraction: 1.0];
 
 	return 0;
@@ -201,6 +201,7 @@ int draw_text(lua_State *L){
 	int y = luaL_checkinteger(L, 3);
 
 	[str drawAtPoint: NSMakePoint(x, y) withAttributes: nil];
+	return 0;
 }
 
 /*************************************************/
