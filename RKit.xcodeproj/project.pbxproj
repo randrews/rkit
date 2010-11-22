@@ -1,0 +1,428 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
+		256AC3DA0F4B6AC300CF3369 /* RKitAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* RKitAppDelegate.m */; };
+		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
+		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		A8546C861296470200618320 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A8546C751296470200618320 /* liblua.a */; };
+		A8546CBB12964B4C00618320 /* RKitView.m in Sources */ = {isa = PBXBuildFile; fileRef = A8546CBA12964B4C00618320 /* RKitView.m */; };
+		A8546CE9129841AD00618320 /* drawing.m in Sources */ = {isa = PBXBuildFile; fileRef = A8546CE6129841AD00618320 /* drawing.m */; };
+		A8546CEA129841AD00618320 /* rkit.m in Sources */ = {isa = PBXBuildFile; fileRef = A8546CE8129841AD00618320 /* rkit.m */; };
+		A8546CEE129843B000618320 /* MobView.m in Sources */ = {isa = PBXBuildFile; fileRef = A8546CED129843B000618320 /* MobView.m */; };
+		A8546CFF129886A500618320 /* floor.png in Resources */ = {isa = PBXBuildFile; fileRef = A8546CF9129886A500618320 /* floor.png */; };
+		A8546D00129886A500618320 /* icon.tiff in Resources */ = {isa = PBXBuildFile; fileRef = A8546CFA129886A500618320 /* icon.tiff */; };
+		A8546D02129886A500618320 /* matricks.png in Resources */ = {isa = PBXBuildFile; fileRef = A8546CFC129886A500618320 /* matricks.png */; };
+		A8546D03129886A500618320 /* solved.png in Resources */ = {isa = PBXBuildFile; fileRef = A8546CFD129886A500618320 /* solved.png */; };
+		A8546D04129886A500618320 /* Tahin-font.png in Resources */ = {isa = PBXBuildFile; fileRef = A8546CFE129886A500618320 /* Tahin-font.png */; };
+		A8546D2512988D3900618320 /* Matricks.icns in Resources */ = {isa = PBXBuildFile; fileRef = A8546D2412988D3900618320 /* Matricks.icns */; };
+		A8546D2C12988E0900618320 /* rkit.lua in Resources */ = {isa = PBXBuildFile; fileRef = A8546D2B12988E0900618320 /* rkit.lua */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		1DDD58150DA1D0A300B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		256AC3D80F4B6AC300CF3369 /* RKitAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKitAppDelegate.h; sourceTree = "<group>"; };
+		256AC3D90F4B6AC300CF3369 /* RKitAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RKitAppDelegate.m; sourceTree = "<group>"; };
+		256AC3F00F4B6AF500CF3369 /* RKit_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKit_Prefix.pch; sourceTree = "<group>"; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		8D1107310486CEB800E47090 /* RKit-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "RKit-Info.plist"; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* Matricks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Matricks.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A8546C6E1296470200618320 /* lapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lapi.h; sourceTree = "<group>"; };
+		A8546C6F1296470200618320 /* lauxlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lauxlib.h; sourceTree = "<group>"; };
+		A8546C701296470200618320 /* lcode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lcode.h; sourceTree = "<group>"; };
+		A8546C711296470200618320 /* ldebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ldebug.h; sourceTree = "<group>"; };
+		A8546C721296470200618320 /* ldo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ldo.h; sourceTree = "<group>"; };
+		A8546C731296470200618320 /* lfunc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lfunc.h; sourceTree = "<group>"; };
+		A8546C741296470200618320 /* lgc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lgc.h; sourceTree = "<group>"; };
+		A8546C751296470200618320 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblua.a; sourceTree = "<group>"; };
+		A8546C761296470200618320 /* llex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = llex.h; sourceTree = "<group>"; };
+		A8546C771296470200618320 /* llimits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = llimits.h; sourceTree = "<group>"; };
+		A8546C781296470200618320 /* lmem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lmem.h; sourceTree = "<group>"; };
+		A8546C791296470200618320 /* lobject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lobject.h; sourceTree = "<group>"; };
+		A8546C7A1296470200618320 /* lopcodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lopcodes.h; sourceTree = "<group>"; };
+		A8546C7B1296470200618320 /* lparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lparser.h; sourceTree = "<group>"; };
+		A8546C7C1296470200618320 /* lstate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lstate.h; sourceTree = "<group>"; };
+		A8546C7D1296470200618320 /* lstring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lstring.h; sourceTree = "<group>"; };
+		A8546C7E1296470200618320 /* ltable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ltable.h; sourceTree = "<group>"; };
+		A8546C7F1296470200618320 /* ltm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ltm.h; sourceTree = "<group>"; };
+		A8546C801296470200618320 /* lua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua.h; sourceTree = "<group>"; };
+		A8546C811296470200618320 /* luaconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = luaconf.h; sourceTree = "<group>"; };
+		A8546C821296470200618320 /* lualib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lualib.h; sourceTree = "<group>"; };
+		A8546C831296470200618320 /* lundump.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lundump.h; sourceTree = "<group>"; };
+		A8546C841296470200618320 /* lvm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lvm.h; sourceTree = "<group>"; };
+		A8546C851296470200618320 /* lzio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzio.h; sourceTree = "<group>"; };
+		A8546CB912964B4C00618320 /* RKitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKitView.h; sourceTree = "<group>"; };
+		A8546CBA12964B4C00618320 /* RKitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RKitView.m; sourceTree = "<group>"; };
+		A8546CE6129841AD00618320 /* drawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = drawing.m; sourceTree = "<group>"; };
+		A8546CE7129841AD00618320 /* rkit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rkit.h; sourceTree = "<group>"; };
+		A8546CE8129841AD00618320 /* rkit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = rkit.m; sourceTree = "<group>"; };
+		A8546CEC129843B000618320 /* MobView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobView.h; sourceTree = "<group>"; };
+		A8546CED129843B000618320 /* MobView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobView.m; sourceTree = "<group>"; };
+		A8546CF9129886A500618320 /* floor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = floor.png; sourceTree = "<group>"; };
+		A8546CFA129886A500618320 /* icon.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = icon.tiff; sourceTree = "<group>"; };
+		A8546CFC129886A500618320 /* matricks.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = matricks.png; sourceTree = "<group>"; };
+		A8546CFD129886A500618320 /* solved.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = solved.png; sourceTree = "<group>"; };
+		A8546CFE129886A500618320 /* Tahin-font.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Tahin-font.png"; sourceTree = "<group>"; };
+		A8546D2412988D3900618320 /* Matricks.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Matricks.icns; sourceTree = "<group>"; };
+		A8546D2B12988E0900618320 /* rkit.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rkit.lua; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				A8546C861296470200618320 /* liblua.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				A8546CB912964B4C00618320 /* RKitView.h */,
+				A8546CBA12964B4C00618320 /* RKitView.m */,
+				256AC3D80F4B6AC300CF3369 /* RKitAppDelegate.h */,
+				256AC3D90F4B6AC300CF3369 /* RKitAppDelegate.m */,
+				A8546CEC129843B000618320 /* MobView.h */,
+				A8546CED129843B000618320 /* MobView.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* Matricks.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* RKit */ = {
+			isa = PBXGroup;
+			children = (
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = RKit;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A8546CE6129841AD00618320 /* drawing.m */,
+				A8546CE7129841AD00618320 /* rkit.h */,
+				A8546CE8129841AD00618320 /* rkit.m */,
+				256AC3F00F4B6AF500CF3369 /* RKit_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+				A8546C6D1296470200618320 /* liblua */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A8546D2A12988E0900618320 /* lua */,
+				A8546D2412988D3900618320 /* Matricks.icns */,
+				A8546CF8129886A400618320 /* img */,
+				8D1107310486CEB800E47090 /* RKit-Info.plist */,
+				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A8546C6D1296470200618320 /* liblua */ = {
+			isa = PBXGroup;
+			children = (
+				A8546C6E1296470200618320 /* lapi.h */,
+				A8546C6F1296470200618320 /* lauxlib.h */,
+				A8546C701296470200618320 /* lcode.h */,
+				A8546C711296470200618320 /* ldebug.h */,
+				A8546C721296470200618320 /* ldo.h */,
+				A8546C731296470200618320 /* lfunc.h */,
+				A8546C741296470200618320 /* lgc.h */,
+				A8546C751296470200618320 /* liblua.a */,
+				A8546C761296470200618320 /* llex.h */,
+				A8546C771296470200618320 /* llimits.h */,
+				A8546C781296470200618320 /* lmem.h */,
+				A8546C791296470200618320 /* lobject.h */,
+				A8546C7A1296470200618320 /* lopcodes.h */,
+				A8546C7B1296470200618320 /* lparser.h */,
+				A8546C7C1296470200618320 /* lstate.h */,
+				A8546C7D1296470200618320 /* lstring.h */,
+				A8546C7E1296470200618320 /* ltable.h */,
+				A8546C7F1296470200618320 /* ltm.h */,
+				A8546C801296470200618320 /* lua.h */,
+				A8546C811296470200618320 /* luaconf.h */,
+				A8546C821296470200618320 /* lualib.h */,
+				A8546C831296470200618320 /* lundump.h */,
+				A8546C841296470200618320 /* lvm.h */,
+				A8546C851296470200618320 /* lzio.h */,
+			);
+			path = liblua;
+			sourceTree = "<group>";
+		};
+		A8546CF8129886A400618320 /* img */ = {
+			isa = PBXGroup;
+			children = (
+				A8546CF9129886A500618320 /* floor.png */,
+				A8546CFA129886A500618320 /* icon.tiff */,
+				A8546CFC129886A500618320 /* matricks.png */,
+				A8546CFD129886A500618320 /* solved.png */,
+				A8546CFE129886A500618320 /* Tahin-font.png */,
+			);
+			path = img;
+			sourceTree = "<group>";
+		};
+		A8546D2A12988E0900618320 /* lua */ = {
+			isa = PBXGroup;
+			children = (
+				A8546D2B12988E0900618320 /* rkit.lua */,
+			);
+			path = lua;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* Matricks */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Matricks" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Matricks;
+			productInstallPath = "$(HOME)/Applications";
+			productName = RKit;
+			productReference = 8D1107320486CEB800E47090 /* Matricks.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "RKit" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* RKit */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* Matricks */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
+				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
+				A8546CFF129886A500618320 /* floor.png in Resources */,
+				A8546D00129886A500618320 /* icon.tiff in Resources */,
+				A8546D02129886A500618320 /* matricks.png in Resources */,
+				A8546D03129886A500618320 /* solved.png in Resources */,
+				A8546D04129886A500618320 /* Tahin-font.png in Resources */,
+				A8546D2512988D3900618320 /* Matricks.icns in Resources */,
+				A8546D2C12988E0900618320 /* rkit.lua in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072D0486CEB800E47090 /* main.m in Sources */,
+				256AC3DA0F4B6AC300CF3369 /* RKitAppDelegate.m in Sources */,
+				A8546CBB12964B4C00618320 /* RKitView.m in Sources */,
+				A8546CE9129841AD00618320 /* drawing.m in Sources */,
+				A8546CEA129841AD00618320 /* rkit.m in Sources */,
+				A8546CEE129843B000618320 /* MobView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C165DFE840E0CC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1DDD58140DA1D0A300B32029 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1DDD58150DA1D0A300B32029 /* English */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A8185DE11298F421009BEBF8 /* Distro */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_UNROLL_LOOPS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Distro;
+		};
+		A8185DE21298F421009BEBF8 /* Distro */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = RKit_Prefix.pch;
+				INFOPLIST_FILE = "RKit-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = Matricks;
+			};
+			name = Distro;
+		};
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = RKit_Prefix.pch;
+				INFOPLIST_FILE = "RKit-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = Matricks;
+			};
+			name = Debug;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Matricks" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				A8185DE21298F421009BEBF8 /* Distro */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Distro;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "RKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				A8185DE11298F421009BEBF8 /* Distro */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Distro;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

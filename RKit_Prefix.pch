@@ -1,0 +1,8 @@
+//
+// Prefix header for all source files of the 'RKit' target in the 'RKit' project
+//
+
+
+#ifdef __OBJC__
+#import <Cocoa/Cocoa.h>
+#endif
