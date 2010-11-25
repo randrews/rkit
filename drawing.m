@@ -1,31 +1,5 @@
 #include "rkit.h"
 
-void* get_value(lua_State *L, const char *key){
-	lua_pushstring(L, key);
-	lua_gettable(L, LUA_REGISTRYINDEX);
-	return lua_touserdata(L, -1);
-}
-
-NSMutableArray* loaded_sheets(lua_State *L){
-	return (NSMutableArray*)get_value(L, "loaded_sheets");
-}
-
-NSMutableArray* loaded_objects(lua_State *L){
-	return (NSMutableArray*)get_value(L, "loaded_objects");
-}
-
-NSWindow* window(lua_State *L){
-	return (NSWindow*)get_value(L, "window");
-}
-
-RKitView* rkit_view(lua_State *L){
-	return (RKitView*)get_value(L, "rkit_view");
-}
-
-RKitAgent* agent(lua_State *L){
-	return (RKitAgent*)get_value(L, "agent");
-}
-
 /*************************************************/
 /*** RKit standard bitmap functions **************/
 /*************************************************/

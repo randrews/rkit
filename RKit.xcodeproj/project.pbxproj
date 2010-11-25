@@ -12,6 +12,9 @@
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		A81567F4129F04A200E94DCA /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = A81567F3129F04A200E94DCA /* util.m */; };
+		A8156834129F0B6A00E94DCA /* timer.m in Sources */ = {isa = PBXBuildFile; fileRef = A8156833129F0B6A00E94DCA /* timer.m */; };
+		A815683A129F0C6B00E94DCA /* mob.m in Sources */ = {isa = PBXBuildFile; fileRef = A8156839129F0C6B00E94DCA /* mob.m */; };
 		A8546C861296470200618320 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A8546C751296470200618320 /* liblua.a */; };
 		A8546CBB12964B4C00618320 /* RKitView.m in Sources */ = {isa = PBXBuildFile; fileRef = A8546CBA12964B4C00618320 /* RKitView.m */; };
 		A8546CE9129841AD00618320 /* drawing.m in Sources */ = {isa = PBXBuildFile; fileRef = A8546CE6129841AD00618320 /* drawing.m */; };
@@ -42,6 +45,9 @@
 		8D1107310486CEB800E47090 /* RKit-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "RKit-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* RKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A81566FB129EF8EE00E94DCA /* test.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.lua; sourceTree = "<group>"; };
+		A81567F3129F04A200E94DCA /* util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
+		A8156833129F0B6A00E94DCA /* timer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = timer.m; sourceTree = "<group>"; };
+		A8156839129F0C6B00E94DCA /* mob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mob.m; sourceTree = "<group>"; };
 		A8546C6E1296470200618320 /* lapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lapi.h; sourceTree = "<group>"; };
 		A8546C6F1296470200618320 /* lauxlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lauxlib.h; sourceTree = "<group>"; };
 		A8546C701296470200618320 /* lcode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lcode.h; sourceTree = "<group>"; };
@@ -160,6 +166,9 @@
 				256AC3F00F4B6AF500CF3369 /* RKit_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				A8546C6D1296470200618320 /* liblua */,
+				A81567F3129F04A200E94DCA /* util.m */,
+				A8156833129F0B6A00E94DCA /* timer.m */,
+				A8156839129F0C6B00E94DCA /* mob.m */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -316,6 +325,9 @@
 				A8546CEA129841AD00618320 /* rkit.m in Sources */,
 				A8546CEE129843B000618320 /* MobView.m in Sources */,
 				A8DE276E129E141600676552 /* RKitAgent.m in Sources */,
+				A81567F4129F04A200E94DCA /* util.m in Sources */,
+				A8156834129F0B6A00E94DCA /* timer.m in Sources */,
+				A815683A129F0C6B00E94DCA /* mob.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

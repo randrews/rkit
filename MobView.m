@@ -11,6 +11,9 @@
 
 @implementation MobView
 
+@synthesize redraw;
+@synthesize lua;
+
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -20,11 +23,7 @@
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
-	if(redraw){ redraw([self frame], lua_function); }
-}
-
--(void) setRedraw: (void (*)(NSRect, int)) redraw_p {
-	redraw = redraw_p;
+	if(redraw){ redraw(lua, [self frame], lua_function); }
 }
 
 -(void) setLuaFunction: (int) lua_function_p {
