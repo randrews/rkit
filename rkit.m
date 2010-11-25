@@ -1,46 +1,36 @@
-#include "rkit.h"
+#import "rkit.h"
 
 NSMutableArray *loaded_sheets, *loaded_objects;
 
 lua_State *event_target; /* The Lua state we'll send event notifications to, redraw and input */
 
-RKitView *rkit_view;
-NSWindow *window;
-
 /*************************************************/
 /*** Event handler registration ******************/
 /*************************************************/
 
-int input_handler_set = 0; /* Nonzero if the last call to set_input_handler didn't pass nil */
-int redraw_handler_set = 0; /* Nonzero if the last call to set_redraw_handler didn't pass nil */
-int new_game_set = 0;
-
-int active_input_handler; /* Index in the Lua registry for the active kbd handler */
-int active_redraw_handler; /* Index in the Lua registry for the active kbd handler */
-int active_new_game;
-
-int set_handler(lua_State *L, int *handler){
+void set_handler(lua_State *L, const char *name){
 	int handler_set = !(lua_isnoneornil(L, 1)); /* Check whether we set or cleared the handler */
 
 	/* If this is an invalid handler... */
 	if(handler_set && !lua_isfunction(L, 1)){ luaL_typerror(L, 1, "function"); }
 
-	*handler = luaL_ref(L, LUA_REGISTRYINDEX); /* Shove this in the registry */
-	return handler_set;
+	lua_pushstring(L, name);
+	lua_pushvalue(L, 1);
+	lua_settable(L, LUA_REGISTRYINDEX); /* Shove this in the registry */
 }
 
 int set_input_handler(lua_State *L){
-	input_handler_set = set_handler(L, &active_input_handler);
+	set_handler(L, "input");
 	return 0;
 }
 
 int set_redraw_handler(lua_State *L){
-	redraw_handler_set = set_handler(L, &active_redraw_handler);
+	set_handler(L, "redraw");
 	return 0;
 }
 
 int set_new_game(lua_State *L){
-	new_game_set = set_handler(L, &active_new_game);
+	set_handler(L, "new_game");
 	return 0;
 }
 
@@ -56,7 +46,7 @@ int create_timer(lua_State *L){
 	int timer_fn_index = luaL_ref(L, LUA_REGISTRYINDEX);
 
 	NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval: delay
-													  target: rkit_view
+													  target: rkit_view(L)
 													selector: @selector(callTimer:)
 													userInfo: [NSNumber numberWithInt: timer_fn_index]
 													 repeats: YES];
@@ -90,38 +80,38 @@ void rkit_timer_hook(int timer_fn){
 /*** RKit redraw hook ****************************/
 /*************************************************/
 
-void redraw(NSRect rect){
-	if(redraw_handler_set){
-		lua_pushinteger(event_target, active_redraw_handler);
-		lua_gettable(event_target, LUA_REGISTRYINDEX);
-		lua_call(event_target, 0, 0);
+void redraw(lua_State *L, NSRect rect){
+	lua_pushstring(L, "redraw");
+	lua_gettable(L, LUA_REGISTRYINDEX);
+	if(!lua_isnil(L, -1)){
+		lua_call(L, 0, 0);
 	}
 }
 
 int trigger_redraw(lua_State *L){
-	[rkit_view setNeedsDisplay: YES];
+	[rkit_view(L) setNeedsDisplay: YES];
 	return 0;
 }
 
-void new_game(){
-	if(new_game_set){
-		lua_pushinteger(event_target, active_new_game);
-		lua_gettable(event_target, LUA_REGISTRYINDEX);
-		lua_call(event_target, 0, 0);
-	}	
+void new_game(lua_State *L){
+	lua_pushstring(L, "new_game");
+	lua_gettable(L, LUA_REGISTRYINDEX);
+	if(!lua_isnil(L, -1)){
+		lua_call(L, 0, 0);
+	}
 }
 
 /*************************************************/
 /*** RKit input functions ************************/
 /*************************************************/
 
-void key_down(const char *letter, int key_code){
-	if(input_handler_set){
-		lua_pushinteger(event_target, active_input_handler);
-		lua_gettable(event_target, LUA_REGISTRYINDEX);
-		lua_pushstring(event_target, letter);
-		lua_pushinteger(event_target, key_code);
-		lua_call(event_target, 2, 0);
+void key_down(lua_State *L, const char *letter, int key_code){
+	lua_pushstring(L, "input");
+	lua_gettable(L, LUA_REGISTRYINDEX);
+	if(!lua_isnil(L, -1)){
+		lua_pushstring(L, letter);
+		lua_pushinteger(L, key_code);
+		lua_call(L, 2, 0);
 	}
 }
 
@@ -149,7 +139,7 @@ int create_mob(lua_State *L){
 	[mob setFrame: NSMakeRect(x, y, w, h)];
 	[mob setRedraw: mob_redraw_callback];
 	[mob setLuaFunction: fn];
-	[rkit_view addSubview: mob];
+	[rkit_view(L) addSubview: mob];
 
 	[loaded_objects addObject: mob];
 	lua_pushlightuserdata(L, mob);
@@ -218,23 +208,36 @@ static const struct luaL_reg rkit_lib[] = {
 	{NULL, NULL}
 };
 
-int open_rkit(lua_State *L, RKitView *view, NSWindow *window_p){
-	loaded_objects = [NSMutableArray arrayWithCapacity: 1];
-	loaded_sheets = [NSMutableArray arrayWithCapacity: 1];
+void rkit_register_value(lua_State *L, const char *key, void *value){
+	lua_pushstring(L, key);
+	lua_pushlightuserdata(L, value);
+	lua_settable(L, LUA_REGISTRYINDEX);
+}
 
-	[loaded_objects retain];
-	[loaded_sheets retain];
-	
-	event_target = L;
-	window = window_p;
-	rkit_view = view;
-
+void rkit_set_window(lua_State *L, NSWindow *window){
+	rkit_register_value(L, "window", window);
 	[window retain];
-	[rkit_view retain];
+}
 
-	[view setRedraw: redraw];
-	[view setKeydown: key_down];
-	[view setTimerHook: rkit_timer_hook];
+void rkit_set_view(lua_State *L, RKitView *view){
+	rkit_register_value(L, "view", view);
+	view.redraw = redraw;
+	view.keydown = key_down;
+	//view.timer_hook = rkit_timer_hook;
+	[view retain];
+}
+
+void rkit_set_agent(lua_State *L, RKitAgent *agent){
+	rkit_register_value(L, "agent", agent);
+	[agent retain];
+}
+
+int open_rkit(lua_State *L){
+	NSMutableArray *loaded_objects = [[NSMutableArray arrayWithCapacity: 1] retain];
+	NSMutableArray *loaded_sheets = [[NSMutableArray arrayWithCapacity: 1] retain];
+
+	rkit_register_value(L, "loaded_objects", loaded_objects);
+	rkit_register_value(L, "loaded_sheets", loaded_sheets);
 
 	luaL_openlib(L, "RKit", rkit_lib, 0);
 	return 1;
@@ -260,8 +263,8 @@ void close_rkit(){
 		[obj release];
 	}
 
-	[rkit_view release];
-	[window release];
+//	[rkit_view release];
+//	[window release];
 	[loaded_objects release];
 	[loaded_sheets release];
 }

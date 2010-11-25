@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-
+#import "rkit.h"
 
 @interface MobView : NSView {
     void (*redraw)(NSRect, int);

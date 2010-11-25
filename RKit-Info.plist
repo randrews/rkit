@@ -5,9 +5,9 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDisplayName</key>
-	<string>Matricks</string>
+	<string>RKit</string>
 	<key>CFBundleExecutable</key>
-	<string>Matricks</string>
+	<string>RKit</string>
 	<key>CFBundleIconFile</key>
 	<string>Matricks.icns</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Matricks</string>
+	<string>RKit</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

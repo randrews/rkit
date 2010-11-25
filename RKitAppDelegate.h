@@ -7,19 +7,16 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#include "rkit.h"
+#import "RKitAgent.h"
+#import "rkit.h"
 
 @interface RKitAppDelegate : NSObject <NSApplicationDelegate> {
-    NSWindow *window;
-	RKitView *rkit_view;
+	NSMutableArray *loaded_agents;
 }
 
-@property (assign) IBOutlet RKitView *rkit_view;
-@property (assign) IBOutlet NSWindow *window;
+-(id) init;
+-(void) finalize;
 
--(BOOL) setupLuaState: (lua_State*) L withCode: (const char*) code;
--(void) logLuaErrorFrom: (lua_State*) L;
--(BOOL) applicationShouldTerminateAfterLastWindowClosed:(NSApplication*) app;
--(void) restartGame: (id) sender;
--(void) applicationWillTerminate: (NSNotification *)notification;
+-(void) applicationWillTerminate: (NSNotification*) notification;
+-(void) openFile: (id) sender;
 @end

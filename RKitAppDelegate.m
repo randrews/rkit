@@ -6,44 +6,43 @@
 //  Copyright 2010 Home. All rights reserved.
 //
 
-#import "RKitAppDelegate.h"
+#import "rkit.h"
 
 @implementation RKitAppDelegate
 
-@synthesize window;
-@synthesize rkit_view;
-
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-	lua_State *L = lua_open();
-	luaL_openlibs(L);
-	open_rkit(L, rkit_view, window);
-	NSString *path = [[NSBundle mainBundle] pathForResource: @"rkit" ofType: @"lua"];
-	NSString *code = [NSString stringWithFormat: @"dofile(\"%@\")", path];
-	[self setupLuaState: L withCode: [code UTF8String]];
-	new_game();
+-(id) init {
+	[super init];
+	loaded_agents = [[NSMutableArray alloc] initWithCapacity: 1];
+	return self;
 }
 
--(void) applicationWillTerminate: (NSNotification *)notification {
-	close_rkit();
+-(void) finalize {
+	for(RKitAgent* agent in loaded_agents){
+		[agent release];
+	}
+	[loaded_agents release];
+	[super finalize];
 }
 
--(BOOL) setupLuaState: (lua_State*) L withCode: (const char*) code {
-	int lua_error = luaL_loadbuffer(L, code, strlen(code), "line") || lua_pcall(L, 0, 0, 0);
+-(void) applicationDidFinishLaunching:(NSNotification *)aNotification {
+
+}
+
+-(void) openFile: (id) sender {
+    NSOpenPanel *oPanel = [NSOpenPanel openPanel];
+
+	[oPanel setAllowedFileTypes:[NSArray arrayWithObject:@"lua"]];
+    [oPanel setAllowsMultipleSelection:NO];
 	
-	if(lua_error){ [self logLuaErrorFrom: L]; }
-	return !lua_error;	
+    if ([oPanel runModal] == NSOKButton) {
+        NSString *file = [[oPanel URL] path];
+		RKitAgent *agent = [[RKitAgent alloc] initWithFile: file];
+		[loaded_agents addObject: agent];
+    }
 }
 
--(void) logLuaErrorFrom:(lua_State *)L {
-	NSLog(@"%s\n", lua_tostring(L, -1));
-	lua_pop(L, 1);
+-(void) applicationWillTerminate: (NSNotification*) notification {
+	//close_rkit();
 }
 
--(BOOL) applicationShouldTerminateAfterLastWindowClosed:(NSApplication*) app {
-    return YES;
-}
-
--(void) restartGame: (id) sender {
-	new_game();
-}
 @end

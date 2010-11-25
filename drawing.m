@@ -1,18 +1,42 @@
 #include "rkit.h"
 
+void* get_value(lua_State *L, const char *key){
+	lua_pushstring(L, key);
+	lua_gettable(L, LUA_REGISTRYINDEX);
+	return lua_touserdata(L, -1);
+}
+
+NSMutableArray* loaded_sheets(lua_State *L){
+	return (NSMutableArray*)get_value(L, "loaded_sheets");
+}
+
+NSMutableArray* loaded_objects(lua_State *L){
+	return (NSMutableArray*)get_value(L, "loaded_objects");
+}
+
+NSWindow* window(lua_State *L){
+	return (NSWindow*)get_value(L, "window");
+}
+
+RKitView* rkit_view(lua_State *L){
+	return (RKitView*)get_value(L, "rkit_view");
+}
+
+RKitAgent* agent(lua_State *L){
+	return (RKitAgent*)get_value(L, "agent");
+}
+
 /*************************************************/
 /*** RKit standard bitmap functions **************/
 /*************************************************/
 
 int load_lua_bitmap(lua_State *L){
 	const char *path = luaL_checkstring(L, 1);
-	NSString *ns_path = [NSString stringWithUTF8String: path];
-	NSString *real_path = [[NSBundle mainBundle] pathForResource: ns_path ofType: @"png"];
-	NSImage *bmp = [[NSImage alloc] initWithContentsOfFile: real_path];
+	NSImage *bmp = [agent(L) loadImage:path];
 
 	if(!bmp){ return luaL_error(L, "Failed to load bitmap %s", path); }
 
-	[loaded_objects addObject: bmp];
+	[loaded_objects(L) addObject: bmp];
 	lua_pushlightuserdata(L, bmp);
 	return 1;
 }
@@ -144,7 +168,7 @@ int load_tilesheet(lua_State *L){
 
 	if(!ts->bmp){ return luaL_error(L, "Failed to load bitmap %s", path); }
 
-	[loaded_sheets addObject: [NSValue valueWithPointer: ts]];
+	[loaded_sheets(L) addObject: [NSValue valueWithPointer: ts]];
 	lua_pushlightuserdata(L, ts);
 	return 1;
 }
@@ -179,7 +203,7 @@ int clear_screen(lua_State *L){
 
 	NSColor *c = color_from_int(color);
 	[c setFill];
-	[[NSBezierPath bezierPathWithRect: [rkit_view bounds]] fill];
+	[[NSBezierPath bezierPathWithRect: [rkit_view(L) bounds]] fill];
 
 	return 0;
 }
@@ -212,13 +236,13 @@ int draw_text(lua_State *L){
 
 int set_title(lua_State *L){
 	const char *title = luaL_checkstring(L, 1);
-	[window setTitle: [NSString stringWithUTF8String: title]];
+	[window(L) setTitle: [NSString stringWithUTF8String: title]];
 	return 0;
 }
 
 int set_resizable(lua_State *L){
 	int resizable = lua_toboolean(L, 1);
-	[window setStyleMask: (NSTitledWindowMask |
+	[window(L) setStyleMask: (NSTitledWindowMask |
 						   NSClosableWindowMask |
 						   (resizable ? NSResizableWindowMask : 0) |
 						   NSMiniaturizableWindowMask)];
@@ -226,7 +250,7 @@ int set_resizable(lua_State *L){
 }
 
 int resize_window(lua_State *L){
-	NSRect frame = [window frame];
+	NSRect frame = [window(L) frame];
 
 	int x = frame.origin.x, y = frame.origin.y;
 
@@ -238,7 +262,7 @@ int resize_window(lua_State *L){
 		y = luaL_checkinteger(L, 4);
 	}
 
-	[window setFrame: NSMakeRect(x, y, w, h)
+	[window(L) setFrame: NSMakeRect(x, y, w, h)
 			 display: YES];
 
 	return 0;
