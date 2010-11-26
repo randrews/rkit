@@ -21,8 +21,6 @@ int create_timer(lua_State *L){
 													selector: @selector(callTimer:)
 													userInfo: [NSNumber numberWithInt: timer_fn_index]
 													 repeats: YES];
-	// [timer retain];
-	
 	[loaded_objects(L) addObject: timer];
 	lua_pushlightuserdata(L, timer);
 	return 1;
@@ -35,7 +33,6 @@ int stop_timer(lua_State *L){
 	int timer_idx = [[timer userInfo] intValue];
 	
 	[timer invalidate];
-	[timer release];
 	luaL_unref(L, LUA_REGISTRYINDEX, timer_idx);
 	
 	return 0;

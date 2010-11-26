@@ -24,12 +24,13 @@ int create_mob(lua_State *L){
 	lua_pushvalue(L, 5);
 	int fn = luaL_ref(L, LUA_REGISTRYINDEX); /* Shove this in the registry */
 	
-	MobView *mob = [[[MobView alloc] init] autorelease];
+	MobView *mob = [[[MobView alloc] initWithFrame:NSMakeRect(x, y, w, h)] autorelease];
+	[mob setLua: L];
 	[mob setWantsLayer: YES];
-	[mob setFrame: NSMakeRect(x, y, w, h)];
 	[mob setRedraw: mob_redraw_callback];
 	[mob setLuaFunction: fn];
 	[rkit_view(L) addSubview: mob];
+	[mob setNeedsDisplay: YES];
 	
 	[loaded_objects(L) addObject: mob];
 	lua_pushlightuserdata(L, mob);

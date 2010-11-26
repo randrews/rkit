@@ -13,21 +13,10 @@
 
 @synthesize redraw;
 @synthesize lua;
-
-- (id)initWithFrame:(NSRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code here.
-    }
-    return self;
-}
+@synthesize luaFunction;
 
 - (void)drawRect:(NSRect)dirtyRect {
-	if(redraw){ redraw(lua, [self frame], lua_function); }
-}
-
--(void) setLuaFunction: (int) lua_function_p {
-	lua_function = lua_function_p;
+	if(redraw){ redraw(lua, [self frame], luaFunction); }
 }
 
 @end

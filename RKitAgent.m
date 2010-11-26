@@ -43,6 +43,7 @@
 
 -(void) windowWillClose: (NSNotification*) notification {
 	NSLog(@"Closing");
+	close_rkit(lua);
 }
 
 -(BOOL) runLuaCode: (const char*) code {

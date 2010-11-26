@@ -27,4 +27,13 @@ function draw_grid(grid, left, top)
    end
 end
 
-RKit.redraw()
+mob = RKit.create_mob(100, 100, 32, 32,
+					function()
+						col = RKit.color(255, 64, 64)
+						RKit.draw_glyph(ts, 3, 0, 0, col, -1)
+					end)
+
+tim = RKit.create_timer(function() print("whatever") end, 0.5)
+
+-- There's an implied redraw after we finish loading
+-- RKit.redraw()

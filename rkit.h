@@ -38,7 +38,7 @@ typedef struct {
 /* rkit.m */
 int open_rkit(lua_State *L);
 void rkit_set_view(lua_State *L, RKitView *view);
-void close_rkit();
+void close_rkit(lua_State *L);
 void new_game();
 void key_down(lua_State *L, const char *letter, int key_code);
 
@@ -59,6 +59,7 @@ int resize_window(lua_State *L);
 /* timer.m */
 int create_timer(lua_State *L);
 int stop_timer(lua_State *L);
+void rkit_timer_hook(lua_State *L, int timer_fn);
 
 /* util.m */
 void *get_value(lua_State *L, const char *key);

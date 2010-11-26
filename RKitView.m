@@ -28,8 +28,6 @@
 /*************************************************/
 
 - (void)drawRect:(NSRect)dirtyRect {
-	NSLog(@"redraw");
-
 	if(redraw){ redraw(lua, [self frame]); }
 }
 

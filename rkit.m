@@ -74,6 +74,9 @@ int open_rkit(lua_State *L){
 	NSMutableArray *loaded_objects = [[NSMutableArray arrayWithCapacity: 1] retain];
 	NSMutableArray *loaded_sheets = [[NSMutableArray arrayWithCapacity: 1] retain];
 
+	// These aren't leaks; we release them in close_rkit
+	// Because the only thing holding a ref to them is Lua,
+	// we need to keep them retained.
 	rkit_register_value(L, "loaded_objects", loaded_objects);
 	rkit_register_value(L, "loaded_sheets", loaded_sheets);
 
@@ -82,10 +85,10 @@ int open_rkit(lua_State *L){
 }
 
 void rkit_set_view(lua_State *L, RKitView *view){
-	rkit_register_value(L, "view", view);
+	rkit_register_value(L, "rkit_view", view);
 	view.redraw = redraw;
 	view.keydown = key_down;
-	//view.timer_hook = rkit_timer_hook;
+	view.timer_hook = rkit_timer_hook;
 	[view retain];
 }
 
@@ -99,18 +102,18 @@ void close_rkit(lua_State *L){
 		we can't put them in the same list as everything else */
 	for(NSValue *ts_id in loaded_sheets(L)){
 		Tilesheet *ts = [ts_id pointerValue];
-		[ts->bg_image release];
-		[ts->bmp release];
 		free(ts);
 	}
 
-	/* Delete the list of loaded everything else */
+	/* Stop all the timers */
 	for(NSObject *obj in loaded_objects(L)){
-		[obj release];
+		if([obj isKindOfClass:[NSTimer class]]){
+			NSTimer *timer = (NSTimer*) obj;
+			[timer invalidate];
+		}
 	}
 
-//	[rkit_view release];
-//	[window release];
+	/* Releasing the arrays releases everything in them */
 	[loaded_objects(L) release];
 	[loaded_sheets(L) release];
 }
