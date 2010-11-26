@@ -133,9 +133,7 @@ int load_tilesheet(lua_State *L){
 	ts->width = width;
 	ts->height = height;
 
-	NSString *ns_path = [NSString stringWithUTF8String: path];
-	NSString *real_path = [[NSBundle mainBundle] pathForResource: ns_path ofType: @"png"];
-	ts->bmp = [[NSImage alloc] initWithContentsOfFile: real_path];
+	ts->bmp = [agent(L) loadImage:path];
 
 	ts->bg_rect = NSMakeRect(0, 0, ts->width, ts->height);
 	ts->bg_image = [[NSImage alloc] initWithSize: ts->bg_rect.size];

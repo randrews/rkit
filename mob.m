@@ -24,7 +24,7 @@ int create_mob(lua_State *L){
 	lua_pushvalue(L, 5);
 	int fn = luaL_ref(L, LUA_REGISTRYINDEX); /* Shove this in the registry */
 	
-	MobView *mob = [[MobView alloc] init];
+	MobView *mob = [[[MobView alloc] init] autorelease];
 	[mob setWantsLayer: YES];
 	[mob setFrame: NSMakeRect(x, y, w, h)];
 	[mob setRedraw: mob_redraw_callback];

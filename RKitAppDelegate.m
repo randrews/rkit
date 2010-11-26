@@ -28,6 +28,13 @@
 
 }
 
+-(BOOL) application: (NSApplication*) app openFile: (NSString*) path {
+	RKitAgent *agent = [[[RKitAgent alloc] initWithFile: path] autorelease];
+	[agent.window makeKeyAndOrderFront: self];
+	[loaded_agents addObject: agent];
+	return YES;
+}
+
 -(void) openFile: (id) sender {
     NSOpenPanel *oPanel = [NSOpenPanel openPanel];
 
@@ -35,9 +42,10 @@
     [oPanel setAllowsMultipleSelection:NO];
 	
     if ([oPanel runModal] == NSOKButton) {
-        NSString *file = [[oPanel URL] path];
-		RKitAgent *agent = [[RKitAgent alloc] initWithFile: file];
-		[loaded_agents addObject: agent];
+		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL: [oPanel URL]];
+		NSString *file = [[oPanel URL] path];
+		[self application: [NSApplication sharedApplication]
+				 openFile: file];
     }
 }
 

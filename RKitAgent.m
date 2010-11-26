@@ -64,7 +64,7 @@
 -(NSImage*) loadImage: (const char*) path {
 	NSString *ns_path = [NSString stringWithUTF8String: path];
 	NSString *real_path = [[NSBundle mainBundle] pathForResource: ns_path ofType: @"png"];
-	return [[NSImage alloc] initWithContentsOfFile: real_path];
+	return [[[NSImage alloc] initWithContentsOfFile: real_path] autorelease];
 }
 
 @end

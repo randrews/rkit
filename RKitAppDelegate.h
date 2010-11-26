@@ -19,4 +19,5 @@
 
 -(void) applicationWillTerminate: (NSNotification*) notification;
 -(void) openFile: (id) sender;
+-(BOOL) application: (NSApplication*) app openFile: (NSString*) path;
 @end
