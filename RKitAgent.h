@@ -26,9 +26,7 @@
 
 -(void) awakeFromNib;
 -(void) windowWillClose: (NSNotification*) notification;
--(BOOL) runLuaCode: (const char*) code;
--(void) logLuaErrorFrom: (lua_State*) L;
--(void) restartGame: (id) sender;
+-(void) restart: (id) sender;
 
 // We want to do different things here for whether we're in dev mode,
 // so we'll have a method that the lua responders will call.

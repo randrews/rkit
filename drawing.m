@@ -6,7 +6,7 @@
 
 int load_lua_bitmap(lua_State *L){
 	const char *path = luaL_checkstring(L, 1);
-	NSImage *bmp = [[agent(L) loadImage:path] retain];
+	NSImage *bmp = [agent(L) loadImage:path];
 
 	if(!bmp){ return luaL_error(L, "Failed to load bitmap %s", path); }
 

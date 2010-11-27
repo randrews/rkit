@@ -16,9 +16,50 @@
 @synthesize lua;
 @synthesize file;
 
+//////////////////////////////////////////////////////////////////
+/// Utility methods //////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+-(void) logLuaError {
+	NSLog(@"%s\n", lua_tostring(lua, -1));
+	lua_pop(lua, 1);
+}
+
+-(void) closeLua {
+	close_rkit(lua);
+	lua_close(lua);
+	lua = 0;	
+}
+
+-(BOOL) runLuaCode: (const char*) code {
+	int lua_error = luaL_loadbuffer(lua, code, strlen(code), "line") || lua_pcall(lua, 0, 0, 0);
+	
+	if(lua_error){ [self logLuaError]; }
+	return !lua_error;	
+}
+
+-(void) runFile {
+	NSString *code = [NSString stringWithFormat: @"dofile(\"%@\")", file];
+	[self runLuaCode: [code UTF8String]];	
+}
+
+-(void) prepareLua {
+	lua = lua_open();
+	luaL_openlibs(lua);
+	rkit_view.lua = lua;
+	open_rkit(lua);
+	rkit_set_window(lua, window);
+	rkit_set_view(lua, rkit_view);
+	rkit_set_agent(lua, self);	
+}
+
+//////////////////////////////////////////////////////////////////
+/// Interface methods ////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
 -(id) initWithFile: (NSString*) file_p {
 	[super init];
-	file = file_p;
+	self.file = file_p;
 	[NSBundle loadNibNamed:@"rkit_window" owner:self];
 	return self;
 }
@@ -29,37 +70,20 @@
 }
 
 -(void) awakeFromNib {
-	lua = lua_open();
-	luaL_openlibs(lua);
-	rkit_view.lua = lua;
-	open_rkit(lua);
-	rkit_set_window(lua, window);
-	rkit_set_view(lua, rkit_view);
-	rkit_set_agent(lua, self);
-	
-	NSString *code = [NSString stringWithFormat: @"dofile(\"%@\")", file];
-	[self runLuaCode: [code UTF8String]];
+	[self prepareLua];
+	[self runFile];
 }
 
 -(void) windowWillClose: (NSNotification*) notification {
 	NSLog(@"Closing");
-	close_rkit(lua);
+	[self closeLua];
 }
 
--(BOOL) runLuaCode: (const char*) code {
-	int lua_error = luaL_loadbuffer(lua, code, strlen(code), "line") || lua_pcall(lua, 0, 0, 0);
-
-	if(lua_error){ [self logLuaErrorFrom: lua]; }
-	return !lua_error;	
-}
-
--(void) logLuaErrorFrom:(lua_State *)L {
-	NSLog(@"%s\n", lua_tostring(L, -1));
-	lua_pop(L, 1);
-}
-
--(void) restartGame: (id) sender {
-	new_game();
+-(void) restart: (id) sender {
+	[self closeLua];
+	[self prepareLua];
+	[self runFile];
+	NSLog(@"Reload");
 }
 
 -(NSImage*) loadImage: (const char*) path {

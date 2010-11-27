@@ -33,7 +33,6 @@ mob = RKit.create_mob(100, 100, 32, 32,
 						RKit.draw_glyph(ts, 3, 0, 0, col, -1)
 					end)
 
-tim = RKit.create_timer(function() print("whatever") ; RKit.redraw() end, 0.5)
+tim = RKit.create_timer(function() print("whatever") ; RKit.redraw() end, 2)
 
--- There's an implied redraw after we finish loading
--- RKit.redraw()
+RKit.redraw()
