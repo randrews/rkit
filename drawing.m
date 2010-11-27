@@ -6,7 +6,7 @@
 
 int load_lua_bitmap(lua_State *L){
 	const char *path = luaL_checkstring(L, 1);
-	NSImage *bmp = [agent(L) loadImage:path];
+	NSImage *bmp = [[agent(L) loadImage:path] retain];
 
 	if(!bmp){ return luaL_error(L, "Failed to load bitmap %s", path); }
 
@@ -133,7 +133,7 @@ int load_tilesheet(lua_State *L){
 	ts->width = width;
 	ts->height = height;
 
-	ts->bmp = [agent(L) loadImage:path];
+	ts->bmp = [[agent(L) loadImage:path] retain];
 
 	ts->bg_rect = NSMakeRect(0, 0, ts->width, ts->height);
 	ts->bg_image = [[NSImage alloc] initWithSize: ts->bg_rect.size];

@@ -102,6 +102,8 @@ void close_rkit(lua_State *L){
 		we can't put them in the same list as everything else */
 	for(NSValue *ts_id in loaded_sheets(L)){
 		Tilesheet *ts = [ts_id pointerValue];
+		[ts->bmp release];
+		[ts->bg_image release];
 		free(ts);
 	}
 
