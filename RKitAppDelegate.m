@@ -49,8 +49,12 @@
     }
 }
 
+-(void) restartActiveWindow: (id) sender {
+	RKitAgent *agent = (RKitAgent*) [[[NSApplication sharedApplication] keyWindow] delegate];
+	[agent restart: sender];
+}
+
 -(void) applicationWillTerminate: (NSNotification*) notification {
-	//close_rkit();
 }
 
 @end

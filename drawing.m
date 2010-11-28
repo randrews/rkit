@@ -222,20 +222,11 @@ int set_resizable(lua_State *L){
 }
 
 int resize_window(lua_State *L){
-	NSRect frame = [window(L) frame];
-
-	int x = frame.origin.x, y = frame.origin.y;
-
 	int w = luaL_checkinteger(L, 1);
 	int h = luaL_checkinteger(L, 2);
 
-	if(lua_gettop(L) >= 4){
-		x = luaL_checkinteger(L, 3);
-		y = luaL_checkinteger(L, 4);
-	}
-
-	[window(L) setFrame: NSMakeRect(x, y, w, h)
-			 display: YES];
+	[rkit_view(L) setFrameSize: NSMakeSize(w, h)];
+	[rkit_view(L) setNeedsDisplay: YES];
 
 	return 0;
 }

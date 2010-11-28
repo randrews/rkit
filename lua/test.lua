@@ -1,5 +1,5 @@
 RKit.resizable(false)
-RKit.resize(640, 480, 200, 200)
+RKit.resize(640, 480)
 RKit.set_title("Matricks")
 
 floor = RKit.load_bitmap("floor")
