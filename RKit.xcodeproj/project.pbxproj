@@ -27,6 +27,7 @@
 		A8546D04129886A500618320 /* Tahin-font.png in Resources */ = {isa = PBXBuildFile; fileRef = A8546CFE129886A500618320 /* Tahin-font.png */; };
 		A8546D2512988D3900618320 /* Matricks.icns in Resources */ = {isa = PBXBuildFile; fileRef = A8546D2412988D3900618320 /* Matricks.icns */; };
 		A8546D2C12988E0900618320 /* rkit.lua in Resources */ = {isa = PBXBuildFile; fileRef = A8546D2B12988E0900618320 /* rkit.lua */; };
+		A8B5915412A2EE1800D1DEC5 /* restart.png in Resources */ = {isa = PBXBuildFile; fileRef = A8B5915312A2EE1800D1DEC5 /* restart.png */; };
 		A8DE2764129E0C5000676552 /* rkit_window.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8DE2763129E0C5000676552 /* rkit_window.xib */; };
 		A8DE276E129E141600676552 /* RKitAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = A8DE276D129E141600676552 /* RKitAgent.m */; };
 /* End PBXBuildFile section */
@@ -86,6 +87,7 @@
 		A8546CFE129886A500618320 /* Tahin-font.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Tahin-font.png"; sourceTree = "<group>"; };
 		A8546D2412988D3900618320 /* Matricks.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Matricks.icns; sourceTree = "<group>"; };
 		A8546D2B12988E0900618320 /* rkit.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rkit.lua; sourceTree = "<group>"; };
+		A8B5915312A2EE1800D1DEC5 /* restart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = restart.png; sourceTree = "<group>"; };
 		A8DE2763129E0C5000676552 /* rkit_window.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = rkit_window.xib; sourceTree = "<group>"; };
 		A8DE276C129E141600676552 /* RKitAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKitAgent.h; sourceTree = "<group>"; };
 		A8DE276D129E141600676552 /* RKitAgent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RKitAgent.m; sourceTree = "<group>"; };
@@ -230,6 +232,7 @@
 		A8546CF8129886A400618320 /* img */ = {
 			isa = PBXGroup;
 			children = (
+				A8B5915312A2EE1800D1DEC5 /* restart.png */,
 				A8546CF9129886A500618320 /* floor.png */,
 				A8546CFA129886A500618320 /* icon.tiff */,
 				A8546CFC129886A500618320 /* matricks.png */,
@@ -308,6 +311,7 @@
 				A8546D2512988D3900618320 /* Matricks.icns in Resources */,
 				A8546D2C12988E0900618320 /* rkit.lua in Resources */,
 				A8DE2764129E0C5000676552 /* rkit_window.xib in Resources */,
+				A8B5915412A2EE1800D1DEC5 /* restart.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
