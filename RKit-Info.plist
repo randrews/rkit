@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>RKit</string>
 	<key>CFBundleIconFile</key>
-	<string>Matricks.icns</string>
+	<string>cube-world.icns</string>
 	<key>CFBundleIdentifier</key>
 	<string>org.geekfu.matricks</string>
 	<key>CFBundleInfoDictionaryVersion</key>

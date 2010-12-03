@@ -15,6 +15,7 @@
 		A81567F4129F04A200E94DCA /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = A81567F3129F04A200E94DCA /* util.m */; };
 		A8156834129F0B6A00E94DCA /* timer.m in Sources */ = {isa = PBXBuildFile; fileRef = A8156833129F0B6A00E94DCA /* timer.m */; };
 		A815683A129F0C6B00E94DCA /* mob.m in Sources */ = {isa = PBXBuildFile; fileRef = A8156839129F0C6B00E94DCA /* mob.m */; };
+		A82CD9A912A89C97007950F6 /* cube-world.icns in Resources */ = {isa = PBXBuildFile; fileRef = A82CD9A812A89C97007950F6 /* cube-world.icns */; };
 		A8546C861296470200618320 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A8546C751296470200618320 /* liblua.a */; };
 		A8546CBB12964B4C00618320 /* RKitView.m in Sources */ = {isa = PBXBuildFile; fileRef = A8546CBA12964B4C00618320 /* RKitView.m */; };
 		A8546CE9129841AD00618320 /* drawing.m in Sources */ = {isa = PBXBuildFile; fileRef = A8546CE6129841AD00618320 /* drawing.m */; };
@@ -49,6 +50,7 @@
 		A81567F3129F04A200E94DCA /* util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
 		A8156833129F0B6A00E94DCA /* timer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = timer.m; sourceTree = "<group>"; };
 		A8156839129F0C6B00E94DCA /* mob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mob.m; sourceTree = "<group>"; };
+		A82CD9A812A89C97007950F6 /* cube-world.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "cube-world.icns"; path = "../../Dropbox/icons/cube-world.icns"; sourceTree = SOURCE_ROOT; };
 		A8546C6E1296470200618320 /* lapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lapi.h; sourceTree = "<group>"; };
 		A8546C6F1296470200618320 /* lauxlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lauxlib.h; sourceTree = "<group>"; };
 		A8546C701296470200618320 /* lcode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lcode.h; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A82CD9A812A89C97007950F6 /* cube-world.icns */,
 				A8546D2A12988E0900618320 /* lua */,
 				A8546D2412988D3900618320 /* Matricks.icns */,
 				A8546CF8129886A400618320 /* img */,
@@ -312,6 +315,7 @@
 				A8546D2C12988E0900618320 /* rkit.lua in Resources */,
 				A8DE2764129E0C5000676552 /* rkit_window.xib in Resources */,
 				A8B5915412A2EE1800D1DEC5 /* restart.png in Resources */,
+				A82CD9A912A89C97007950F6 /* cube-world.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
