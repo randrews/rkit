@@ -15,7 +15,13 @@
 		A81567F4129F04A200E94DCA /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = A81567F3129F04A200E94DCA /* util.m */; };
 		A8156834129F0B6A00E94DCA /* timer.m in Sources */ = {isa = PBXBuildFile; fileRef = A8156833129F0B6A00E94DCA /* timer.m */; };
 		A815683A129F0C6B00E94DCA /* mob.m in Sources */ = {isa = PBXBuildFile; fileRef = A8156839129F0C6B00E94DCA /* mob.m */; };
-		A82CD9A912A89C97007950F6 /* cube-world.icns in Resources */ = {isa = PBXBuildFile; fileRef = A82CD9A812A89C97007950F6 /* cube-world.icns */; };
+		A82CDA2D12AB1B79007950F6 /* corners.png in Resources */ = {isa = PBXBuildFile; fileRef = A82CDA2C12AB1B79007950F6 /* corners.png */; };
+		A82CDA2F12AB1B95007950F6 /* walls.png in Resources */ = {isa = PBXBuildFile; fileRef = A82CDA2E12AB1B95007950F6 /* walls.png */; };
+		A82CDA3112AB1BBC007950F6 /* cube-world.icns in Resources */ = {isa = PBXBuildFile; fileRef = A82CDA3012AB1BBC007950F6 /* cube-world.icns */; };
+		A83E41C512AC3B1300E56C22 /* rkit.lua in Resources */ = {isa = PBXBuildFile; fileRef = A8546D2B12988E0900618320 /* rkit.lua */; };
+		A83E41C612AC3B1300E56C22 /* test.lua in Resources */ = {isa = PBXBuildFile; fileRef = A81566FB129EF8EE00E94DCA /* test.lua */; };
+		A83E41C712AC3B1300E56C22 /* util.lua in Resources */ = {isa = PBXBuildFile; fileRef = A83E419B12AC329900E56C22 /* util.lua */; };
+		A83E423012AC409800E56C22 /* point.lua in Resources */ = {isa = PBXBuildFile; fileRef = A83E422F12AC409800E56C22 /* point.lua */; };
 		A8546C861296470200618320 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A8546C751296470200618320 /* liblua.a */; };
 		A8546CBB12964B4C00618320 /* RKitView.m in Sources */ = {isa = PBXBuildFile; fileRef = A8546CBA12964B4C00618320 /* RKitView.m */; };
 		A8546CE9129841AD00618320 /* drawing.m in Sources */ = {isa = PBXBuildFile; fileRef = A8546CE6129841AD00618320 /* drawing.m */; };
@@ -27,7 +33,6 @@
 		A8546D03129886A500618320 /* solved.png in Resources */ = {isa = PBXBuildFile; fileRef = A8546CFD129886A500618320 /* solved.png */; };
 		A8546D04129886A500618320 /* Tahin-font.png in Resources */ = {isa = PBXBuildFile; fileRef = A8546CFE129886A500618320 /* Tahin-font.png */; };
 		A8546D2512988D3900618320 /* Matricks.icns in Resources */ = {isa = PBXBuildFile; fileRef = A8546D2412988D3900618320 /* Matricks.icns */; };
-		A8546D2C12988E0900618320 /* rkit.lua in Resources */ = {isa = PBXBuildFile; fileRef = A8546D2B12988E0900618320 /* rkit.lua */; };
 		A8B5915412A2EE1800D1DEC5 /* restart.png in Resources */ = {isa = PBXBuildFile; fileRef = A8B5915312A2EE1800D1DEC5 /* restart.png */; };
 		A8DE2764129E0C5000676552 /* rkit_window.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8DE2763129E0C5000676552 /* rkit_window.xib */; };
 		A8DE276E129E141600676552 /* RKitAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = A8DE276D129E141600676552 /* RKitAgent.m */; };
@@ -50,7 +55,11 @@
 		A81567F3129F04A200E94DCA /* util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
 		A8156833129F0B6A00E94DCA /* timer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = timer.m; sourceTree = "<group>"; };
 		A8156839129F0C6B00E94DCA /* mob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mob.m; sourceTree = "<group>"; };
-		A82CD9A812A89C97007950F6 /* cube-world.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "cube-world.icns"; path = "../../Dropbox/icons/cube-world.icns"; sourceTree = SOURCE_ROOT; };
+		A82CDA2C12AB1B79007950F6 /* corners.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = corners.png; sourceTree = "<group>"; };
+		A82CDA2E12AB1B95007950F6 /* walls.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = walls.png; sourceTree = "<group>"; };
+		A82CDA3012AB1BBC007950F6 /* cube-world.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "cube-world.icns"; sourceTree = "<group>"; };
+		A83E419B12AC329900E56C22 /* util.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = util.lua; sourceTree = "<group>"; };
+		A83E422F12AC409800E56C22 /* point.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = point.lua; sourceTree = "<group>"; };
 		A8546C6E1296470200618320 /* lapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lapi.h; sourceTree = "<group>"; };
 		A8546C6F1296470200618320 /* lauxlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lauxlib.h; sourceTree = "<group>"; };
 		A8546C701296470200618320 /* lcode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lcode.h; sourceTree = "<group>"; };
@@ -180,7 +189,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				A82CD9A812A89C97007950F6 /* cube-world.icns */,
+				A82CDA3012AB1BBC007950F6 /* cube-world.icns */,
 				A8546D2A12988E0900618320 /* lua */,
 				A8546D2412988D3900618320 /* Matricks.icns */,
 				A8546CF8129886A400618320 /* img */,
@@ -235,6 +244,8 @@
 		A8546CF8129886A400618320 /* img */ = {
 			isa = PBXGroup;
 			children = (
+				A82CDA2E12AB1B95007950F6 /* walls.png */,
+				A82CDA2C12AB1B79007950F6 /* corners.png */,
 				A8B5915312A2EE1800D1DEC5 /* restart.png */,
 				A8546CF9129886A500618320 /* floor.png */,
 				A8546CFA129886A500618320 /* icon.tiff */,
@@ -248,8 +259,10 @@
 		A8546D2A12988E0900618320 /* lua */ = {
 			isa = PBXGroup;
 			children = (
+				A83E422F12AC409800E56C22 /* point.lua */,
 				A8546D2B12988E0900618320 /* rkit.lua */,
 				A81566FB129EF8EE00E94DCA /* test.lua */,
+				A83E419B12AC329900E56C22 /* util.lua */,
 			);
 			path = lua;
 			sourceTree = "<group>";
@@ -312,10 +325,15 @@
 				A8546D03129886A500618320 /* solved.png in Resources */,
 				A8546D04129886A500618320 /* Tahin-font.png in Resources */,
 				A8546D2512988D3900618320 /* Matricks.icns in Resources */,
-				A8546D2C12988E0900618320 /* rkit.lua in Resources */,
 				A8DE2764129E0C5000676552 /* rkit_window.xib in Resources */,
 				A8B5915412A2EE1800D1DEC5 /* restart.png in Resources */,
-				A82CD9A912A89C97007950F6 /* cube-world.icns in Resources */,
+				A82CDA2D12AB1B79007950F6 /* corners.png in Resources */,
+				A82CDA2F12AB1B95007950F6 /* walls.png in Resources */,
+				A82CDA3112AB1BBC007950F6 /* cube-world.icns in Resources */,
+				A83E41C512AC3B1300E56C22 /* rkit.lua in Resources */,
+				A83E41C612AC3B1300E56C22 /* test.lua in Resources */,
+				A83E41C712AC3B1300E56C22 /* util.lua in Resources */,
+				A83E423012AC409800E56C22 /* point.lua in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

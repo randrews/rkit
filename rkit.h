@@ -38,6 +38,7 @@ typedef struct {
 /* rkit.m */
 int open_rkit(lua_State *L);
 void rkit_set_view(lua_State *L, RKitView *view);
+void rkit_add_load_path(lua_State *L, const char *path);
 void close_rkit(lua_State *L);
 void new_game();
 void key_down(lua_State *L, const char *letter, int key_code);
@@ -47,6 +48,7 @@ int load_lua_bitmap(lua_State *L);
 int load_tilesheet(lua_State *L);
 int draw_bitmap(lua_State *L);
 int draw_glyph(lua_State *L);
+int draw_tile(lua_State *L);
 int make_color(lua_State *L);
 NSColor* color_from_int(int color);
 int clear_screen(lua_State *L);

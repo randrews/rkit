@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="621"/>
+			<integer value="587"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -237,6 +237,15 @@
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
+								<object class="NSMenuItem" id="861756010">
+									<reference key="NSMenu" ref="744330966"/>
+									<string key="NSTitle">Log</string>
+									<string key="NSKeyEquiv">l</string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="35465992"/>
+									<reference key="NSMixedImage" ref="502551668"/>
+								</object>
 								<object class="NSMenuItem" id="519664373">
 									<reference key="NSMenu" ref="744330966"/>
 									<bool key="NSIsDisabled">YES</bool>
@@ -376,6 +385,14 @@
 					</object>
 					<int key="connectionID">623</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">toggleActiveWindowLog:</string>
+						<reference key="source" ref="976324537"/>
+						<reference key="destination" ref="861756010"/>
+					</object>
+					<int key="connectionID">625</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -502,6 +519,7 @@
 							<reference ref="99911534"/>
 							<reference ref="519664373"/>
 							<reference ref="624366673"/>
+							<reference ref="861756010"/>
 						</object>
 						<reference key="parent" ref="365868940"/>
 					</object>
@@ -604,6 +622,11 @@
 						<reference key="object" ref="517517621"/>
 						<reference key="parent" ref="914485394"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">624</int>
+						<reference key="object" ref="861756010"/>
+						<reference key="parent" ref="744330966"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -654,6 +677,7 @@
 					<string>621.IBEditorWindowLastContentRect</string>
 					<string>621.IBPluginDependency</string>
 					<string>622.IBPluginDependency</string>
+					<string>624.IBPluginDependency</string>
 				</object>
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -691,7 +715,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{824, 591}, {194, 73}}</string>
+					<string>{{786, 571}, {194, 93}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -699,6 +723,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{729, 641}, {122, 23}}</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 				</object>
@@ -719,7 +744,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">623</int>
+			<int key="maxID">625</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -733,9 +758,11 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>openFile:</string>
 							<string>restartActiveWindow:</string>
+							<string>toggleActiveWindowLog:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 						</object>
@@ -746,6 +773,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>openFile:</string>
 							<string>restartActiveWindow:</string>
+							<string>toggleActiveWindowLog:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -755,6 +783,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">restartActiveWindow:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">toggleActiveWindowLog:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 						</object>

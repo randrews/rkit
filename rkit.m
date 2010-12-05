@@ -1,5 +1,12 @@
 #import "rkit.h"
 
+int rkit_log(lua_State *L){
+	const char *str = luaL_checkstring(L, 1);
+	NSString *msg = [NSString stringWithFormat:@"%s\n", str];
+	[agent(L) addToLog: msg];
+	return 0;
+}
+
 /*************************************************/
 /*** RKit redraw hook ****************************/
 /*************************************************/
@@ -46,6 +53,7 @@ void key_down(lua_State *L, const char *letter, int key_code){
 /*************************************************/
 
 static const struct luaL_reg rkit_lib[] = {
+	{"log", rkit_log},
 	{"load_bitmap", load_lua_bitmap},
 	{"draw_bitmap", draw_bitmap},
 	{"load_tilesheet", load_tilesheet},
@@ -53,6 +61,7 @@ static const struct luaL_reg rkit_lib[] = {
 	{"set_title", set_title},
 	{"color", make_color},
 	{"draw_glyph", draw_glyph},
+	{"draw_tile", draw_tile},
 	{"rect", draw_rect},
 	{"text", draw_text},
 	{"set_input_handler", set_input_handler},
@@ -90,6 +99,18 @@ void rkit_set_view(lua_State *L, RKitView *view){
 	view.keydown = key_down;
 	view.timer_hook = rkit_timer_hook;
 	[view retain];
+}
+
+void rkit_add_load_path(lua_State *L, const char *path){
+	lua_getglobal(L, "package");
+	lua_pushstring(L, "path");	
+	lua_pushstring(L, "path");
+	lua_gettable(L, -3); // [table, "path", old_path]
+	lua_pushstring(L, ";");
+	lua_pushstring(L, path);
+	lua_pushstring(L, "/?.lua");
+	lua_concat(L, 4); // [table, "path", new_path]
+	lua_settable(L, -3);
 }
 
 /*************************************************/

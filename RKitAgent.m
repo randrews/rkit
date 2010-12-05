@@ -15,13 +15,16 @@
 @synthesize rkit_view;
 @synthesize lua;
 @synthesize file;
+@synthesize log;
+@synthesize log_drawer;
 
 //////////////////////////////////////////////////////////////////
 /// Utility methods //////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 
 -(void) logLuaError {
-	NSLog(@"%s\n", lua_tostring(lua, -1));
+	NSString *msg = [NSString stringWithFormat: @"%s\n", lua_tostring(lua, -1)];
+	[self addToLog: msg];
 	lua_pop(lua, 1);
 }
 
@@ -43,6 +46,11 @@
 	[self runLuaCode: [code UTF8String]];	
 }
 
+-(void) runUtils: (NSString*) util_path {
+	NSString *util = [NSString stringWithFormat: @"dofile(\"%@\")", util_path];
+	[self runLuaCode: [util UTF8String]];	
+}
+
 -(void) prepareLua {
 	lua = lua_open();
 	luaL_openlibs(lua);
@@ -50,7 +58,14 @@
 	open_rkit(lua);
 	rkit_set_window(lua, window);
 	rkit_set_view(lua, rkit_view);
-	rkit_set_agent(lua, self);	
+	rkit_set_agent(lua, self);
+
+	NSString *util_path = [[NSBundle mainBundle] pathForResource:@"util" ofType:@"lua"];
+	NSString *util_dir = [util_path stringByDeletingLastPathComponent];
+	rkit_add_load_path(lua, [util_dir UTF8String]);
+	[self runUtils: util_path];
+	
+	rkit_add_load_path(lua, [[file stringByDeletingLastPathComponent] UTF8String]);
 }
 
 //////////////////////////////////////////////////////////////////
@@ -65,7 +80,6 @@
 }
 
 -(void) finalize {
-	NSLog(@"Releasing %@", self);
 	[super finalize];
 }
 
@@ -75,7 +89,6 @@
 }
 
 -(void) windowWillClose: (NSNotification*) notification {
-	NSLog(@"Closing");
 	[self closeLua];
 }
 
@@ -83,13 +96,19 @@
 	[self closeLua];
 	[self prepareLua];
 	[self runFile];
-	NSLog(@"Reload");
+	[self addToLog: @"Reload\n"];
 }
 
 -(NSImage*) loadImage: (const char*) path {
 	NSString *ns_path = [NSString stringWithUTF8String: path];
 	NSString *real_path = [[NSBundle mainBundle] pathForResource: ns_path ofType: @"png"];
 	return [[[NSImage alloc] initWithContentsOfFile: real_path] autorelease];
+}
+
+-(void) addToLog: (NSString*) msg {
+	[[[log textStorage] mutableString] appendString: msg];
+	[[log textStorage] setFont: [NSFont fontWithName: @"Courier" size:12]];
+	[log scrollRangeToVisible: NSMakeRange([[log textStorage] length], 0)];
 }
 
 @end

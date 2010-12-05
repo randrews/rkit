@@ -43,6 +43,30 @@ int draw_bitmap(lua_State *L){
 /*** RKit tilesheet functions ********************/
 /*************************************************/
 
+int draw_tile(lua_State *L){
+	if(!lua_islightuserdata(L, 1)){ luaL_typerror(L, 1, "tilesheet"); }
+	Tilesheet *ts = lua_touserdata(L, 1);
+	int tile_index = luaL_checkinteger(L, 2);
+	int x = luaL_checkinteger(L, 3);
+	int y = luaL_checkinteger(L, 4);
+
+	/* Figure out the coords we're blitting from on the tilesheet.
+	 These are Lua coordinates (top-left), we convert them below. */
+	int tiles_per_row = [ts->bmp size].width / ts->width;
+	int tile_x = (tile_index % tiles_per_row) * ts->width;
+	int tile_y = (tile_index / tiles_per_row) * ts->height;
+
+	/* Make rects to blit from and to */
+	NSRect src = NSMakeRect(tile_x, tile_y, ts->width, ts->height);
+	NSRect dest = NSMakeRect(x, y, ts->width, ts->height);
+
+	[ts->bmp drawAtPoint: dest.origin
+				fromRect: src
+			   operation: NSCompositeSourceOver
+				fraction: 1.0];
+	return 0;
+}
+
 int draw_glyph(lua_State *L){
 	int fg = 255 + (255 << 8) + (255 << 16); /* Default: white */
 	int bg = -2;
@@ -88,7 +112,7 @@ int draw_glyph(lua_State *L){
 	[[NSBezierPath bezierPathWithRect: ts->bg_rect] fill];
 	[ts->bg_image unlockFocus];
 
-	if(bg == -1){	
+	if(bg == -1){
 		[ts->bmp drawAtPoint: dest.origin
 		   fromRect: src
 		   operation: NSCompositeClear
@@ -186,9 +210,14 @@ int draw_rect(lua_State *L){
 	int w = luaL_checkinteger(L, 3);
 	int h = luaL_checkinteger(L, 4);
 	NSColor *c = color_from_int(luaL_checkinteger(L, 5));
+	int fill = 0;
+	if(lua_gettop(L)>=6){fill = lua_toboolean(L, 6);}
 
 	[c setStroke];
-	[[NSBezierPath bezierPathWithRect: NSMakeRect(x, y, w, h)] stroke];
+	[c setFill];
+	NSBezierPath *p = [NSBezierPath bezierPathWithRect: NSMakeRect(x+0.5, y+0.5, w-1, h-1)];
+	[p stroke];
+	if(fill){ [p fill]; }
 
 	return 0;
 }

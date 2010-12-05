@@ -20,5 +20,6 @@
 -(void) applicationWillTerminate: (NSNotification*) notification;
 -(void) openFile: (id) sender;
 -(void) restartActiveWindow: (id) sender;
+-(void) toggleActiveWindowLog: (id) sender;
 -(BOOL) application: (NSApplication*) app openFile: (NSString*) path;
 @end

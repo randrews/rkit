@@ -54,6 +54,11 @@
 	[agent restart: sender];
 }
 
+-(void) toggleActiveWindowLog: (id) sender {
+	RKitAgent *agent = (RKitAgent*) [[[NSApplication sharedApplication] keyWindow] delegate];
+	[[agent log_drawer] toggle: self];
+}
+
 -(void) applicationWillTerminate: (NSNotification*) notification {
 }
 
