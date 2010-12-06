@@ -13,10 +13,11 @@ int rkit_log(lua_State *L){
 
 // RKitView calls this one
 void redraw(lua_State *L, NSRect rect){
+	lua_getglobal(L, "print");
 	lua_pushstring(L, "redraw");
 	lua_gettable(L, LUA_REGISTRYINDEX);
 	if(!lua_isnil(L, -1)){
-		lua_call(L, 0, 0);
+		lua_pcall(L, 0, 0, -2);
 	}
 }
 
