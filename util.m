@@ -69,6 +69,11 @@ int set_input_handler(lua_State *L){
 	return 0;
 }
 
+int set_mouse_handler(lua_State *L){
+	set_handler(L, "mouse");
+	return 0;
+}
+
 int set_redraw_handler(lua_State *L){
 	set_handler(L, "redraw");
 	return 0;

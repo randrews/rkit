@@ -40,12 +40,25 @@ void new_game(lua_State *L){
 /*************************************************/
 
 void key_down(lua_State *L, const char *letter, int key_code){
+	lua_getglobal(L, "print");
 	lua_pushstring(L, "input");
 	lua_gettable(L, LUA_REGISTRYINDEX);
 	if(!lua_isnil(L, -1)){
 		lua_pushstring(L, letter);
 		lua_pushinteger(L, key_code);
-		lua_call(L, 2, 0);
+		lua_pcall(L, 2, 0, -4);
+	}
+}
+
+void mouse_event(lua_State *L, int x, int y, const char *event){
+	lua_getglobal(L, "print");
+	lua_pushstring(L, "mouse");
+	lua_gettable(L, LUA_REGISTRYINDEX);
+	if(!lua_isnil(L, -1)){
+		lua_pushinteger(L, x);
+		lua_pushinteger(L, y);
+		lua_pushstring(L, event);
+		lua_pcall(L, 3, 0, -5);
 	}
 }
 
@@ -66,6 +79,7 @@ static const struct luaL_reg rkit_lib[] = {
 	{"rect", draw_rect},
 	{"text", draw_text},
 	{"set_input_handler", set_input_handler},
+	{"set_mouse_handler", set_mouse_handler},
 	{"set_redraw_handler", set_redraw_handler},
 	{"set_new_game", set_new_game},
 	{"redraw", trigger_redraw},
@@ -98,6 +112,7 @@ void rkit_set_view(lua_State *L, RKitView *view){
 	rkit_register_value(L, "rkit_view", view);
 	view.redraw = redraw;
 	view.keydown = key_down;
+	view.mouse = mouse_event;
 	view.timer_hook = rkit_timer_hook;
 	[view retain];
 }

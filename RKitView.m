@@ -13,6 +13,7 @@
 @synthesize lua;
 @synthesize redraw;
 @synthesize keydown;
+@synthesize mouse;
 @synthesize timer_hook;
 
 - (id)initWithFrame:(NSRect)frame {
@@ -41,6 +42,15 @@
 	if(keydown){
 		keydown(lua, [[event characters] UTF8String],
 					 [event keyCode]);
+	}
+}
+
+-(BOOL) mouseDownCanMoveWindow { return NO; }
+
+-(void) mouseDown: (NSEvent*) event {
+	if(mouse){
+		NSPoint pt = [event locationInWindow];
+		mouse(lua, pt.x, pt.y, "mousedown");
 	}
 }
 

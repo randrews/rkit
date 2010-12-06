@@ -75,6 +75,7 @@ NSMutableArray* loaded_sheets(lua_State *L);
 NSMutableArray* loaded_objects(lua_State *L);
 RKitAgent* agent(lua_State *L);
 int set_input_handler(lua_State *L);
+int set_mouse_handler(lua_State *L);
 int set_redraw_handler(lua_State *L);
 int set_new_game(lua_State *L);
 

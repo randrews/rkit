@@ -16,6 +16,7 @@
        that function. */
     void (*redraw)(lua_State*,NSRect);
     void (*keydown)(lua_State*,const char*,int);
+	void (*mouse)(lua_State*,int, int, const char*);
     void (*timer_hook)(lua_State*,int);
 	lua_State *lua;
 }
@@ -23,13 +24,9 @@
 @property (assign) lua_State *lua;
 @property (assign) void (*redraw)(lua_State*,NSRect);
 @property (assign) void (*keydown)(lua_State*,const char*,int);
+@property (assign) void (*mouse)(lua_State*,int, int, const char*);
 @property (assign) void (*timer_hook)(lua_State*,int);
 
 
--(void) drawRect: (NSRect) rect;
 -(void) callTimer: (NSTimer*) timer_fn_index;
-
--(BOOL) acceptsFirstResponder;
--(void) keyDown: (NSEvent*) event;
-
 @end
