@@ -50,15 +50,16 @@ void key_down(lua_State *L, const char *letter, int key_code){
 	}
 }
 
-void mouse_event(lua_State *L, int x, int y, const char *event){
+void mouse_event(lua_State *L, const char *event, int x, int y, int buttons){
 	lua_getglobal(L, "print");
 	lua_pushstring(L, "mouse");
 	lua_gettable(L, LUA_REGISTRYINDEX);
 	if(!lua_isnil(L, -1)){
+		lua_pushstring(L, event);
 		lua_pushinteger(L, x);
 		lua_pushinteger(L, y);
-		lua_pushstring(L, event);
-		lua_pcall(L, 3, 0, -5);
+		lua_pushinteger(L, buttons);
+		lua_pcall(L, 4, 0, -6);
 	}
 }
 

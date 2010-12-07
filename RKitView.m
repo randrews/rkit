@@ -18,9 +18,7 @@
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code here.
-    }
+    if (self) {}
     return self;
 }
 
@@ -36,8 +34,6 @@
 /*** Keyboard stuff ******************************/
 /*************************************************/
 
--(BOOL) acceptsFirstResponder { return YES; }
-
 -(void) keyDown: (NSEvent*) event {
 	if(keydown){
 		keydown(lua, [[event characters] UTF8String],
@@ -45,12 +41,35 @@
 	}
 }
 
+/*************************************************/
+/*** Behavior ************************************/
+/*************************************************/
+
+-(BOOL) acceptsFirstResponder { return YES; }
 -(BOOL) mouseDownCanMoveWindow { return NO; }
 
--(void) mouseDown: (NSEvent*) event {
+/*************************************************/
+/*** Keyboard stuff ******************************/
+/*************************************************/
+
+-(void) handleMouseEvent: (NSEvent*) event ofType: (NSString*) type {
+	NSPoint point = [event locationInWindow];
 	if(mouse){
-		NSPoint pt = [event locationInWindow];
-		mouse(lua, pt.x, pt.y, "mousedown");
+		mouse(lua,
+			  [type UTF8String],
+			  point.x, point.y,
+			  [NSEvent pressedMouseButtons]);
+	}
+}
+
+-(void) mouseDown: (NSEvent*) event { [self handleMouseEvent: event ofType: @"mousedown"]; }
+-(void) rightMouseDown: (NSEvent*) event { [self handleMouseEvent: event ofType: @"mousedown"]; }
+-(void) mouseUp: (NSEvent*) event { [self handleMouseEvent: event ofType: @"mouseup"]; }
+-(void) mouseDragged: (NSEvent*) event { [self handleMouseEvent: event ofType: @"mousedragged"]; }
+
+-(void) mouseMoved: (NSEvent*) event {
+	if([self mouse: [event locationInWindow] inRect: [self frame]]){
+		[self handleMouseEvent: event ofType: @"mousemoved"];
 	}
 }
 
