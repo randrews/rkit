@@ -5,7 +5,8 @@ require("array")
 -- Region.new{
 --     origin=point(50, 50),
 --     width=50, height=50,
---     mousedown=function(self, point) ... end
+--     mousedown=function(self, point) ... end,
+--     ... etc, other event handlers the same ...
 -- }
 
 -- Dragging:
@@ -14,6 +15,13 @@ require("array")
 -- it will be the current dragged region. Whes a mousedragged
 -- event is received, the region's origin is updated accordingly,
 -- and the region's dragto method is called with the new origin.
+
+-- Hit testing:
+-- If your region has a mask(self,point) method, it will be called
+-- with a point (in region coordinates) to determine whether to
+-- pass on events. Any event within the bounding box will be
+-- tested with mask, but only the ones that pass will be sent to
+-- event handlers.
 
 Region = {}
 Region.prototype = {}
@@ -59,16 +67,16 @@ end
 function Region.mouse_handler(type, x, y, buttons)
    if type == "mousemove" then return end
    local pt = point(x,y)
-
    if type=="mousedragged" and Region.current_dragged then Region.drag(pt) end
 
-   local hit = array.select(Region.regions, function(r) return r:hit(pt) end)
-   if #hit > 0 then
-	  local last_hit = hit[#hit]
+   local hits = array.select(Region.regions, function(r) return r:hit(pt) end)
+   if #hits > 0 then
+	  local last_hit = hits[#hits]
+	  if not last_hit.mask or last_hit:mask(pt - last_hit.origin) then
+		 if type=="mousedown" then Region.start_drag(last_hit, pt) end
+		 if type=="mouseup" and Region.current_dragged then Region.handle_drop(pt) end
 
-	  if type=="mousedown" then Region.start_drag(last_hit, pt) end
-	  if type=="mouseup" and Region.current_dragged then Region.handle_drop(pt) end
-
-	  if last_hit[type] then last_hit[type](last_hit,pt) end
+		 if last_hit[type] then last_hit[type](last_hit,pt) end
+	  end
    end
 end
