@@ -4,4 +4,7 @@ function print(...)
    RKit.log(table.concat(strs,"\t"))
 end
 
+require("array")
 require("point")
+require("block")
+require("region")
