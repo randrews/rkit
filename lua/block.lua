@@ -78,9 +78,9 @@ Block.prototype.corners =
       end
 
       if not s or
-		 not w or
-		 s and not sw or
-		 w and not sw then
+		 not e or
+		 s and not se or
+		 e and not se then
 		 RKit.draw_tile(corner_ts, 1, at.x+28, at.y)
       end
 
