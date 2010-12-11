@@ -53,8 +53,9 @@ int draw_tile(lua_State *L){
 	/* Figure out the coords we're blitting from on the tilesheet.
 	 These are Lua coordinates (top-left), we convert them below. */
 	int tiles_per_row = [ts->bmp size].width / ts->width;
+	int tiles_per_col = [ts->bmp size].height / ts->height;
 	int tile_x = (tile_index % tiles_per_row) * ts->width;
-	int tile_y = (tile_index / tiles_per_row) * ts->height;
+	int tile_y = (tiles_per_col - 1 - (tile_index / tiles_per_row)) * ts->height;
 
 	/* Make rects to blit from and to */
 	NSRect src = NSMakeRect(tile_x, tile_y, ts->width, ts->height);
@@ -91,8 +92,9 @@ int draw_glyph(lua_State *L){
 	/* Figure out the coords we're blitting from on the tilesheet.
 	   These are Lua coordinates (top-left), we convert them below. */
 	int tiles_per_row = [ts->bmp size].width / ts->width;
+	int tiles_per_col = [ts->bmp size].height / ts->height;
 	int tile_x = (tile_index % tiles_per_row) * ts->width;
-	int tile_y = (tile_index / tiles_per_row) * ts->height;
+	int tile_y = (tiles_per_col - 1 - (tile_index / tiles_per_row)) * ts->height;
 
 	/* Make rects to blit from and to */
 	NSRect src = NSMakeRect(tile_x, tile_y, ts->width, ts->height);
