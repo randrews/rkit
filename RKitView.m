@@ -11,9 +11,6 @@
 @implementation RKitView
 
 @synthesize lua;
-@synthesize redraw;
-@synthesize keydown;
-@synthesize mouse;
 @synthesize timer_hook;
 
 - (id)initWithFrame:(NSRect)frame {
@@ -27,7 +24,12 @@
 /*************************************************/
 
 - (void)drawRect:(NSRect)dirtyRect {
-	if(redraw){ redraw(lua, [self frame]); }
+	lua_getglobal(lua, "print");
+	lua_pushstring(lua, "redraw");
+	lua_gettable(lua, LUA_REGISTRYINDEX);
+	if(!lua_isnil(lua, -1)){
+		lua_pcall(lua, 0, 0, -2);
+	}
 }
 
 /*************************************************/
@@ -35,9 +37,13 @@
 /*************************************************/
 
 -(void) keyDown: (NSEvent*) event {
-	if(keydown){
-		keydown(lua, [[event characters] UTF8String],
-					 [event keyCode]);
+	lua_getglobal(lua, "print");
+	lua_pushstring(lua, "input");
+	lua_gettable(lua, LUA_REGISTRYINDEX);
+	if(!lua_isnil(lua, -1)){
+		lua_pushstring(lua, [[event characters] UTF8String]);
+		lua_pushinteger(lua, [event keyCode]);
+		lua_pcall(lua, 2, 0, -4);
 	}
 }
 
@@ -54,11 +60,15 @@
 
 -(void) handleMouseEvent: (NSEvent*) event ofType: (NSString*) type {
 	NSPoint point = [event locationInWindow];
-	if(mouse){
-		mouse(lua,
-			  [type UTF8String],
-			  point.x, point.y,
-			  [NSEvent pressedMouseButtons]);
+	lua_getglobal(lua, "print");
+	lua_pushstring(lua, "mouse");
+	lua_gettable(lua, LUA_REGISTRYINDEX);
+	if(!lua_isnil(lua, -1)){
+		lua_pushstring(lua, [type UTF8String]);
+		lua_pushinteger(lua, point.x);
+		lua_pushinteger(lua, point.y);
+		lua_pushinteger(lua, [NSEvent pressedMouseButtons]);
+		lua_pcall(lua, 4, 0, -6);
 	}
 }
 

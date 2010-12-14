@@ -10,14 +10,12 @@
 #import "rkit.h"
 
 @interface MobView : NSView {
-    void (*redraw)(lua_State*, NSRect, int);
-    int luaFunction;
+    int redrawFunction;
 	lua_State *lua;
 }
 
 @property (assign) lua_State *lua;
-@property int luaFunction;
-@property (assign) void (*redraw)(lua_State*, NSRect, int);
+@property int redrawFunction;
 
 -(void) drawRect: (NSRect) rect;
 

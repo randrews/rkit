@@ -11,56 +11,17 @@ int rkit_log(lua_State *L){
 /*** RKit redraw hook ****************************/
 /*************************************************/
 
-// RKitView calls this one
-void redraw(lua_State *L, NSRect rect){
-	lua_getglobal(L, "print");
-	lua_pushstring(L, "redraw");
-	lua_gettable(L, LUA_REGISTRYINDEX);
-	if(!lua_isnil(L, -1)){
-		lua_pcall(L, 0, 0, -2);
-	}
-}
-
 // Lua calls this one
 int trigger_redraw(lua_State *L){
 	[rkit_view(L) setNeedsDisplay: YES];
 	return 0;
 }
 
-void new_game(lua_State *L){
-	lua_pushstring(L, "new_game");
-	lua_gettable(L, LUA_REGISTRYINDEX);
-	if(!lua_isnil(L, -1)){
-		lua_call(L, 0, 0);
-	}
-}
-
 /*************************************************/
 /*** RKit input functions ************************/
 /*************************************************/
 
-void key_down(lua_State *L, const char *letter, int key_code){
-	lua_getglobal(L, "print");
-	lua_pushstring(L, "input");
-	lua_gettable(L, LUA_REGISTRYINDEX);
-	if(!lua_isnil(L, -1)){
-		lua_pushstring(L, letter);
-		lua_pushinteger(L, key_code);
-		lua_pcall(L, 2, 0, -4);
-	}
-}
-
 void mouse_event(lua_State *L, const char *event, int x, int y, int buttons){
-	lua_getglobal(L, "print");
-	lua_pushstring(L, "mouse");
-	lua_gettable(L, LUA_REGISTRYINDEX);
-	if(!lua_isnil(L, -1)){
-		lua_pushstring(L, event);
-		lua_pushinteger(L, x);
-		lua_pushinteger(L, y);
-		lua_pushinteger(L, buttons);
-		lua_pcall(L, 4, 0, -6);
-	}
 }
 
 /*************************************************/
@@ -111,9 +72,6 @@ int open_rkit(lua_State *L){
 
 void rkit_set_view(lua_State *L, RKitView *view){
 	rkit_register_value(L, "rkit_view", view);
-	view.redraw = redraw;
-	view.keydown = key_down;
-	view.mouse = mouse_event;
 	view.timer_hook = rkit_timer_hook;
 	[view retain];
 }

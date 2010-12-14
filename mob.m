@@ -9,12 +9,6 @@
 
 #import "rkit.h"
 
-void mob_redraw_callback(lua_State *L, NSRect rect, int lua_function){
-	lua_pushinteger(L, lua_function);
-	lua_gettable(L, LUA_REGISTRYINDEX);
-	lua_call(L, 0, 0);
-}
-
 int create_mob(lua_State *L){
 	int x = luaL_checkinteger(L, 1);
 	int y = luaL_checkinteger(L, 2);
@@ -27,8 +21,7 @@ int create_mob(lua_State *L){
 	MobView *mob = [[[MobView alloc] initWithFrame:NSMakeRect(x, y, w, h)] autorelease];
 	[mob setLua: L];
 	[mob setWantsLayer: YES];
-	[mob setRedraw: mob_redraw_callback];
-	[mob setLuaFunction: fn];
+	[mob setRedrawFunction: fn];
 	[rkit_view(L) addSubview: mob];
 	[mob setNeedsDisplay: YES];
 	

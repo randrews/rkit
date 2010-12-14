@@ -11,12 +11,15 @@
 
 @implementation MobView
 
-@synthesize redraw;
 @synthesize lua;
-@synthesize luaFunction;
+@synthesize redrawFunction;
 
 - (void)drawRect:(NSRect)dirtyRect {
-	if(redraw){ redraw(lua, [self frame], luaFunction); }
+	if(redrawFunction){
+		lua_pushinteger(lua, redrawFunction);
+		lua_gettable(lua, LUA_REGISTRYINDEX);
+		lua_call(lua, 0, 0);		
+	}
 }
 
 @end
