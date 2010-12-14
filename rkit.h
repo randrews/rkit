@@ -60,7 +60,6 @@ int resize_window(lua_State *L);
 /* timer.m */
 int create_timer(lua_State *L);
 int stop_timer(lua_State *L);
-void rkit_timer_hook(lua_State *L, int timer_fn);
 
 /* util.m */
 void *get_value(lua_State *L, const char *key);

@@ -17,7 +17,7 @@ int create_timer(lua_State *L){
 	int timer_fn_index = luaL_ref(L, LUA_REGISTRYINDEX);
 	
 	NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval: delay
-													  target: rkit_view(L)
+													  target: agent(L)
 													selector: @selector(callTimer:)
 													userInfo: [NSNumber numberWithInt: timer_fn_index]
 													 repeats: YES];
@@ -39,7 +39,4 @@ int stop_timer(lua_State *L){
 }
 
 void rkit_timer_hook(lua_State *L, int timer_fn){
-	lua_pushinteger(L, timer_fn);
-	lua_gettable(L, LUA_REGISTRYINDEX);
-	lua_call(L, 0, 0);
 }

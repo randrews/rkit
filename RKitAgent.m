@@ -111,4 +111,14 @@
 	[log scrollRangeToVisible: NSMakeRange([[log textStorage] length], 0)];
 }
 
+/*************************************************/
+/*** Timer stuff *********************************/
+/*************************************************/
+
+-(void) callTimer: (NSTimer*) timer {
+	int timer_num = [[timer userInfo] intValue];
+	lua_pushinteger(lua, timer_num);
+	lua_gettable(lua, LUA_REGISTRYINDEX);
+	lua_call(lua, 0, 0);
+}
 @end

@@ -11,7 +11,6 @@
 @implementation RKitView
 
 @synthesize lua;
-@synthesize timer_hook;
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
@@ -82,14 +81,4 @@
 		[self handleMouseEvent: event ofType: @"mousemoved"];
 	}
 }
-
-/*************************************************/
-/*** Timer stuff *********************************/
-/*************************************************/
-
--(void) callTimer: (NSTimer*) timer {
-	int timer_num = [[timer userInfo] intValue];
-	if(timer_hook){ timer_hook(lua, timer_num); }
-}
-
 @end

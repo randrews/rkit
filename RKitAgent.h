@@ -37,4 +37,5 @@
 -(NSImage*) loadImage: (const char*) name;
 -(void) addToLog: (NSString*) msg;
 
+-(void) callTimer: (NSTimer*) timer_fn_index;
 @end

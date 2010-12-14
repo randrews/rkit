@@ -72,7 +72,6 @@ int open_rkit(lua_State *L){
 
 void rkit_set_view(lua_State *L, RKitView *view){
 	rkit_register_value(L, "rkit_view", view);
-	view.timer_hook = rkit_timer_hook;
 	[view retain];
 }
 
