@@ -34,6 +34,10 @@
 	lua = 0;	
 }
 
+-(void) clearView {
+	[rkit_view setSubviews: [NSArray array]];
+}
+
 -(BOOL) runLuaCode: (const char*) code {
 	int lua_error = luaL_loadbuffer(lua, code, strlen(code), "line") || lua_pcall(lua, 0, 0, 0);
 	
@@ -94,6 +98,7 @@
 
 -(void) restart: (id) sender {
 	[self closeLua];
+	[self clearView];
 	[self prepareLua];
 	[self runFile];
 	[self addToLog: @"Reload\n"];
